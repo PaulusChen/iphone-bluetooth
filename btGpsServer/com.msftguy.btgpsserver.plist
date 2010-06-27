@@ -1,0 +1,21 @@
+{
+	StandardErrorPath = "/tmp/BtGpsServer.err";
+	StandardOutPath = "/tmp/BtGpsServer.log";
+	Disabled = NO;
+	EnvironmentVariables = {
+		"DYLD_INSERT_LIBRARIES" = "";
+	};
+	UserName = mobile;
+	HopefullyExitsFirst = YES;
+	KeepAlive = {
+		SuccessfulExit = NO;
+	};
+	Label = "com.msftguy.BtGpsServer";
+	MachServices = {
+		"com.msftguy.server.btgps" = true;
+	};
+	ProgramArguments = (
+		"/lib/btGpsServer",
+	);
+	RunAtLoad = YES;
+}

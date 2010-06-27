@@ -1,0 +1,12 @@
+//
+// Prefix header for all source files of the 'btTest' target in the 'btTest' project
+//
+
+#include <unistd.h>
+#include <sys/socket.h>
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif
+
+#include "BtGpsDefs.h"

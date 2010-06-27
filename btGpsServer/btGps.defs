@@ -1,0 +1,32 @@
+/* file server.defs */
+
+subsystem BtGps 8100700;
+
+ServerPrefix srv_;
+
+#import "btGpsTypes.defs"
+
+/* get version */
+routine get_version(
+			server : mach_port_t;
+		out version : int32_t);
+		
+/* set PIN code */
+routine set_pin(
+			server : mach_port_t;
+			pin : str80);
+
+/* set target device name */
+routine set_name(
+			server : mach_port_t;
+			name : str80);
+			
+/* set PIN code */
+routine set_addr(
+			server : mach_port_t;
+			addr : str80);
+			
+/* set PIN code */
+routine set_need_gps(
+			server : mach_port_t;
+			needGps : boolean_t);

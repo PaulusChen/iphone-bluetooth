@@ -1,0 +1,329 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1D3623260D0F684500981E51 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* main.m */; };
+		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		9D133E4B11D6FC31008CB46B /* gps_thread.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D133E4A11D6FC31008CB46B /* gps_thread.m */; };
+		9D704B2311D5A9BC0024037D /* BluetoothContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D704B2211D5A9BC0024037D /* BluetoothContext.mm */; };
+		9D704B2E11D5AA590024037D /* bt_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D704B2D11D5AA590024037D /* bt_main.m */; };
+		9D704B7D11D5AF900024037D /* mach_srv.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D704B7C11D5AF900024037D /* mach_srv.m */; };
+		9D704B7F11D5B2D40024037D /* btGps.defs in Sources */ = {isa = PBXBuildFile; fileRef = 9D704B7E11D5B2D40024037D /* btGps.defs */; };
+		9DC5D91310B152A000CDA4DE /* MobileBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DC5D91210B152A000CDA4DE /* MobileBluetooth.framework */; };
+		9DF806E711D5DC0B00731C5E /* launchd.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF806E611D5DC0B00731C5E /* launchd.m */; };
+		9DF806EE11D5DC6300731C5E /* log.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF806ED11D5DC6300731C5E /* log.m */; };
+		9DF8073C11D5E04F00731C5E /* bt_helpers.c in Sources */ = {isa = PBXBuildFile; fileRef = 9DF8073B11D5E04F00731C5E /* bt_helpers.c */; };
+		9DF8077411D5E5D700731C5E /* srv_api.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF8077311D5E5D700731C5E /* srv_api.m */; };
+		9DF8077A11D5E60800731C5E /* com.msftguy.btgpsserver.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9DF8077911D5E60800731C5E /* com.msftguy.btgpsserver.plist */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1D3623250D0F684500981E51 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Classes/main.m; sourceTree = "<group>"; };
+		1D6058910D05DD3D006BFB54 /* btGpsServer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = btGpsServer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		32CA4F630368D1EE00C91783 /* btGpsServer_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = btGpsServer_Prefix.pch; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		9D133B4F11D617D5008CB46B /* BtGpsDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BtGpsDefs.h; sourceTree = "<group>"; };
+		9D133D0511D6C093008CB46B /* btGpsTypes.defs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.mig; path = btGpsTypes.defs; sourceTree = "<group>"; };
+		9D133E4911D6FC31008CB46B /* gps_thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gps_thread.h; sourceTree = "<group>"; };
+		9D133E4A11D6FC31008CB46B /* gps_thread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gps_thread.m; sourceTree = "<group>"; };
+		9D57823211CE003C003BF173 /* MobileBluetooth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobileBluetooth.h; sourceTree = "<group>"; };
+		9D704B2111D5A9BC0024037D /* BluetoothContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BluetoothContext.h; sourceTree = "<group>"; };
+		9D704B2211D5A9BC0024037D /* BluetoothContext.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BluetoothContext.mm; sourceTree = "<group>"; };
+		9D704B2C11D5AA590024037D /* bt_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bt_main.h; sourceTree = "<group>"; };
+		9D704B2D11D5AA590024037D /* bt_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = bt_main.m; sourceTree = "<group>"; };
+		9D704B7B11D5AF900024037D /* mach_srv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mach_srv.h; sourceTree = "<group>"; };
+		9D704B7C11D5AF900024037D /* mach_srv.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mach_srv.m; sourceTree = "<group>"; };
+		9D704B7E11D5B2D40024037D /* btGps.defs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.mig; path = btGps.defs; sourceTree = "<group>"; };
+		9DC5D91210B152A000CDA4DE /* MobileBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileBluetooth.framework; path = System/Library/PrivateFrameworks/MobileBluetooth.framework; sourceTree = SDKROOT; };
+		9DF806E511D5DC0B00731C5E /* launchd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = launchd.h; sourceTree = "<group>"; };
+		9DF806E611D5DC0B00731C5E /* launchd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = launchd.m; sourceTree = "<group>"; };
+		9DF806EC11D5DC6300731C5E /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
+		9DF806ED11D5DC6300731C5E /* log.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = log.m; sourceTree = "<group>"; };
+		9DF8073A11D5E04F00731C5E /* bt_helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bt_helpers.h; sourceTree = "<group>"; };
+		9DF8073B11D5E04F00731C5E /* bt_helpers.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bt_helpers.c; sourceTree = "<group>"; };
+		9DF8077211D5E5D700731C5E /* srv_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = srv_api.h; sourceTree = "<group>"; };
+		9DF8077311D5E5D700731C5E /* srv_api.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = srv_api.m; sourceTree = "<group>"; };
+		9DF8077911D5E60800731C5E /* com.msftguy.btgpsserver.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = com.msftguy.btgpsserver.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1D60588F0D05DD3D006BFB54 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
+				9DC5D91310B152A000CDA4DE /* MobileBluetooth.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				9D704B2111D5A9BC0024037D /* BluetoothContext.h */,
+				9D704B2211D5A9BC0024037D /* BluetoothContext.mm */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1D6058910D05DD3D006BFB54 /* btGpsServer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
+			isa = PBXGroup;
+			children = (
+				9D133E4811D6FC16008CB46B /* GPS */,
+				9DF8078111D5E6F600731C5E /* Bluetooth */,
+				9DF8076F11D5E54F00731C5E /* RPC */,
+				080E96DDFE201D6D7F000001 /* Classes */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = CustomTemplate;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				1D3623250D0F684500981E51 /* main.m */,
+				32CA4F630368D1EE00C91783 /* btGpsServer_Prefix.pch */,
+				9DF806EC11D5DC6300731C5E /* log.h */,
+				9DF806ED11D5DC6300731C5E /* log.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107310486CEB800E47090 /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1D30AB110D05D00D00671497 /* Foundation.framework */,
+				9DC5D91210B152A000CDA4DE /* MobileBluetooth.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9D133E4811D6FC16008CB46B /* GPS */ = {
+			isa = PBXGroup;
+			children = (
+				9D133E4911D6FC31008CB46B /* gps_thread.h */,
+				9D133E4A11D6FC31008CB46B /* gps_thread.m */,
+			);
+			name = GPS;
+			sourceTree = "<group>";
+		};
+		9DF8076F11D5E54F00731C5E /* RPC */ = {
+			isa = PBXGroup;
+			children = (
+				9DF8077911D5E60800731C5E /* com.msftguy.btgpsserver.plist */,
+				9D704B7E11D5B2D40024037D /* btGps.defs */,
+				9DF8077211D5E5D700731C5E /* srv_api.h */,
+				9DF8077311D5E5D700731C5E /* srv_api.m */,
+				9DF806E511D5DC0B00731C5E /* launchd.h */,
+				9DF806E611D5DC0B00731C5E /* launchd.m */,
+				9D704B7B11D5AF900024037D /* mach_srv.h */,
+				9D704B7C11D5AF900024037D /* mach_srv.m */,
+				9D133B4F11D617D5008CB46B /* BtGpsDefs.h */,
+				9D133D0511D6C093008CB46B /* btGpsTypes.defs */,
+			);
+			name = RPC;
+			sourceTree = "<group>";
+		};
+		9DF8078111D5E6F600731C5E /* Bluetooth */ = {
+			isa = PBXGroup;
+			children = (
+				9D57823211CE003C003BF173 /* MobileBluetooth.h */,
+				9DF8073A11D5E04F00731C5E /* bt_helpers.h */,
+				9DF8073B11D5E04F00731C5E /* bt_helpers.c */,
+				9D704B2C11D5AA590024037D /* bt_main.h */,
+				9D704B2D11D5AA590024037D /* bt_main.m */,
+			);
+			name = Bluetooth;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1D6058900D05DD3D006BFB54 /* btGpsServer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "btGpsServer" */;
+			buildPhases = (
+				1D60588D0D05DD3D006BFB54 /* Resources */,
+				1D60588E0D05DD3D006BFB54 /* Sources */,
+				1D60588F0D05DD3D006BFB54 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = btGpsServer;
+			productName = btGpsServer;
+			productReference = 1D6058910D05DD3D006BFB54 /* btGpsServer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "btGpsServer" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1D6058900D05DD3D006BFB54 /* btGpsServer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1D60588D0D05DD3D006BFB54 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9DF8077A11D5E60800731C5E /* com.msftguy.btgpsserver.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1D60588E0D05DD3D006BFB54 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D3623260D0F684500981E51 /* main.m in Sources */,
+				9D704B2311D5A9BC0024037D /* BluetoothContext.mm in Sources */,
+				9D704B2E11D5AA590024037D /* bt_main.m in Sources */,
+				9D704B7D11D5AF900024037D /* mach_srv.m in Sources */,
+				9D704B7F11D5B2D40024037D /* btGps.defs in Sources */,
+				9DF806E711D5DC0B00731C5E /* launchd.m in Sources */,
+				9DF806EE11D5DC6300731C5E /* log.m in Sources */,
+				9DF8073C11D5E04F00731C5E /* bt_helpers.c in Sources */,
+				9DF8077411D5E5D700731C5E /* srv_api.m in Sources */,
+				9D133E4B11D6FC31008CB46B /* gps_thread.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1D6058940D05DD3E006BFB54 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = btGpsServer_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				PRODUCT_NAME = btGpsServer;
+			};
+			name = Debug;
+		};
+		1D6058950D05DD3E006BFB54 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = btGpsServer_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				PRODUCT_NAME = btGpsServer;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
+				DEAD_CODE_STRIPPING = NO;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
+				MIG_GENERATE_CLIENT_SOURCES = NO;
+				MIG_GENERATE_SERVER_SOURCES = YES;
+				OTHER_MIGFLAGS = "-I/Developer/SDKs/MacOSX10.6.sdk/usr/include";
+				PREBINDING = NO;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos4.0;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
+				MIG_GENERATE_SERVER_SOURCES = YES;
+				OTHER_MIGFLAGS = "-I/Developer/SDKs/MacOSX10.6.sdk/usr/include";
+				PREBINDING = NO;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos4.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "btGpsServer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D6058940D05DD3E006BFB54 /* Debug */,
+				1D6058950D05DD3E006BFB54 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "btGpsServer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}
