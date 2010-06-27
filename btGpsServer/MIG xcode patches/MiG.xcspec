@@ -1,0 +1,108 @@
+{
+	Type = Compiler;
+	Identifier = "com.apple.compilers.mig";
+	Class = "PBXCompilerSpecificationMig";
+	Name = MiG;
+	Description = "Mach Interface Stub Generator";
+	CommandLine = "$(DEVELOPER_BIN_DIR)/mig [special-args] [options] [input]";
+	RuleName = "Mig $(InputFile) $(arch)";
+	InputFileTypes = (
+		"sourcecode.mig",
+	);
+	EnvironmentVariables = {
+		SDKROOT = "$(SDKROOT)";
+		MIGCC = "$(PLATFORM_DEVELOPER_BIN_DIR)/gcc";
+		MIGCOM = "$(DEVELOPER_BIN_DIR)/../libexec/migcom";
+	};
+	"OutputsAreSourceFiles" = Yes;
+	CommandOutputParser = (
+		(
+			"errors found. Abort.$",
+			ignore,
+		),
+		(
+			"^(?:/.*/mig|mig): fatal: \\\"(.*)\\\", line ([0-9]*): (.*)$",
+			"emit-error",
+		),
+		(
+			"^(?:/.*/mig|mig): \\\"(.*)\\\", line ([0-9]*): (.*)$",
+			"emit-error",
+		),
+		(
+			"^\\\"(.*)\\\", line ([0-9]*): (.*)$",
+			"emit-error",
+		),
+	);
+	Options = (
+		{
+			Name = arch;
+			Type = String;
+			CommandLineArgs = {
+				"<<otherwise>>" = (
+					"-arch",
+					"$(value)",
+				);
+			};
+		},
+		{
+			Category = BuildOptions;
+			Name = "MIG_GENERATE_CLIENT_SOURCES";
+			Type = Boolean;
+			DefaultValue = YES;
+			AllowedValues = (
+				{
+					Value = YES;
+					CommandLine = "-header $(DERIVED_FILE_DIR)/$(CURRENT_ARCH)/$(InputFileBase).h -user $(DERIVED_FILE_DIR)/$(CURRENT_ARCH)/$(InputFileBase)User.c";
+					Outputs = (
+						"$(DERIVED_FILE_DIR)/$(CURRENT_ARCH)/$(InputFileBase).h",
+						"$(DERIVED_FILE_DIR)/$(CURRENT_ARCH)/$(InputFileBase)User.c",
+					);
+				},
+				{
+					Value = NO;
+					CommandLine = "-header /dev/null -user /dev/null";
+				},
+			);
+			"OutputsAreSourceFiles" = Yes;
+		},
+		{
+			Category = BuildOptions;
+			Name = "MIG_GENERATE_SERVER_SOURCES";
+			Type = Boolean;
+			DefaultValue = NO;
+			AllowedValues = (
+				{
+					Value = YES;
+					CommandLine = "-sheader $(DERIVED_FILE_DIR)/$(CURRENT_ARCH)/$(InputFileBase)Server.h -server $(DERIVED_FILE_DIR)/$(CURRENT_ARCH)/$(InputFileBase)Server.c";
+					Outputs = (
+						"$(DERIVED_FILE_DIR)/$(CURRENT_ARCH)/$(InputFileBase)Server.h",
+						"$(DERIVED_FILE_DIR)/$(CURRENT_ARCH)/$(InputFileBase)Server.c",
+					);
+				},
+				{
+					Value = NO;
+					CommandLine = "-sheader /dev/null -server /dev/null";
+				},
+			);
+			"OutputsAreSourceFiles" = Yes;
+		},
+		{
+			Name = "OTHER_MIGFLAGS";
+			Type = StringList;
+			DefaultValue = "";
+			CommandLineArgs = (
+				"$(OTHER_MIGFLAGS)",
+			);
+			Category = BuildOptions;
+		},
+		{
+			Category = BuildOptions;
+			Name = "HEADER_SEARCH_PATHS";
+			Type = stringlist;
+			DefaultValue = "";
+			CommandLineArgs = (
+				"-I$(value)",
+			);
+		},
+	);
+}
