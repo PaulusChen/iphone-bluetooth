@@ -13,10 +13,17 @@
 #include "log.h"
 #include "btGps.h"
 
+#include <nmea/nmea.h>
+#include <nmea/time.h>
+
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+
+#include <CoreFoundation/CoreFoundation.h>
 
 
 void usage(const char* progName) {
@@ -28,10 +35,12 @@ char g_pin[BUFSIZ] = "";
 char g_devName[BUFSIZ] = "";
 char g_macAddr[BUFSIZ] = "";
 
+boolean_t g_wait = FALSE;
+
 void parseOptions(int argc, char *argv[])
 {
 	char ch;
-	while ((ch = getopt(argc, argv, "p:n:a:")) != -1) {
+	while ((ch = getopt(argc, argv, "p:n:a:w")) != -1) {
 		switch (ch) {
 			case 'p':
 				strcpy(g_pin, optarg);
@@ -42,10 +51,50 @@ void parseOptions(int argc, char *argv[])
 			case 'a':
 				strcpy(g_macAddr, optarg);
 				break;
+			case 'w':
+				g_wait = TRUE;
+				break;
 			default:
 				usage(*argv);
 		}
 	}
+}
+
+void gpsinfo_notification (
+						 CFNotificationCenterRef center,
+						 void *observer,
+						 CFStringRef name,
+						 const void *object,
+						 CFDictionaryRef userInfo
+						 )
+{
+	static int shmid = -1;
+	static void* p_shm = MAP_FAILED;
+	if (shmid == -1)
+		shmid = shm_open(BtGpsSharedMemSectionName, O_RDONLY);
+	if (shmid != -1 && p_shm == MAP_FAILED) {
+		p_shm = mmap(0, PAGE_SIZE, PROT_READ, MAP_SHARED, shmid, 0);
+	}
+	if (p_shm != MAP_FAILED) {	
+		nmeaINFO* nmeaInfo = p_shm;
+		nmeaTIME* utc = &nmeaInfo->utc;
+		printf("nmeaInfo: fl: %x;lat=%f, lon=%f, elev=%f; spd=%f, dir=%f; gmt=%02u:%02u:%02u\n", 
+			   nmeaInfo->smask,
+			   nmeaInfo->lat, nmeaInfo->lon, nmeaInfo->elv, 
+			   nmeaInfo->speed, nmeaInfo->direction,
+			   utc->hour, utc->min, utc->sec); 
+	}
+}
+
+void wait_for_notifications()
+{
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), 
+									NULL, gpsinfo_notification, 
+									BtGpsNotificationName, nil, 
+									CFNotificationSuspensionBehaviorDrop);
+	CFRunLoopRef runLoop = CFRunLoopGetCurrent();
+	runLoop;
+	CFRunLoopRun();
 }
 
 void client_test(int argc, char *argv[])
@@ -94,5 +143,8 @@ void client_test(int argc, char *argv[])
 		LogMsg("set_pin get_version, 0x%x", result);
 	} else {
 		LogMsg("get_version() = %u", ver);
+	}
+	if (g_wait) {
+		wait_for_notifications();
 	}
 }
