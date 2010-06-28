@@ -7,10 +7,25 @@
  *
  */
 
-@interface GpsThread : NSObject {
-}
+#include <nmea/nmea.h>
 
-- (void) threadProc:(NSObject*) ctx;
+@interface GpsThread : NSObject {
+	nmeaPARSER nmeaParser;
+	nmeaINFO nmeaInfo;
+}
 - (id) init;
+- (void) dealloc;
+- (void) readCompletionNotification:(NSNotification*)notification;
+- (void) gpsConnected:(NSNotification*)notification;
+- (void) openTty:(NSString*)ttyPath;
 
 @end
+
+extern GpsThread* g_gpsThread;
+
+extern NSString* GpsConnectedNotification;
+extern NSString* GpsTty;
+
+void enableNmeaLog(bool fEnable);
+
+void gpsStartThread();

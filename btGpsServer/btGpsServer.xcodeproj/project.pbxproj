@@ -10,6 +10,17 @@
 		1D3623260D0F684500981E51 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		9D133E4B11D6FC31008CB46B /* gps_thread.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D133E4A11D6FC31008CB46B /* gps_thread.m */; };
+		9D43932611D86DC100DAB52E /* context.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D43931C11D86DC100DAB52E /* context.c */; };
+		9D43932711D86DC100DAB52E /* generate.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D43931D11D86DC100DAB52E /* generate.c */; };
+		9D43932811D86DC100DAB52E /* generator.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D43931E11D86DC100DAB52E /* generator.c */; };
+		9D43932911D86DC100DAB52E /* gmath.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D43931F11D86DC100DAB52E /* gmath.c */; };
+		9D43932A11D86DC100DAB52E /* info.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D43932011D86DC100DAB52E /* info.c */; };
+		9D43932B11D86DC100DAB52E /* parse.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D43932111D86DC100DAB52E /* parse.c */; };
+		9D43932C11D86DC100DAB52E /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D43932211D86DC100DAB52E /* parser.c */; };
+		9D43932D11D86DC100DAB52E /* sentence.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D43932311D86DC100DAB52E /* sentence.c */; };
+		9D43932E11D86DC100DAB52E /* time.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D43932411D86DC100DAB52E /* time.c */; };
+		9D43932F11D86DC100DAB52E /* tok.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D43932511D86DC100DAB52E /* tok.c */; };
+		9D4393EB11D88E8300DAB52E /* shm_gpsinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D4393EA11D88E8300DAB52E /* shm_gpsinfo.c */; };
 		9D704B2311D5A9BC0024037D /* BluetoothContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D704B2211D5A9BC0024037D /* BluetoothContext.mm */; };
 		9D704B2E11D5AA590024037D /* bt_main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D704B2D11D5AA590024037D /* bt_main.m */; };
 		9D704B7D11D5AF900024037D /* mach_srv.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D704B7C11D5AF900024037D /* mach_srv.m */; };
@@ -32,6 +43,18 @@
 		9D133D0511D6C093008CB46B /* btGpsTypes.defs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.mig; path = btGpsTypes.defs; sourceTree = "<group>"; };
 		9D133E4911D6FC31008CB46B /* gps_thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gps_thread.h; sourceTree = "<group>"; };
 		9D133E4A11D6FC31008CB46B /* gps_thread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gps_thread.m; sourceTree = "<group>"; };
+		9D43931C11D86DC100DAB52E /* context.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = context.c; path = nmealib/src/context.c; sourceTree = "<group>"; };
+		9D43931D11D86DC100DAB52E /* generate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = generate.c; path = nmealib/src/generate.c; sourceTree = "<group>"; };
+		9D43931E11D86DC100DAB52E /* generator.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = generator.c; path = nmealib/src/generator.c; sourceTree = "<group>"; };
+		9D43931F11D86DC100DAB52E /* gmath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gmath.c; path = nmealib/src/gmath.c; sourceTree = "<group>"; };
+		9D43932011D86DC100DAB52E /* info.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = info.c; path = nmealib/src/info.c; sourceTree = "<group>"; };
+		9D43932111D86DC100DAB52E /* parse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = parse.c; path = nmealib/src/parse.c; sourceTree = "<group>"; };
+		9D43932211D86DC100DAB52E /* parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = parser.c; path = nmealib/src/parser.c; sourceTree = "<group>"; };
+		9D43932311D86DC100DAB52E /* sentence.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sentence.c; path = nmealib/src/sentence.c; sourceTree = "<group>"; };
+		9D43932411D86DC100DAB52E /* time.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = time.c; path = nmealib/src/time.c; sourceTree = "<group>"; };
+		9D43932511D86DC100DAB52E /* tok.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tok.c; path = nmealib/src/tok.c; sourceTree = "<group>"; };
+		9D4393E911D88E8300DAB52E /* shm_gpsinfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shm_gpsinfo.h; sourceTree = "<group>"; };
+		9D4393EA11D88E8300DAB52E /* shm_gpsinfo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = shm_gpsinfo.c; sourceTree = "<group>"; };
 		9D57823211CE003C003BF173 /* MobileBluetooth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobileBluetooth.h; sourceTree = "<group>"; };
 		9D704B2111D5A9BC0024037D /* BluetoothContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BluetoothContext.h; sourceTree = "<group>"; };
 		9D704B2211D5A9BC0024037D /* BluetoothContext.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BluetoothContext.mm; sourceTree = "<group>"; };
@@ -85,6 +108,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				9D43933011D86DC700DAB52E /* NMEA parser */,
 				9D133E4811D6FC16008CB46B /* GPS */,
 				9DF8078111D5E6F600731C5E /* Bluetooth */,
 				9DF8076F11D5E54F00731C5E /* RPC */,
@@ -111,6 +135,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9DF8077911D5E60800731C5E /* com.msftguy.btgpsserver.plist */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 			);
 			name = Resources;
@@ -134,19 +159,69 @@
 			name = GPS;
 			sourceTree = "<group>";
 		};
-		9DF8076F11D5E54F00731C5E /* RPC */ = {
+		9D43933011D86DC700DAB52E /* NMEA parser */ = {
 			isa = PBXGroup;
 			children = (
-				9DF8077911D5E60800731C5E /* com.msftguy.btgpsserver.plist */,
+				9D43931C11D86DC100DAB52E /* context.c */,
+				9D43931D11D86DC100DAB52E /* generate.c */,
+				9D43931E11D86DC100DAB52E /* generator.c */,
+				9D43931F11D86DC100DAB52E /* gmath.c */,
+				9D43932011D86DC100DAB52E /* info.c */,
+				9D43932111D86DC100DAB52E /* parse.c */,
+				9D43932211D86DC100DAB52E /* parser.c */,
+				9D43932311D86DC100DAB52E /* sentence.c */,
+				9D43932411D86DC100DAB52E /* time.c */,
+				9D43932511D86DC100DAB52E /* tok.c */,
+			);
+			name = "NMEA parser";
+			sourceTree = "<group>";
+		};
+		9D4393EC11D88E8B00DAB52E /* Shared Mem IPC */ = {
+			isa = PBXGroup;
+			children = (
+				9D4393E911D88E8300DAB52E /* shm_gpsinfo.h */,
+				9D4393EA11D88E8300DAB52E /* shm_gpsinfo.c */,
+			);
+			name = "Shared Mem IPC";
+			sourceTree = "<group>";
+		};
+		9D4393ED11D88E9600DAB52E /* Mach Ports */ = {
+			isa = PBXGroup;
+			children = (
+				9D704B7B11D5AF900024037D /* mach_srv.h */,
+				9D704B7C11D5AF900024037D /* mach_srv.m */,
+			);
+			name = "Mach Ports";
+			sourceTree = "<group>";
+		};
+		9D4393EE11D88EAB00DAB52E /* Launchd Checkin */ = {
+			isa = PBXGroup;
+			children = (
+				9DF806E511D5DC0B00731C5E /* launchd.h */,
+				9DF806E611D5DC0B00731C5E /* launchd.m */,
+			);
+			name = "Launchd Checkin";
+			sourceTree = "<group>";
+		};
+		9D4393EF11D88EB700DAB52E /* MIG */ = {
+			isa = PBXGroup;
+			children = (
 				9D704B7E11D5B2D40024037D /* btGps.defs */,
 				9DF8077211D5E5D700731C5E /* srv_api.h */,
 				9DF8077311D5E5D700731C5E /* srv_api.m */,
-				9DF806E511D5DC0B00731C5E /* launchd.h */,
-				9DF806E611D5DC0B00731C5E /* launchd.m */,
-				9D704B7B11D5AF900024037D /* mach_srv.h */,
-				9D704B7C11D5AF900024037D /* mach_srv.m */,
 				9D133B4F11D617D5008CB46B /* BtGpsDefs.h */,
 				9D133D0511D6C093008CB46B /* btGpsTypes.defs */,
+			);
+			name = MIG;
+			sourceTree = "<group>";
+		};
+		9DF8076F11D5E54F00731C5E /* RPC */ = {
+			isa = PBXGroup;
+			children = (
+				9D4393EF11D88EB700DAB52E /* MIG */,
+				9D4393EE11D88EAB00DAB52E /* Launchd Checkin */,
+				9D4393ED11D88E9600DAB52E /* Mach Ports */,
+				9D4393EC11D88E8B00DAB52E /* Shared Mem IPC */,
 			);
 			name = RPC;
 			sourceTree = "<group>";
@@ -226,6 +301,17 @@
 				9DF8073C11D5E04F00731C5E /* bt_helpers.c in Sources */,
 				9DF8077411D5E5D700731C5E /* srv_api.m in Sources */,
 				9D133E4B11D6FC31008CB46B /* gps_thread.m in Sources */,
+				9D43932611D86DC100DAB52E /* context.c in Sources */,
+				9D43932711D86DC100DAB52E /* generate.c in Sources */,
+				9D43932811D86DC100DAB52E /* generator.c in Sources */,
+				9D43932911D86DC100DAB52E /* gmath.c in Sources */,
+				9D43932A11D86DC100DAB52E /* info.c in Sources */,
+				9D43932B11D86DC100DAB52E /* parse.c in Sources */,
+				9D43932C11D86DC100DAB52E /* parser.c in Sources */,
+				9D43932D11D86DC100DAB52E /* sentence.c in Sources */,
+				9D43932E11D86DC100DAB52E /* time.c in Sources */,
+				9D43932F11D86DC100DAB52E /* tok.c in Sources */,
+				9D4393EB11D88E8300DAB52E /* shm_gpsinfo.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,7 +361,7 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = nmealib/include;
 				MIG_GENERATE_CLIENT_SOURCES = NO;
 				MIG_GENERATE_SERVER_SOURCES = YES;
 				OTHER_MIGFLAGS = "-I/Developer/SDKs/MacOSX10.6.sdk/usr/include";

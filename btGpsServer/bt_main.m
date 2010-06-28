@@ -7,10 +7,12 @@
  *
  */
 
+
 #include "bt_main.h"
 #include "bt_helpers.h"
-#include <pthread.h>
 #include "log.h"
+#include "gps_thread.h"
+#include <pthread.h>
 
 char g_pin[BUFSIZ] = "0000";
 char g_macAddr[BUFSIZ] = "";
@@ -108,6 +110,11 @@ void serviceEventCallback(BTDEVICE device, BT_SERVICE_TYPE service, int eventTyp
 			}
 			LogMsg("BTDeviceGetComPortForService OK: %s", buf);
 			bc.connected = true;
+			NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+			NSDictionary* userInfo = [NSDictionary 
+									  dictionaryWithObject:[NSString stringWithFormat:@"%s", buf] 
+									  forKey:GpsTty];
+			[nc postNotificationName:GpsConnectedNotification object:g_gpsThread userInfo:userInfo];  
 		}
 		if (eventType == SERVICE_EVENT_TYPE_DISCONNECTED && event == SERVICE_EVENT_DISCONNECTION_RESULT) {
 			bc.connected = false;

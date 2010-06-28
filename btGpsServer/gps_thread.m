@@ -9,6 +9,9 @@
 
 #include "gps_thread.h"
 #include "log.h"
+#include "shm_gpsinfo.h"
+
+#include <nmea/nmea.h>
 
 #include <pthread.h>
 
@@ -27,14 +30,40 @@ NSString* GpsTty = @"Tty";
 {
 	assert(g_gpsThread == nil);
 	g_gpsThread = self;
-	
+
 	NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
 	[nc addObserver:self 
 		   selector:@selector(gpsConnected:)
 			   name:@"GpsConnected"
 			 object:nil];
 	
+	//NMEA
+	enableNmeaLog(true);
+	nmea_zero_INFO(&nmeaInfo);
+	nmea_parser_init(&nmeaParser);
+	
 	return self;
+}
+
+- (void) dealloc
+{
+	nmea_parser_destroy(&nmeaParser);
+
+	[super dealloc];
+}
+
+- (void) processNmea:(NSData*)data
+{	
+	nmeaInfo.smask = 0;
+	int cParsedPackets = nmea_parse(&nmeaParser, [data bytes], [data length], &nmeaInfo);
+	
+	LogMsg("processNmea: nmea_parse returned %u", cParsedPackets);
+
+	shm_post_update(&nmeaInfo);
+	
+	nmeaTIME* utc = &nmeaInfo.utc;
+	LogMsg("processNmea: nmeaInfo: lat=%f, lon=%f, elev=%f; gmt=%02u:%02u:%02u", 
+		   nmeaInfo.lat, nmeaInfo.lon, nmeaInfo.elv, utc->hour, utc->min, utc->sec); 
 }
 
 - (void) readCompletionNotification:(NSNotification*)notification
@@ -45,8 +74,11 @@ NSString* GpsTty = @"Tty";
 	NSData* readData = [userInfo valueForKey:NSFileHandleNotificationDataItem];
 	NSNumber* error = [userInfo valueForKey:@"NSFileHandleError"];
 
-	NSString* logMessage = [NSString stringWithFormat:@"Data: %@", readData];
-	LogMsg("readCompletionNotification: %s, error: %u", [logMessage cStringUsingEncoding:NSASCIIStringEncoding], [error intValue]);
+	LogMsg("readCompletionNotification: %li bytes, error: %u", 
+		   [readData length], [error intValue]);
+	
+	[self processNmea:readData];
+	
 	if (error == 0) {
 		//read more data
 		[handle readInBackgroundAndNotify]; 
@@ -55,7 +87,6 @@ NSString* GpsTty = @"Tty";
 		[nc removeObserver:self name:NSFileHandleReadCompletionNotification object:handle];
 		[handle release];
 	}
-
 }
 
 
@@ -87,6 +118,28 @@ NSString* GpsTty = @"Tty";
 
 
 @end
+
+
+void nmea_trace_func(const char *str, int str_size)
+{
+	LogMsg("nmea_trace: %.*s", str_size, str);
+}
+
+void nmea_error_func(const char *str, int str_size)
+{
+	LogMsg("NMEA ERROR: %.*s", str_size, str);
+}
+
+void enableNmeaLog(bool enable)
+{
+	if (enable) {
+		nmea_property()->trace_func = &nmea_trace_func;
+		nmea_property()->error_func = &nmea_error_func;
+	} else {
+		nmea_property()->trace_func = nil;
+		nmea_property()->error_func = nil;
+	}
+}
 
 void* gpsThreadProc(void* ctx)
 {
