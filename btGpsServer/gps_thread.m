@@ -14,6 +14,7 @@
 #include <nmea/nmea.h>
 
 #include <pthread.h>
+#include <fcntl.h>
 
 #include <Foundation/NSAutoReleasePool.h>
 #include <Foundation/NSRunLoop.h>
@@ -73,22 +74,23 @@ NSString* GpsTty = @"Tty";
 
 	NSData* readData = [userInfo valueForKey:NSFileHandleNotificationDataItem];
 	NSNumber* error = [userInfo valueForKey:@"NSFileHandleError"];
-
-	LogMsg("readCompletionNotification: %li bytes, error: %u", 
-		   [readData length], [error intValue]);
+	int errorCode = [error intValue];
+	size_t cbRead = [readData length];
 	
-	[self processNmea:readData];
+	LogMsg("readCompletionNotification: %li bytes, error: %u", cbRead, errorCode);
 	
-	if (error == 0) {
-		//read more data
+	if (errorCode == 0 && cbRead != 0) {
+		[self processNmea:readData];
 		[handle readInBackgroundAndNotify]; 
 	} else {
+		LogMsg("readCompletionNotification: closing tty!");
 		NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
 		[nc removeObserver:self name:NSFileHandleReadCompletionNotification object:handle];
+		LogMsg("readCompletionNotification: retain count before release is %u", 
+			   [handle retainCount]);
 		[handle release];
 	}
 }
-
 
 - (void) gpsConnected:(NSNotification*)notification
 {
@@ -102,17 +104,24 @@ NSString* GpsTty = @"Tty";
 
 - (void) openTty:(NSString*)ttyPath 
 {
-	NSFileHandle* handle = [NSFileHandle fileHandleForReadingAtPath:ttyPath];
+	int fd = open([ttyPath cStringUsingEncoding:NSASCIIStringEncoding], O_RDWR | O_NOCTTY);
+	if (fd == -1) {
+		LogMsg("openTty(%s): error 0x%x", [ttyPath cStringUsingEncoding:NSASCIIStringEncoding], errno);		
+		return;
+	}
+	NSFileHandle* handle = [[NSFileHandle alloc] initWithFileDescriptor:fd closeOnDealloc:YES];
 	if (handle == nil) {
 		NSString* logMessage = [NSString stringWithFormat:@"fileHandleForReadingAtPath(%@) failed", ttyPath];
 		LogMsg("openTty: %s", [logMessage cStringUsingEncoding:NSASCIIStringEncoding]);
 		return;
 	}
+
 	NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
 	[nc addObserver:self 
 		   selector:@selector(readCompletionNotification:)
 			   name:NSFileHandleReadCompletionNotification
 			 object:handle];
+
 	[handle readInBackgroundAndNotify];
 }
 
