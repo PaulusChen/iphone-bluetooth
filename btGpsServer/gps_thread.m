@@ -8,6 +8,7 @@
  */
 
 #include "gps_thread.h"
+#include "log.h"
 
 #include <pthread.h>
 
@@ -15,30 +16,68 @@
 #include <Foundation/NSRunLoop.h>
 #include <Foundation/NSPort.h>
 
-@implementation GpsThread
+GpsThread* g_gpsThread;
 
-- (void) threadProc:(NSObject*) ctx 
-{
-	
-}
+NSString* GpsConnectedNotification = @"GpsConnected";
+NSString* GpsTty = @"Tty";
+
+@implementation GpsThread
 
 - (id) init
 {
+	assert(g_gpsThread == nil);
+	g_gpsThread = self;
+	
+	NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+	[nc addObserver:self 
+		   selector:@selector(gpsConnected:)
+			   name:@"GpsConnected"
+			 object:nil];
+	
 	return self;
 }
 
-- (void) readCompletionNotification:(NSFileHandle*)handle
+- (void) readCompletionNotification:(NSNotification*)notification
 {
-	
+	NSFileHandle* handle = [notification object];
+	NSDictionary* userInfo = [notification userInfo];
+
+	NSData* readData = [userInfo valueForKey:NSFileHandleNotificationDataItem];
+	NSNumber* error = [userInfo valueForKey:@"NSFileHandleError"];
+
+	NSString* logMessage = [NSString stringWithFormat:@"Data: %@", readData];
+	LogMsg("readCompletionNotification: %s, error: %u", [logMessage cStringUsingEncoding:NSASCIIStringEncoding], [error intValue]);
+	if (error == 0) {
+		//read more data
+		[handle readInBackgroundAndNotify]; 
+	} else {
+		NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+		[nc removeObserver:self name:NSFileHandleReadCompletionNotification object:handle];
+		[handle release];
+	}
+
 }
 
-- (void) openTty:(const char*)path 
+
+- (void) gpsConnected:(NSNotification*)notification
 {
-	NSFileHandle* handle = [NSFileHandle fileHandleForReadingAtPath:[NSString stringWithCString:path encoding:NSASCIIStringEncoding]];
+	NSDictionary* userInfo = [notification userInfo];
+	NSString* tty = [userInfo valueForKey:GpsTty];
+	NSString* logMessage = [NSString stringWithFormat:@"Tty: %@", tty];
+	
+	LogMsg("gpsConnected: %s", [logMessage cStringUsingEncoding:NSASCIIStringEncoding]);
+	[self openTty:tty];
+}
+
+- (void) openTty:(NSString*)ttyPath 
+{
+	NSFileHandle* handle = [NSFileHandle fileHandleForReadingAtPath:ttyPath];
 	if (handle == nil) {
+		NSString* logMessage = [NSString stringWithFormat:@"fileHandleForReadingAtPath(%@) failed", ttyPath];
+		LogMsg("openTty: %s", [logMessage cStringUsingEncoding:NSASCIIStringEncoding]);
 		return;
 	}
-	NSNotificationCenter* nc = [NSNotificationCenter defaultNotificationCenter];
+	NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
 	[nc addObserver:self 
 		   selector:@selector(readCompletionNotification:)
 			   name:NSFileHandleReadCompletionNotification
@@ -53,20 +92,21 @@ void* gpsThreadProc(void* ctx)
 {
 	NSAutoreleasePool* ap = [[NSAutoreleasePool alloc] init];
 	NSRunLoop* rl = [NSRunLoop currentRunLoop];
-	
+	[[GpsThread alloc] init]; 
+
 	[rl run];
 	[ap release];
 	return NULL;
 }
 
-void startGpsThreadOnce()
+void gpsStartThreadOnce()
 {
 	pthread_t pt;
 	pthread_create(&pt, NULL, gpsThreadProc, NULL);
 }
 
-void startGpsThread()
+void gpsStartThread()
 {
 	pthread_once_t gpsThreadOnce = PTHREAD_ONCE_INIT;
-	pthread_once(&gpsThreadOnce, startGpsThreadOnce);
+	pthread_once(&gpsThreadOnce, gpsStartThreadOnce);
 }
