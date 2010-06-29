@@ -27,7 +27,7 @@
 
 
 void usage(const char* progName) {
-	printf("Usage: %s [-n <device name>][-p <pin code>][-a <mac address>]\n", progName);
+	printf("Usage: %s [-n <device name>][-p <pin code>][-a <mac address>][-w][-c][-d]\n", progName);
 	exit (1);
 }
 
@@ -36,11 +36,12 @@ char g_devName[BUFSIZ] = "";
 char g_macAddr[BUFSIZ] = "";
 
 boolean_t g_wait = FALSE;
+boolean_t g_disconnect = FALSE;
 
 void parseOptions(int argc, char *argv[])
 {
 	char ch;
-	while ((ch = getopt(argc, argv, "p:n:a:w")) != -1) {
+	while ((ch = getopt(argc, argv, "p:n:a:wcd")) != -1) {
 		switch (ch) {
 			case 'p':
 				strcpy(g_pin, optarg);
@@ -53,6 +54,12 @@ void parseOptions(int argc, char *argv[])
 				break;
 			case 'w':
 				g_wait = TRUE;
+				break;
+			case 'd':
+				g_disconnect = TRUE;
+				break;
+			case 'c':
+				g_disconnect = FALSE;
 				break;
 			default:
 				usage(*argv);
@@ -107,13 +114,13 @@ void client_test(int argc, char *argv[])
 		LogMsg("get_server_port() failed: 0x%x", result);
 		return;
 	}
-	int ver;
-	result = get_version(serverPort, &ver);
-	if (result != KERN_SUCCESS) {
-		LogMsg("set_pin get_version, 0x%x", result);
-	} else {
-		LogMsg("get_version() = %u", ver);
-	}
+//	int ver;
+//	result = get_version(serverPort, &ver);
+//	if (result != KERN_SUCCESS) {
+//		LogMsg("set_pin get_version, 0x%x", result);
+//	} else {
+//		LogMsg("get_version() = %u", ver);
+//	}
 	
 	if (*g_pin) {
 		result = set_pin(serverPort, g_pin, strlen(g_pin) + 1);
@@ -133,17 +140,17 @@ void client_test(int argc, char *argv[])
 			LogMsg("set_name failed, 0x%x", result);
 		}
 	}
-	result = set_need_gps(serverPort, TRUE);
+	result = set_need_gps(serverPort, !g_disconnect);
 	if (result != KERN_SUCCESS) {
 		LogMsg("set_need_gps failed, 0x%x", result);
 	}
 	
-	result = get_version(serverPort, &ver);
-	if (result != KERN_SUCCESS) {
-		LogMsg("set_pin get_version, 0x%x", result);
-	} else {
-		LogMsg("get_version() = %u", ver);
-	}
+//	result = get_version(serverPort, &ver);
+//	if (result != KERN_SUCCESS) {
+//		LogMsg("set_pin get_version, 0x%x", result);
+//	} else {
+//		LogMsg("get_version() = %u", ver);
+//	}
 	if (g_wait) {
 		wait_for_notifications();
 	}
