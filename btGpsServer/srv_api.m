@@ -9,6 +9,7 @@
 
 #include "srv_api.h"
 #include "bt_main.h"
+#include "BluetoothContext.h"
 #include "log.h"
 
 
@@ -24,7 +25,9 @@ kern_return_t srv_get_version(mach_port_t server, int32_t* pVersion)
 kern_return_t srv_set_pin(mach_port_t server, str80 pin, mach_msg_type_number_t pinCnt)
 {
 	LogMsg("srv_set_pin(%s) called", pin);
-	strncpy(g_pin, pin, sizeof(g_pin));
+	[BluetoothContext	 
+	 postNotificationWithKey:BtPinKey
+	 value:[NSString stringWithFormat:@"%.*s",pinCnt, pin]];
 	return KERN_SUCCESS;
 }
 
@@ -32,7 +35,9 @@ kern_return_t srv_set_pin(mach_port_t server, str80 pin, mach_msg_type_number_t 
 kern_return_t srv_set_name(mach_port_t server, str80 name, mach_msg_type_number_t nameCnt)
 {
 	LogMsg("srv_set_name(%s) called", name);
-	strncpy(g_devName, name, sizeof(g_devName));
+	[BluetoothContext	 
+	 postNotificationWithKey:BtNameKey
+	 value:[NSString stringWithFormat:@"%.*s", nameCnt, name]];
 	return KERN_SUCCESS;
 }
 
@@ -40,13 +45,18 @@ kern_return_t srv_set_name(mach_port_t server, str80 name, mach_msg_type_number_
 kern_return_t srv_set_addr(mach_port_t server, str80 addr, mach_msg_type_number_t addrCnt)
 {
 	LogMsg("srv_set_addr(%s) called", addr);
-	strncpy(g_macAddr, addr, sizeof(g_macAddr));
+	[BluetoothContext	 
+	 postNotificationWithKey:BtAddressKey
+	 value:[NSString stringWithFormat:@"%.*s", addrCnt, addr]];
 	return KERN_SUCCESS;
 }
 
 kern_return_t srv_set_need_gps(mach_port_t server, boolean_t needGps)
 {
 	LogMsg("srv_set_need_gps(%s)", needGps ? "TRUE" : "FALSE");
-	g_targetState = needGps;
+	BtState targetState = needGps ? BtStateConnected : BtStatePowerKeep; 
+	[BluetoothContext	 postNotificationWithKey:BtTargetStateKey
+										 value:[NSNumber 
+												numberWithInt:targetState]];
 	return KERN_SUCCESS;
 }

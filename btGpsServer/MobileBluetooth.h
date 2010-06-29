@@ -20,7 +20,10 @@ typedef int BTDeviceAttributes;
 typedef int BTServiceMask;
 typedef BOOL BTBool;
 typedef int BTResult;
-typedef int BTSessionEvent;
+typedef enum {
+	BTSessionEventConnectedSession = 0,
+	BTSessionEventDisconnectedSession = 2
+} BTSessionEvent;
 
 typedef void *BTSESSION, **PBTSESSION;
 
@@ -71,6 +74,7 @@ typedef enum BT_PAIRING_AGENT_STATUS BT_PAIRING_AGENT_STATUS;
 enum BT_SERVICE_TYPE
 {
 	BT_SERVICE_BRAILLE = 0x2000,
+	BT_SERVICE_ANY = 0xFFFFffff,
 };
 
 typedef enum BT_SERVICE_TYPE BT_SERVICE_TYPE;
@@ -155,7 +159,7 @@ enum SERVICE_EVENT
 
 typedef enum SERVICE_EVENT SERVICE_EVENT;
 
-typedef void (*SERVICE_EVENT_CALLBACK)(BTDEVICE device, BT_SERVICE_TYPE service, int eventType, SERVICE_EVENT event, int result ,void* ctx);
+typedef void (*SERVICE_EVENT_CALLBACK)(BTDEVICE device, BT_SERVICE_TYPE service, SERVICE_EVENT_TYPE eventType, SERVICE_EVENT event, int result ,void* ctx);
 
 
 #ifdef __cplusplus
@@ -172,11 +176,16 @@ int BTLocalDeviceGetModulePower(BTLOCALDEVICE localDevice, int unk_must_be_1, in
 
 int BTSessionAttachWithRunLoopAsync(CFRunLoopRef runLoop, const char* sessionName, PSESSION_CALLBACKS pCallbacks, void* ctx, PBTSESSION pSession);
 
+int BTSessionDetachWithRunLoopAsync(CFRunLoopRef runLoop, BTSESSION session);
+	
 int BTDiscoveryAgentCreate(BTSESSION session, PDISCOVERY_CALLBACKS pCallbacks, void* ctx, PBTDISCOVERYAGENT pAgent);
 
 int BTDiscoveryAgentStartScan(BTDISCOVERYAGENT agent, int magic1, int magic2);
 
+int BTDiscoveryAgentStopScan(BTDISCOVERYAGENT agent);
 
+int	BTDiscoveryAgentDestroy(BTDISCOVERYAGENT agent);
+	
 int BTDeviceGetSupportedServices(BTDEVICE device, int* svc);
 
 int BTDeviceGetName(BTDEVICE device, char name[0x200]);
@@ -212,9 +221,10 @@ int BTPairingAgentSetPincode(PAIRING_AGENT pairingAgent, BTDEVICE device, const 
 
 int BTPairingAgentCancelPairing(PAIRING_AGENT pairingAgent);
 
-
 int BTServiceAddCallbacks(BTSESSION session, SERVICE_EVENT_CALLBACK callback, void* ctx);
 
+int BTFrameworkIsServerUp(); //0, 1, 9 ...
+	
 #ifdef __cplusplus
 }
 #endif
