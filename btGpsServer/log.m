@@ -10,7 +10,7 @@
 #include <stdarg.h>
 #include "log.h"
 
-void LogOperation(char* fmt,...)
+void LogOperation(const char* fmt,...)
 {
 	va_list valist;
 	va_start(valist, fmt);
@@ -20,7 +20,7 @@ void LogOperation(char* fmt,...)
 	va_end(valist);
 }
 
-void LogMsg(char* fmt,...)
+void LogMsg(const char* fmt,...)
 {
 	va_list valist;
 	va_start(valist, fmt);
