@@ -28,6 +28,34 @@ void pairingAuthorizationCallback(PAIRING_AGENT agent, BTDEVICE device, BTServic
 void pairingUserConfirmationCallback(PAIRING_AGENT agent, BTDEVICE device, uint32_t unk1, BTBool unk2, void* ctx);
 void pairingPasskeyDisplayCallback(PAIRING_AGENT agent, BTDEVICE device, uint32_t unk1, void* ctx);
 
+const char* stateString(BtState state)
+{
+	static char buf[BUFSIZ];
+	switch (state) {
+		case BtStatePowerKeep:
+			return "PowerKeep";
+			break;
+		case BtStatePowerOff:
+			return "PowerOff";
+			break;
+		case BtStatePowerOn:
+			return "PowerOn";
+			break;
+		case BtStateScan:
+			return "Scan";
+			break;
+		case BtStateConnecting:
+			return "Connecting";
+			break;
+		case BtStateConnected:
+			return "Connected";
+			break;
+		default:
+			snprintf(buf, sizeof(buf), "%u", state);
+			return buf;
+			break;
+	}
+}
 
 @implementation BluetoothContext
 
@@ -106,12 +134,14 @@ void pairingPasskeyDisplayCallback(PAIRING_AGENT agent, BTDEVICE device, uint32_
 		if (targetState == BtStateScan) {
 			[foundDevices removeAllObjects];
 		}
-		[self onStateChange];
+		[self onStateChange:currentState];
 	}	
 }
 
-- (void) onStateChange
+- (void) onStateChange:(BtState)newState
 {
+	LogMsg("onStateChange: %s -> %s", stateString(currentState), stateString(newState));
+	currentState = newState;
 	int direction = currentState > targetState ? -1 : currentState == targetState ? 0 : 1;
 	switch (currentState) {
 		case BtStatePowerKeep:
@@ -173,17 +203,25 @@ void pairingPasskeyDisplayCallback(PAIRING_AGENT agent, BTDEVICE device, uint32_
 - (void) fsmScan2PowerOn
 {
 	[self setScanEnabled:NO];	
+	[self onStateChange:BtStatePowerOn];
 }
 
 - (void) fsmScan2Connecting
 {
+	[self setScanEnabled:NO];	
 	[self connectDisconnect:YES];
 }
 
 - (void) fsmConnecting2Scan
 {
 	[self connectDisconnect:NO];
-	[self setScanEnabled:YES];	
+	if (targetState == BtStateScan) {
+		[self setScanEnabled:YES];
+	} else {
+		[self setScanEnabled:NO];		
+		//going down; skip scan state
+		[self onStateChange:BtStateScan];
+	}
 }
 
 - (void) fsmConnecting2Connected
@@ -237,7 +275,7 @@ void pairingPasskeyDisplayCallback(PAIRING_AGENT agent, BTDEVICE device, uint32_
 			LogMsg("setScanEnabled: BTDiscoveryAgentStopScan error: 0x%x", err);
 			return;
 		}	
-		LogMsg("setScanEnabled: BTDiscoveryAgentStartScan OK");
+		LogMsg("setScanEnabled: BTDiscoveryAgentStopScan OK");
 	}
 }
 
@@ -398,16 +436,16 @@ void pairingPasskeyDisplayCallback(PAIRING_AGENT agent, BTDEVICE device, uint32_
 	
 	bool powerState = [self getPowerState];
 	LogMsg("Power state: %s", powerState ? "ON" : "OFF");
-	currentState = powerState ? BtStatePowerOn : BtStatePowerOff;
+	BtState newState = powerState ? BtStatePowerOn : BtStatePowerOff;
 	
-	if (currentState) {
+	if (powerState != 0) {
 		[self startStopPairingAgent:YES];
 	}
 
 	if (targetState == BtStatePowerKeep) {
-		targetState = currentState;
+		targetState = newState;
 	}
-	[self onStateChange];
+	[self onStateChange:newState];
 }
 
 - (void) onSessionDisconnected
@@ -478,16 +516,17 @@ static const NSString* BtSessionKey = @"BtSessionKey";
 - (void) onLocalPowerChanged
 {
 	bool newPowerState = [self getPowerState];
+	BtState newState = currentState;
 	if (newPowerState) {
 		[self startStopPairingAgent:YES];
 		if (currentState < BtStatePowerOn) {
-			currentState = BtStatePowerOn;
+			newState = BtStatePowerOn;
 		}
 	} else {
 		[self startStopPairingAgent:NO];
-		currentState = BtStatePowerOff;
+		newState = BtStatePowerOff;
 	}
-	[self onStateChange];
+	[self onStateChange:newState];
 }
 
 - (BOOL) tryCreateTargetDevice
@@ -513,8 +552,7 @@ static const NSString* BtSessionKey = @"BtSessionKey";
 	} else {
 		LogMsg("BTDeviceFromAddress OK: 0x%p", btDevice);
 		device = btDevice;
-		currentState = BtStateConnecting;
-		[self onStateChange];
+		[self onStateChange:BtStateConnecting];
 		return YES;
 	}
 }
@@ -534,20 +572,19 @@ static const NSString* BtSessionKey = @"BtSessionKey";
 								  dictionaryWithObject:[NSString stringWithFormat:@"%s", buf] 
 								  forKey:GpsTty];
 		[nc postNotificationName:GpsConnectedNotification object:g_gpsThread userInfo:userInfo];  
-		currentState = BtStateConnected;
-		[self onStateChange];
+		[self onStateChange:BtStateConnected];
 	} else if (result != 0 && 
 			   (serviceType == BT_SERVICE_BRAILLE || serviceType == BT_SERVICE_ANY)) {
-		currentState = BtStateConnecting;
-		[self onStateChange];
+		if (currentState == BtStateConnected || currentState == BtStateConnecting) {
+			[self onStateChange:BtStateConnecting];
+		}
 	}
 }
 
 - (void) onServiceDisconnected:(BT_SERVICE_TYPE)serviceType result:(int)result
 {
-	if (serviceType == BT_SERVICE_BRAILLE) {
-		currentState = BtStateConnecting;
-		[self onStateChange];
+	if (serviceType == BT_SERVICE_BRAILLE && currentState == BtStateConnected) {
+		[self onStateChange:BtStateConnecting];
 	}
 }
 
@@ -565,17 +602,19 @@ static const NSString* BtSessionKey = @"BtSessionKey";
 
 - (void) onDiscoveryStarted
 {
-	currentState = BtStateScan;
-	[self onStateChange];
-	[self postScanNotification];
+	if (currentState != BtStateConnected) {
+		[self onStateChange:BtStateScan];
+		[self postScanNotification];
+	}
 }
 
 - (void) onDiscoveryStopped
 {
-	if (currentState == BtStateScan) {
-		currentState = BtStatePowerOn; 
+	BtState newState = currentState;
+	if (newState == BtStateScan) {
+		newState = BtStatePowerOn; 
 	}
-	[self onStateChange];
+	[self onStateChange:newState];
 	[self postScanNotification];
 }
 
@@ -617,8 +656,9 @@ static const NSString* BtSessionKey = @"BtSessionKey";
 		LogMsg("BTDeviceGetSupportedServices(): 0x%x", svc);
 	}
 	
-	currentState = BtStateConnecting;
-	[self onStateChange];
+	if (currentState == BtStateScan) {
+		[self onStateChange:BtStateConnecting];
+	}
 }
 
 - (void) onPairingStatus:(BT_PAIRING_AGENT_STATUS)status
@@ -628,9 +668,7 @@ static const NSString* BtSessionKey = @"BtSessionKey";
 		case BT_PAIRING_AGENT_STARTED:
 			break;
 		case BT_PAIRING_AGENT_STOPPED:
-//			if (currentState == BtStatePairing) {
-//				currentState = BtStateConnecting;
-//			}
+
 			break;
 		case BT_PAIRING_ATTEMPT_COMPLETE:
 			break;

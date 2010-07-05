@@ -56,7 +56,7 @@
 
 
 
-- (void) onStateChange;
+- (void) onStateChange:(BtState)newState;
 
 - (void) fsmPowerOff2On;
 - (void) fsmPowerOn2Off;
