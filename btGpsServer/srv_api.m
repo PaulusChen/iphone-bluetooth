@@ -11,6 +11,10 @@
 #include "bt_main.h"
 #include "BluetoothContext.h"
 #include "log.h"
+#include "btGpsServer.h"
+
+#include <mach/mach.h>
+#include <mach/vm_map.h>
 
 
 /* get version */
@@ -51,12 +55,29 @@ kern_return_t srv_set_addr(mach_port_t server, str80 addr, mach_msg_type_number_
 	return KERN_SUCCESS;
 }
 
-kern_return_t srv_set_need_gps(mach_port_t server, boolean_t needGps)
+kern_return_t srv_set_state(mach_port_t server, int32_t state)
 {
-	LogMsg("srv_set_need_gps(%s)", needGps ? "TRUE" : "FALSE");
-	BtState targetState = needGps ? BtStateConnected : BtStatePowerKeep; 
-	[BluetoothContext	 postNotificationWithKey:BtTargetStateKey
-										 value:[NSNumber 
-												numberWithInt:targetState]];
+	LogMsg("srv_set_state(%u)", state);
+	[BluetoothContext
+		postNotificationWithKey:BtTargetStateKey
+		value:[NSNumber numberWithInt:state]];
 	return KERN_SUCCESS;
+}
+
+kern_return_t srv_get_scan_results(mach_port_t server, vm_address_t *scan_results, mach_msg_type_number_t *scan_resultsCnt)
+{
+	kern_return_t result = KERN_SUCCESS;
+	NSData* archivedScanResults = [NSKeyedArchiver archivedDataWithRootObject:[g_bc foundDevices]];
+	if (archivedScanResults == nil) {
+		return KERN_FAILURE;
+	}
+	vm_address_t addr = 0;
+	size_t dataSize = [archivedScanResults length];
+	result = vm_allocate(mach_task_self(), &addr, dataSize, 1);
+	if (result == KERN_SUCCESS) { 
+		[archivedScanResults getBytes:(void*)addr];
+		*scan_results = addr;
+		*scan_resultsCnt = dataSize;
+	}
+	return result;
 }

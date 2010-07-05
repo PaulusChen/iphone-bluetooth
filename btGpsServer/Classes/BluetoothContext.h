@@ -9,15 +9,15 @@
 #import <Foundation/Foundation.h>
 #include "MobileBluetooth.h"
 
-typedef enum {
-	BtStatePowerKeep,
-	BtStatePowerOff,
-	BtStatePowerOn,
-	BtStateScan,
-	BtStateConnecting,
-//	BtStatePairing,
-	BtStateConnected,
-} BtState;
+//typedef enum {
+//	BtStatePowerKeep,
+//	BtStatePowerOff,
+//	BtStatePowerOn,
+//	BtStateScan,
+//	BtStateConnecting,
+////	BtStatePairing,
+//	BtStateConnected,
+//} BtState;
 
 #define BluetoothConfigChangeNotification @"BluetoothConfigChangeNotification"
 
@@ -38,6 +38,7 @@ typedef enum {
 	@private NSString* targetName;
 	@private NSString* targetAddr;
 	@private NSString* targetPin;
+	@private NSMutableDictionary* foundDevices;
 	
 	@private int magic;
 }
@@ -87,6 +88,7 @@ typedef enum {
 @property (readwrite, retain) NSString* targetName;
 @property (readwrite, retain) NSString* targetAddr;
 @property (readwrite, retain) NSString* targetPin;
+@property (readonly,  retain) NSDictionary* foundDevices;
 
 @property (readwrite, assign) int magic;
 

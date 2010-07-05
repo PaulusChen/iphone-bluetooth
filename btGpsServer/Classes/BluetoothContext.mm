@@ -39,7 +39,7 @@ void pairingPasskeyDisplayCallback(PAIRING_AGENT agent, BTDEVICE device, uint32_
 @synthesize targetName;
 @synthesize targetAddr;
 @synthesize targetPin;
-
+@synthesize foundDevices;
 
 @synthesize magic;
 
@@ -65,7 +65,8 @@ void pairingPasskeyDisplayCallback(PAIRING_AGENT agent, BTDEVICE device, uint32_
 	targetName = @"";
 	targetAddr = @"";
 	targetPin = @"";
-	
+	foundDevices = [[NSMutableDictionary alloc] init];
+
 	magic = 0xdeadbeef;
 	
 	NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
@@ -75,6 +76,12 @@ void pairingPasskeyDisplayCallback(PAIRING_AGENT agent, BTDEVICE device, uint32_
 				name:BluetoothConfigChangeNotification
 			  object:nil];
 	return self;
+}
+
+- (void) dealloc
+{
+	[foundDevices release];
+	[super dealloc];
 }
 
 - (void) BluetoothConfigChanged:(NSNotification*)notification
@@ -96,6 +103,9 @@ void pairingPasskeyDisplayCallback(PAIRING_AGENT agent, BTDEVICE device, uint32_
 	if (newTsVal != nil) {
 		BtState newTargetState = (BtState)[newTsVal intValue];
 		targetState = newTargetState;
+		if (targetState == BtStateScan) {
+			[foundDevices removeAllObjects];
+		}
 		[self onStateChange];
 	}	
 }
@@ -131,13 +141,6 @@ void pairingPasskeyDisplayCallback(PAIRING_AGENT agent, BTDEVICE device, uint32_
 			} else if (direction > 0) {
 				[self fsmConnecting2Connected];
 			}
-//		case BtStatePairing:
-//			if (direction < 0) {
-//				[self fsmPairing2Connecting];
-//			} else if (direction > 0) {
-//				[self fsmPairing2Connected];
-//			}
-//			break;
 		case BtStateConnected:
 			if (direction < 0) {
 				[self fsmConnected2Connecting];
@@ -180,6 +183,7 @@ void pairingPasskeyDisplayCallback(PAIRING_AGENT agent, BTDEVICE device, uint32_
 - (void) fsmConnecting2Scan
 {
 	[self connectDisconnect:NO];
+	[self setScanEnabled:YES];	
 }
 
 - (void) fsmConnecting2Connected
@@ -208,7 +212,7 @@ void pairingPasskeyDisplayCallback(PAIRING_AGENT agent, BTDEVICE device, uint32_
 {	
 	bool currentPowerState = [self getPowerState];
 	if (targetPowerState != currentPowerState) {
-		int err = BTLocalDeviceSetModulePower(localDevice, targetPowerState ? 1 : 0);
+		int err = BTLocalDeviceSetModulePower(localDevice, 1, targetPowerState ? POWER_STATE_ON : POWER_STATE_OFF);
 		if (err !=  0) {
 			LogMsg("setPowerState: BTLocalDeviceSetModulePower(%i->%i) error: 0x%x", 
 				   currentPowerState, targetPowerState, err);
@@ -547,10 +551,23 @@ static const NSString* BtSessionKey = @"BtSessionKey";
 	}
 }
 
+- (void) postScanNotification
+{
+	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), 
+										 BtGpsScanNotificationName, 
+										 nil, nil, TRUE);
+}
+
+- (void) addDeviceAddr:(NSString*)address name:(NSString*)name
+{
+	[foundDevices setValue:name forKey:address];
+}
+
 - (void) onDiscoveryStarted
 {
 	currentState = BtStateScan;
 	[self onStateChange];
+	[self postScanNotification];
 }
 
 - (void) onDiscoveryStopped
@@ -559,29 +576,35 @@ static const NSString* BtSessionKey = @"BtSessionKey";
 		currentState = BtStatePowerOn; 
 	}
 	[self onStateChange];
+	[self postScanNotification];
 }
 
 - (void) onDiscoveryFoundDevice:(BTDEVICE)foundDevice event:(BT_DISCOVERY_EVENT)event attributes:(BTDeviceAttributes)attr
 {
 	int svc;
-	char name[BUFSIZ] = "";
-	int err = BTDeviceGetName(foundDevice, name);
+	char cName[BUFSIZ] = "";
+	int err = BTDeviceGetName(foundDevice, cName);
 	if (err != 0) {
 		LogMsg("BTDeviceGetName error: %X", err);
 	} else {
-		LogMsg("BTDeviceGetName()=%s", name);	
+		LogMsg("BTDeviceGetName()=%s", cName);	
 	}
+	NSString* name = [NSString stringWithCString:cName encoding:NSASCIIStringEncoding];
 	
-	char addr[BUFSIZ] = "";
-	err = BTDeviceGetAddressString(foundDevice, addr, sizeof(addr));
+	char cAddr[BUFSIZ] = "";
+	err = BTDeviceGetAddressString(foundDevice, cAddr, sizeof(cAddr));
 	if (err != 0) {
 		LogMsg("BTDeviceGetAddressString error: 0x%x", err);
 	} else {
-		LogMsg("BTDeviceGetAddressString()=%s", addr);	
+		LogMsg("BTDeviceGetAddressString()=%s", cAddr);	
 	}
+	NSString* address = [NSString stringWithCString:cAddr encoding:NSASCIIStringEncoding];
+
+	[self addDeviceAddr:address name:name];
 	
-	if (![self isTargetDeviceName:[NSString stringWithCString:name encoding:NSASCIIStringEncoding]
-						addr:[NSString stringWithCString:addr encoding:NSASCIIStringEncoding]]) {
+	[self postScanNotification];
+
+	if (![self isTargetDeviceName:name addr:address]) {
 		return;
 	}
 
@@ -710,7 +733,6 @@ void discoveryStatusCallback(BTDISCOVERYAGENT agent, BT_DISCOVERY_STATUS status,
 	} else if (status == BT_DISCOVERY_STATUS_FINISHED) {
 		[bc onDiscoveryStopped];	
 	}
-
 }
 
 void discoveryEventCallback(BTDISCOVERYAGENT agent, BT_DISCOVERY_EVENT event, 

@@ -161,6 +161,13 @@ typedef enum SERVICE_EVENT SERVICE_EVENT;
 
 typedef void (*SERVICE_EVENT_CALLBACK)(BTDEVICE device, BT_SERVICE_TYPE service, SERVICE_EVENT_TYPE eventType, SERVICE_EVENT event, int result ,void* ctx);
 
+enum MODULE_POWER_STATE
+{
+	POWER_STATE_OFF = 0,
+	POWER_STATE_ON = -1,
+};
+
+typedef enum MODULE_POWER_STATE MODULE_POWER_STATE;
 
 #ifdef __cplusplus
 extern "C" {
@@ -170,7 +177,7 @@ int BTLocalDeviceGetDefault(BTSESSION session, BTLOCALDEVICE* pLocalDevice);
 
 int BTLocalDeviceAddCallbacks(BTLOCALDEVICE localDevice, PLOCAL_DEVICE_CALLBACKS pCallbacks, void* ctx);
 
-int BTLocalDeviceSetModulePower(BTLOCALDEVICE localDevice, BOOL powerOn);
+int BTLocalDeviceSetModulePower(BTLOCALDEVICE localDevice, int unk_must_be_1, MODULE_POWER_STATE powerState);
 
 int BTLocalDeviceGetModulePower(BTLOCALDEVICE localDevice, int unk_must_be_1, int* powerStatus);
 

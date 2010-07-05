@@ -11,7 +11,7 @@ routine get_version(
 			server : mach_port_t;
 		out version : int32_t);
 		
-/* set PIN code */
+/* set pairing PIN code */
 routine set_pin(
 			server : mach_port_t;
 			pin : str80);
@@ -21,12 +21,18 @@ routine set_name(
 			server : mach_port_t;
 			name : str80);
 			
-/* set PIN code */
+/* set target device address */
 routine set_addr(
 			server : mach_port_t;
 			addr : str80);
 			
-/* set PIN code */
-routine set_need_gps(
+/* set server state */
+routine set_state(
 			server : mach_port_t;
-			needGps : boolean_t);
+			state : int32_t);
+
+routine get_scan_results(
+			server : mach_port_t;
+	out		scan_results : some_memory_t, dealloc);
+
+			

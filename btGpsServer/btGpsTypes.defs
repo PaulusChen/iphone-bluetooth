@@ -7,3 +7,6 @@
 /* passed by value */
 
 type str80 = array [*:80] of char;
+
+type some_memory_t = ^array[] of MACH_MSG_TYPE_BYTE
+	ctype: vm_address_t;
