@@ -9,7 +9,7 @@
 
 #include "client_test.h"
 
-#include "api_wrappers.h"
+#include "client_helper.h"
 #include "log.h"
 #include "btGps.h"
 
@@ -35,13 +35,15 @@ char g_pin[BUFSIZ] = "";
 char g_devName[BUFSIZ] = "";
 char g_macAddr[BUFSIZ] = "";
 
+mach_port_t g_serverPort;
+
 boolean_t g_wait = FALSE;
-boolean_t g_disconnect = FALSE;
+BtState g_targetState = BtStatePowerKeep;
 
 void parseOptions(int argc, char *argv[])
 {
 	char ch;
-	while ((ch = getopt(argc, argv, "p:n:a:wcd")) != -1) {
+	while ((ch = getopt(argc, argv, "p:n:a:wcds")) != -1) {
 		switch (ch) {
 			case 'p':
 				strcpy(g_pin, optarg);
@@ -56,18 +58,39 @@ void parseOptions(int argc, char *argv[])
 				g_wait = TRUE;
 				break;
 			case 'd':
-				g_disconnect = TRUE;
+				g_targetState = BtStatePowerOff;
 				break;
 			case 'c':
-				g_disconnect = FALSE;
+				g_targetState = BtStateConnected;
 				break;
+			case 's':
+				g_targetState = BtStateScan;
+				break;			
 			default:
 				usage(*argv);
 		}
 	}
 }
 
-void gpsinfo_notification (
+void gpsscan_notification(
+						   CFNotificationCenterRef center,
+						   void *observer,
+						   CFStringRef name,
+						   const void *object,
+						   CFDictionaryRef userInfo
+						   )
+{
+	vm_address_t addr; 
+	mach_msg_type_number_t size;
+	kern_return_t result = get_scan_results(g_serverPort, &addr, &size);
+	if (result == KERN_SUCCESS) {
+		printf("Scan results:\n");
+		print_scan_results((void*)addr, size);
+		vm_deallocate(mach_task_self(), addr, size);
+	}
+}
+
+void gpsinfo_notification(
 						 CFNotificationCenterRef center,
 						 void *observer,
 						 CFStringRef name,
@@ -96,6 +119,10 @@ void gpsinfo_notification (
 void wait_for_notifications()
 {
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), 
+									NULL, gpsscan_notification, 
+									BtGpsScanNotificationName, nil, 
+									CFNotificationSuspensionBehaviorDrop);
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), 
 									NULL, gpsinfo_notification, 
 									BtGpsNotificationName, nil, 
 									CFNotificationSuspensionBehaviorDrop);
@@ -107,51 +134,39 @@ void wait_for_notifications()
 void client_test(int argc, char *argv[])
 {
 	parseOptions(argc, argv);
-	mach_port_t serverPort;
 	kern_return_t result;
-	result = get_server_port(&serverPort);
+	result = get_server_port(&g_serverPort);
 	if (result != KERN_SUCCESS) {
 		LogMsg("get_server_port() failed: 0x%x", result);
 		return;
 	}
-//	int ver;
-//	result = get_version(serverPort, &ver);
-//	if (result != KERN_SUCCESS) {
-//		LogMsg("set_pin get_version, 0x%x", result);
-//	} else {
-//		LogMsg("get_version() = %u", ver);
-//	}
 	
 	if (*g_pin) {
-		result = set_pin(serverPort, g_pin, strlen(g_pin) + 1);
+		result = set_pin(g_serverPort, g_pin, strlen(g_pin) + 1);
 		if (result != KERN_SUCCESS) {
 			LogMsg("set_pin failed, 0x%x", result);
 		}
 	}
 	if (*g_macAddr) {
-		result = set_addr(serverPort, g_macAddr, strlen(g_macAddr) + 1);
+		result = set_addr(g_serverPort, g_macAddr, strlen(g_macAddr) + 1);
 		if (result != KERN_SUCCESS) {
 			LogMsg("set_addr failed, 0x%x", result);
 		}
 	}
 	if (*g_devName) {
-		result = set_name(serverPort, g_devName, strlen(g_devName) + 1);
+		result = set_name(g_serverPort, g_devName, strlen(g_devName) + 1);
 		if (result != KERN_SUCCESS) {
 			LogMsg("set_name failed, 0x%x", result);
 		}
 	}
-	result = set_need_gps(serverPort, !g_disconnect);
-	if (result != KERN_SUCCESS) {
-		LogMsg("set_need_gps failed, 0x%x", result);
+	if (g_targetState != BtStatePowerKeep) {
+		result = set_state(g_serverPort, g_targetState);
+		if (result != KERN_SUCCESS) {
+			LogMsg("set_state failed, 0x%x", result);
+		}
 	}
 	
-//	result = get_version(serverPort, &ver);
-//	if (result != KERN_SUCCESS) {
-//		LogMsg("set_pin get_version, 0x%x", result);
-//	} else {
-//		LogMsg("get_version() = %u", ver);
-//	}
-	if (g_wait) {
+	if (g_wait || g_targetState == BtStateScan) {
 		wait_for_notifications();
 	}
 }

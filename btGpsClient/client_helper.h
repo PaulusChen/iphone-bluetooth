@@ -10,3 +10,5 @@
 #include <mach/mach.h>
 
 kern_return_t get_server_port(mach_port_t* serverPort);
+
+void print_scan_results(void* buf, size_t cbBuf);

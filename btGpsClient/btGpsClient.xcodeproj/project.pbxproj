@@ -10,7 +10,7 @@
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		9D133B2811D60FFB008CB46B /* btGps.defs in Sources */ = {isa = PBXBuildFile; fileRef = 9D133B2711D60FFB008CB46B /* btGps.defs */; };
-		9D133B4511D61380008CB46B /* api_wrappers.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D133B4411D61380008CB46B /* api_wrappers.c */; };
+		9D133B4511D61380008CB46B /* client_helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D133B4411D61380008CB46B /* client_helper.m */; };
 		9D133C5B11D64FF9008CB46B /* client_test.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D133C5A11D64FF9008CB46B /* client_test.c */; };
 		9D133C8711D651FF008CB46B /* log.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D133C8611D651FF008CB46B /* log.c */; };
 /* End PBXBuildFile section */
@@ -22,8 +22,8 @@
 		32CA4F630368D1EE00C91783 /* btGpsClient_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = btGpsClient_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* btGpsClient-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "btGpsClient-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 		9D133B2711D60FFB008CB46B /* btGps.defs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.mig; name = btGps.defs; path = ../btGpsServer/btGps.defs; sourceTree = SOURCE_ROOT; };
-		9D133B4311D61380008CB46B /* api_wrappers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = api_wrappers.h; sourceTree = "<group>"; };
-		9D133B4411D61380008CB46B /* api_wrappers.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = api_wrappers.c; sourceTree = "<group>"; };
+		9D133B4311D61380008CB46B /* client_helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client_helper.h; sourceTree = "<group>"; };
+		9D133B4411D61380008CB46B /* client_helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = client_helper.m; sourceTree = "<group>"; };
 		9D133B5011D61839008CB46B /* BtGpsDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BtGpsDefs.h; path = ../btGpsServer/BtGpsDefs.h; sourceTree = SOURCE_ROOT; };
 		9D133B9E11D61C9F008CB46B /* bootstrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bootstrap.h; sourceTree = "<group>"; };
 		9D133C5911D64FF9008CB46B /* client_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client_test.h; sourceTree = "<group>"; };
@@ -98,8 +98,8 @@
 			children = (
 				9D133B5011D61839008CB46B /* BtGpsDefs.h */,
 				9D133B2711D60FFB008CB46B /* btGps.defs */,
-				9D133B4311D61380008CB46B /* api_wrappers.h */,
-				9D133B4411D61380008CB46B /* api_wrappers.c */,
+				9D133B4311D61380008CB46B /* client_helper.h */,
+				9D133B4411D61380008CB46B /* client_helper.m */,
 			);
 			name = RPC;
 			sourceTree = "<group>";
@@ -175,7 +175,7 @@
 			files = (
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				9D133B2811D60FFB008CB46B /* btGps.defs in Sources */,
-				9D133B4511D61380008CB46B /* api_wrappers.c in Sources */,
+				9D133B4511D61380008CB46B /* client_helper.m in Sources */,
 				9D133C5B11D64FF9008CB46B /* client_test.c in Sources */,
 				9D133C8711D651FF008CB46B /* log.c in Sources */,
 			);

@@ -7,7 +7,7 @@
  *
  */
 
-#include "api_wrappers.h"
+#include "client_helper.h"
 #include "btGps.h"
 #include "BtGpsDefs.h"
 #include "log.h"
@@ -37,3 +37,16 @@ kern_return_t get_server_port(mach_port_t* serverPort)
 	*serverPort = server_port;
 	return KERN_SUCCESS;
 }
+
+void print_scan_results(void* buf, size_t cbBuf)
+{
+	NSData* data = [NSData dataWithBytes:buf length:cbBuf];
+	id scanResults = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+	if (scanResults != nil) {
+		for (NSString* key in scanResults) {
+			NSString* string = [NSString stringWithFormat:@"%@: \t%@", [scanResults valueForKey:key], key];
+			printf("%s\n", [string cStringUsingEncoding:NSASCIIStringEncoding]);
+		}
+	}
+}
+
