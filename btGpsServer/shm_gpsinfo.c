@@ -7,6 +7,7 @@
  *
  */
 
+
 #include "shm_gpsinfo.h"
 
 #include "log.h"
