@@ -7,7 +7,6 @@
  *
  */
 
-
 #include "shm_gpsinfo.h"
 
 #include "log.h"
@@ -21,7 +20,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 
-int best_sentence_in_smask(int smask)
+int smask_rating(int smask)
 {
 	if (smask & GPRMC)
 		return 2;
@@ -33,28 +32,49 @@ int best_sentence_in_smask(int smask)
 static void* g_shm_info = NULL;
 
 void shm_post_update(nmeaINFO* nmeaInfo)
-{
-	static nmeaINFO lastNmeaInfo;
+{	
+	const int bestRatingResetTimeout = 3;
 	
-	lastNmeaInfo.smask = nmeaInfo->smask;
-	// Spam Filter 1: only post a notifiation if there are actual changes
-	if (0 == memcmp(&lastNmeaInfo, nmeaInfo, offsetof(nmeaINFO, satinfo))) {
-		return;
-	}
-	memcpy(&lastNmeaInfo, nmeaInfo, sizeof(nmeaINFO));
-	
-	static int best_sentence_ever = 0;
+	static int lastSeenBestRatedSentence = 0;
 
-	int best_sentence = best_sentence_in_smask(nmeaInfo->smask);
-	// Spam Filter 2: post after getting the best sentence available.
-	if (best_sentence < best_sentence_ever) {
-		return;
-	} else if (best_sentence > best_sentence_ever) {
-		best_sentence_ever = best_sentence;
+	int currentRating = smask_rating(nmeaInfo->smask);
+	
+	static nmeaTIME lastTimestamp;
+	
+	// only do this for position sentences because 
+	// sentences without embedded UTC get local device time
+	// which will vary with each sentence
+	
+	if (currentRating > 0 && 
+		0 != memcmp(&lastTimestamp, &nmeaInfo->utc, sizeof(nmeaTIME))) {
+		lastTimestamp = nmeaInfo->utc;
+		++lastSeenBestRatedSentence;
+#ifdef DEBUG
+		LogMsg("shm_post_update DEBUG: incrementing lastSeenBestRatedSentence to %u, current rating %u", 
+			   lastSeenBestRatedSentence, currentRating);
+
+#endif
+	}
+
+	static int bestRating = 0;
+
+	if (lastSeenBestRatedSentence > bestRatingResetTimeout) {
+		LogMsg("shm_post_update: resetting best rating (%u)", bestRating);
+		bestRating = 0;
 	}
 	
+	
+	if (currentRating > bestRating) {
+		bestRating = currentRating;
+		LogMsg("shm_post_update: best rating set to (%u)", bestRating);
+	}
+	
+	// always update shared mem to make it possible to show satellite positions before fix is available
 	memcpy(g_shm_info, nmeaInfo, sizeof(nmeaINFO));
-	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), BtGpsNotificationName, nil, nil, TRUE);
+	if (currentRating == bestRating && lastSeenBestRatedSentence != 0) {
+		lastSeenBestRatedSentence = 0;
+		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), BtGpsNotificationName, nil, nil, TRUE);
+	}
 }
 
 boolean_t shm_ensure()
