@@ -6,13 +6,14 @@
 //  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#include <Foundation/NSNotification.h>
 #include "substrate.h"
-//#include <ExternalAccessory/ExternalAccessory.h>
+#include "EALocationAccessory.h"
 
-@interface EAAccessoryManager<NSObject> {}
+@interface EAAccessoryManager(Prefix)
 -(void)BTGPS_setAreLocationAccessoriesEnabled:(bool)enable;
 @end;
+
 
 extern "C" void dlinit();
 
@@ -20,8 +21,13 @@ static const char* MESSAGE_PREFIX = "BTGPS_";
 
 static void $EAAccessoryManager$setAreLocationAccessoriesEnabled$(EAAccessoryManager *self, SEL sel, bool enable)
 {
-	NSLog(@"- [EAAccessoryManager setAreLocationAccessoriesEnabled:%i]", enable);
+	NSLog(@"-[EAAccessoryManager setAreLocationAccessoriesEnabled:%i]", enable);
 	[self BTGPS_setAreLocationAccessoriesEnabled:enable];
+	if (enable) {
+		[EALocationAccessory start];
+	} else {
+		[EALocationAccessory stop];	
+	}
 }
 
 
