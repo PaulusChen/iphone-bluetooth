@@ -16,18 +16,45 @@ EA_EXTERN NSString *const EAAccessoryDidReceiveLocationPointDataNotification __O
 @interface EALocationAccessory : NSObject {
 @private
     EAAccessoryInternal *_internal;
-		
+	BOOL dataLeft;
+	NSArray* nmeaSentences;
+	int currentIndex;
+	NSTimer* timer;
 }
+
+-(void)postNamedNotification:(NSString*)notification;
+
++(EALocationAccessory*)instance;
+
++(void)start;
+
++(void)stop;
+
+-(void)start;
+
+-(void)stop;
+
+- (void)onTimer:(NSTimer*)theTimer;
+
+-(EALocationAccessory*)init;
+
+-(void)dealloc;
 
 -(BOOL)accessoryHasNMEASentencesAvailable;
 
--(void)getNMEASentence:(NSString**)outSentence;
+-(BOOL)getNMEASentence:(NSString**)outSentence;
 
--(void)setNMEASentencesToFilter:(NSArray*)nsstringArray;
+-(BOOL)setNMEASentencesToFilter:(NSArray*)nsstringArray;
 
--(BOOL)setupEphemeris; // true = OK
+-(BOOL)setupEphemeris;
 
 -(BOOL)supportsLocation;
+
+-(BOOL)sendGpsWeek:(float) week gpsTOW:(double)tow;
+
+-(BOOL)sendEphemerisPointDataGpsWeek:(float)week gpsTOW:(double)tow latitude:(double)lat longitude:(double)lon accuracy:(short)acc;
+
+-(BOOL)getEphemerisURL:(NSString**)pUrl;
 
 @property(nonatomic, readonly, getter=isConnected) BOOL connected __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0);
 @property(nonatomic, readonly) NSUInteger connectionID __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0);
