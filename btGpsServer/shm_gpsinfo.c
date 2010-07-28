@@ -14,8 +14,6 @@
 #include <nmea/nmea.h>
 #include <nmea/sentence.h>
 
-#include <CoreFoundation/CoreFoundation.h>
-
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -29,10 +27,29 @@ int smask_rating(int smask)
 	return 0;
 }
 
-static void* g_shm_info = NULL;
+static gps_shared_mem_t* g_shm_info = NULL;
 
-void shm_post_update(nmeaINFO* nmeaInfo)
+void shm_append_ringbuf(const char *data, int cbData)
+{
+	size_t maxSize = sizeof(g_shm_info->ringbuf) - 1;
+	if (cbData > maxSize) {
+		data += cbData - maxSize;
+		cbData = maxSize;
+	}
+	size_t maxEndWriteSize = sizeof(g_shm_info->ringbuf) - g_shm_info->ringbufPos;
+	if (cbData < maxEndWriteSize) {
+		memcpy(g_shm_info->ringbuf + g_shm_info->ringbufPos, data, cbData);
+	} else {
+		memcpy(g_shm_info->ringbuf + g_shm_info->ringbufPos, data, maxEndWriteSize);
+		memcpy(g_shm_info->ringbuf, data + maxEndWriteSize, cbData - maxEndWriteSize);
+	}
+	g_shm_info->ringbufPos = (g_shm_info->ringbufPos + cbData) % sizeof(g_shm_info->ringbuf);
+}
+
+void shm_post_update(nmeaINFO* nmeaInfo, const char *buff, int buff_sz)
 {	
+	shm_append_ringbuf(buff, buff_sz);
+	
 	const int bestRatingResetTimeout = 3;
 	
 	static int lastSeenBestRatedSentence = 0;
@@ -70,7 +87,7 @@ void shm_post_update(nmeaINFO* nmeaInfo)
 	}
 	
 	// always update shared mem to make it possible to show satellite positions before fix is available
-	memcpy(g_shm_info, nmeaInfo, sizeof(nmeaINFO));
+	memcpy(&g_shm_info->nmeaInfo, nmeaInfo, sizeof(nmeaINFO));
 	if (currentRating == bestRating && lastSeenBestRatedSentence != 0) {
 		lastSeenBestRatedSentence = 0;
 		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), BtGpsNotificationName, nil, nil, TRUE);
@@ -93,19 +110,20 @@ boolean_t shm_ensure()
 		LogMsg("shm_ensure: fstat FAILED, error=0x%x", errno);
 		return FALSE;	
 	}
-	if (statInfo.st_size != PAGE_SIZE) {
-		LogMsg("shm_ensure: resizing shm: %lu -> %u", statInfo.st_size, PAGE_SIZE);
-		ret = ftruncate(shmid, PAGE_SIZE);
+	if (statInfo.st_size != sizeof(gps_shared_mem_t)) {
+		LogMsg("shm_ensure: resizing shm: %lu -> %u", statInfo.st_size, sizeof(gps_shared_mem_t));
+		ret = ftruncate(shmid, sizeof(gps_shared_mem_t));
 		if (ret != 0) {
 			LogMsg("shm_ensure: ftruncate FAILED, error=0x%x", errno);
 			return FALSE;	
 		}
 	}
-	g_shm_info = mmap(0, PAGE_SIZE, PROT_WRITE|PROT_READ, MAP_SHARED, shmid, 0);
+	g_shm_info = mmap(0, sizeof(gps_shared_mem_t), PROT_WRITE|PROT_READ, MAP_SHARED, shmid, 0);
 	if (g_shm_info == MAP_FAILED) {
 		g_shm_info = NULL;
 		LogMsg("shm_ensure: mmap FAILED, error=0x%x", errno);
 		return FALSE;	
 	}
+	memset(g_shm_info, 0, sizeof(gps_shared_mem_t));
 	return TRUE;
 }

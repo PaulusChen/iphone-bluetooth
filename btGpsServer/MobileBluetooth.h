@@ -195,7 +195,7 @@ int	BTDiscoveryAgentDestroy(BTDISCOVERYAGENT agent);
 	
 int BTDeviceGetSupportedServices(BTDEVICE device, int* svc);
 
-int BTDeviceGetName(BTDEVICE device, char name[0x200]);
+int BTDeviceGetName(BTDEVICE device, char* nameBuf, size_t cbNameBuf);
 
 int BTDeviceAddressFromString(const char* addrString, char macAddr[0x6]);
 

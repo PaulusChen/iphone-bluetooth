@@ -20,7 +20,7 @@
 #include <Foundation/NSRunLoop.h>
 #include <Foundation/NSPort.h>
 
-GpsThread* g_gpsThread;
+GpsThread* g_gpsThread = nil;
 
 NSString* GpsConnectedNotification = @"GpsConnected";
 NSString* GpsTty = @"Tty";
@@ -29,15 +29,6 @@ NSString* GpsTty = @"Tty";
 
 - (id) init
 {
-	assert(g_gpsThread == nil);
-	g_gpsThread = self;
-
-	NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
-	[nc addObserver:self 
-		   selector:@selector(gpsConnected:)
-			   name:@"GpsConnected"
-			 object:nil];
-	
 	//NMEA
 	enableNmeaLog(true);
 	nmea_zero_INFO(&nmeaInfo);
@@ -56,11 +47,13 @@ NSString* GpsTty = @"Tty";
 - (void) processNmea:(NSData*)data
 {	
 	nmeaInfo.smask = 0;
-	int cParsedPackets = nmea_parse(&nmeaParser, [data bytes], [data length], &nmeaInfo);
+	const char* dataBytes = [data bytes];
+	size_t dataSize = [data length];
+	int cParsedPackets = nmea_parse(&nmeaParser, dataBytes, dataSize, &nmeaInfo);
 	
 	LogMsg("processNmea: nmea_parse returned %u", cParsedPackets);
 
-	shm_post_update(&nmeaInfo);
+	shm_post_update(&nmeaInfo, dataBytes, dataSize);
 	
 	nmeaTIME* utc = &nmeaInfo.utc;
 	LogMsg("processNmea: nmeaInfo: lat=%f, lon=%f, elev=%f; gmt=%02u:%02u:%02u", 
@@ -86,9 +79,8 @@ NSString* GpsTty = @"Tty";
 		LogMsg("readCompletionNotification: closing tty!");
 		NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
 		[nc removeObserver:self name:NSFileHandleReadCompletionNotification object:handle];
-		LogMsg("readCompletionNotification: retain count before release is %u", 
+		LogMsg("readCompletionNotification: handle retain count is %u", 
 			   [handle retainCount]);
-		[handle release];
 	}
 }
 
@@ -123,6 +115,34 @@ NSString* GpsTty = @"Tty";
 			 object:handle];
 
 	[handle readInBackgroundAndNotify];
+	[handle release];
+}
+
+- (void) timerProc:(NSTimer*)timer
+{
+	
+}
+
+- (void) threadProc:(void*) ctx
+{
+	LogMsg("gpsThreadProc STARTED");
+	NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
+	
+	assert(g_gpsThread == nil);
+	g_gpsThread = self; 
+
+	NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
+	[nc addObserver:self 
+		   selector:@selector(gpsConnected:)
+			   name:@"GpsConnected"
+			 object:nil];
+	
+	[runLoop addTimer:[[NSTimer alloc] initWithFireDate:[NSDate distantFuture] interval:0 target:self selector:@selector(timerProc:) userInfo:nil repeats:NO] forMode:NSRunLoopCommonModes];
+	
+	for (;;) {
+		[runLoop run];
+		LogMsg("gpsThreadProc RUNLOOP EXIT!!");
+	}
 }
 
 
@@ -150,25 +170,14 @@ void enableNmeaLog(bool enable)
 	}
 }
 
-void* gpsThreadProc(void* ctx)
-{
-	NSAutoreleasePool* ap = [[NSAutoreleasePool alloc] init];
-	NSRunLoop* rl = [NSRunLoop currentRunLoop];
-	[[GpsThread alloc] init]; 
-
-	[rl run];
-	[ap release];
-	return NULL;
-}
-
 void gpsStartThreadOnce()
 {
-	pthread_t pt;
-	pthread_create(&pt, NULL, gpsThreadProc, NULL);
+	[NSThread detachNewThreadSelector:@selector(threadProc:) toTarget:[[GpsThread alloc] init] withObject:nil];
 }
+
+static pthread_once_t s_gpsThreadOnce = PTHREAD_ONCE_INIT;
 
 void gpsStartThread()
 {
-	pthread_once_t gpsThreadOnce = PTHREAD_ONCE_INIT;
-	pthread_once(&gpsThreadOnce, gpsStartThreadOnce);
+	pthread_once(&s_gpsThreadOnce, gpsStartThreadOnce);
 }

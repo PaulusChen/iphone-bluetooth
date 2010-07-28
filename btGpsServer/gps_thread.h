@@ -13,6 +13,9 @@
 	nmeaPARSER nmeaParser;
 	nmeaINFO nmeaInfo;
 }
+- (void) threadProc:(void*) ctx;
+- (void) timerProc:(NSTimer*)timer;
+
 - (id) init;
 - (void) dealloc;
 - (void) readCompletionNotification:(NSNotification*)notification;

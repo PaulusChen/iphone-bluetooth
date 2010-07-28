@@ -9,6 +9,6 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include <nmea/nmea.h>
 
-void shm_post_update(nmeaINFO* nmeaInfo);
+void shm_post_update(nmeaINFO* nmeaInfo, const char *buff, int buff_sz);
 
 boolean_t shm_ensure();

@@ -35,6 +35,7 @@ void* btThreadProc(void* arg)
 	}
 
 	[rl run];
+	LogMsg("btThreadProc: RUNLOOP EXIT!!");
 	[ap release];
 	return NULL;
 }

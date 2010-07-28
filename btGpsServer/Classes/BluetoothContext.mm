@@ -622,7 +622,7 @@ static const NSString* BtSessionKey = @"BtSessionKey";
 {
 	int svc;
 	char cName[BUFSIZ] = "";
-	int err = BTDeviceGetName(foundDevice, cName);
+	int err = BTDeviceGetName(foundDevice, cName, sizeof(cName));
 	if (err != 0) {
 		LogMsg("BTDeviceGetName error: %X", err);
 	} else {

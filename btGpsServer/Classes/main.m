@@ -28,6 +28,7 @@ int main(int argc, char *argv[]) {
 	btStartThread();
 	gpsStartThread();
 	[runLooop run];
+	LogMsg("main: RUNLOOP EXIT!!!");
 	[pool release];
     return 0;
 }

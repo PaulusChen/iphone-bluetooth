@@ -246,8 +246,8 @@
 			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "btGpsServer" */;
 			buildPhases = (
 				1D60588D0D05DD3D006BFB54 /* Resources */,
-				1D60588E0D05DD3D006BFB54 /* Sources */,
 				1D60588F0D05DD3D006BFB54 /* Frameworks */,
+				1D60588E0D05DD3D006BFB54 /* Sources */,
 			);
 			buildRules = (
 			);
@@ -298,11 +298,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D704B7F11D5B2D40024037D /* btGps.defs in Sources */,
 				1D3623260D0F684500981E51 /* main.m in Sources */,
 				9D704B2311D5A9BC0024037D /* BluetoothContext.mm in Sources */,
 				9D704B2E11D5AA590024037D /* bt_main.m in Sources */,
 				9D704B7D11D5AF900024037D /* mach_srv.m in Sources */,
-				9D704B7F11D5B2D40024037D /* btGps.defs in Sources */,
 				9DF806E711D5DC0B00731C5E /* launchd.m in Sources */,
 				9DF806EE11D5DC6300731C5E /* log.m in Sources */,
 				9DF8073C11D5E04F00731C5E /* bt_helpers.c in Sources */,
@@ -329,6 +329,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCH = armv6;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -338,8 +339,10 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = btGpsServer_Prefix.pch;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = Info.plist;
 				PRODUCT_NAME = btGpsServer;
+				SEPARATE_STRIP = YES;
 			};
 			name = Debug;
 		};
@@ -347,6 +350,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCH = armv6;
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -354,8 +358,11 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = btGpsServer_Prefix.pch;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = Info.plist;
 				PRODUCT_NAME = btGpsServer;
+				SEPARATE_STRIP = YES;
+				STRIP_INSTALLED_PRODUCT = YES;
 			};
 			name = Release;
 		};
@@ -365,34 +372,50 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
 				DEAD_CODE_STRIPPING = NO;
+				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = nmealib/include;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				MACH_O_TYPE = mh_execute;
 				MIG_GENERATE_CLIENT_SOURCES = NO;
 				MIG_GENERATE_SERVER_SOURCES = YES;
 				OTHER_MIGFLAGS = "-I/Developer/SDKs/MacOSX10.6.sdk/usr/include";
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos4.1;
+				SEPARATE_STRIP = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
+				VALID_ARCHS = "armv6 armv7";
 			};
 			name = Debug;
 		};
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
+				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = nmealib/include;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				MACH_O_TYPE = mh_execute;
+				MIG_GENERATE_CLIENT_SOURCES = NO;
 				MIG_GENERATE_SERVER_SOURCES = YES;
 				OTHER_MIGFLAGS = "-I/Developer/SDKs/MacOSX10.6.sdk/usr/include";
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos4.1;
+				SEPARATE_STRIP = YES;
+				VALID_ARCHS = "armv6 armv7";
 			};
 			name = Release;
 		};
