@@ -131,8 +131,13 @@ const char* stateString(BtState state)
 	if (newTsVal != nil) {
 		BtState newTargetState = (BtState)[newTsVal intValue];
 		targetState = newTargetState;
-		if (targetState == BtStateScan) {
-			[foundDevices removeAllObjects];
+		switch (targetState) {
+			case BtStatePowerKeep:
+				targetState = currentState < BtStatePowerOn ? BtStatePowerOff : BtStatePowerOn;
+				break;
+			case BtStateScan:
+				[foundDevices removeAllObjects];
+				break;				
 		}
 		[self onStateChange:currentState];
 	}	
