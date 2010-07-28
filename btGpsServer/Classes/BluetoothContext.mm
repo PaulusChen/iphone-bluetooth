@@ -91,9 +91,17 @@ const char* stateString(BtState state)
 	currentState = BtStatePowerKeep;
 	targetState = BtStatePowerKeep;
 	targetName = @"";
-	targetAddr = @"";
-	targetPin = @"";
 	foundDevices = [[NSMutableDictionary alloc] init];
+
+	targetAddr = (NSString*)CFPreferencesCopyAppValue(kBtDeviceAddress, kAppId);
+	if (targetAddr == nil) {
+		targetAddr = @"";
+	}
+
+	targetPin = (NSString*)CFPreferencesCopyAppValue(kBtDevicePasscode, kAppId);	
+	if (targetPin == nil) {
+		targetPin = @"";
+	}
 
 	magic = 0xdeadbeef;
 	
@@ -578,6 +586,11 @@ static const NSString* BtSessionKey = @"BtSessionKey";
 								  forKey:GpsTty];
 		[nc postNotificationName:GpsConnectedNotification object:g_gpsThread userInfo:userInfo];  
 		[self onStateChange:BtStateConnected];
+		CFPreferencesSetAppValue(kBtDeviceAddress, targetAddr, kAppId);
+		CFPreferencesSetAppValue(kBtDevicePasscode, targetPin, kAppId);		
+		if (!CFPreferencesAppSynchronize(kAppId)) {
+			LogMsg("BTDeviceGetComPortForService: could not save preferences!");
+		}
 	} else if (result != 0 && 
 			   (serviceType == BT_SERVICE_BRAILLE || serviceType == BT_SERVICE_ANY)) {
 		if (currentState == BtStateConnected || currentState == BtStateConnecting) {
