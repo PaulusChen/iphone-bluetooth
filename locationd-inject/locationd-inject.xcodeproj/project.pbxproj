@@ -11,6 +11,9 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		8C39072312003CC60049EF92 /* EALocationAccessory.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8C39072212003CC60049EF92 /* EALocationAccessory.mm */; };
 		8C39072912003D4A0049EF92 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C39072812003D4A0049EF92 /* ExternalAccessory.framework */; };
+		8C6D4578120082AA00EF8271 /* ipc.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8C6D4577120082AA00EF8271 /* ipc.mm */; };
+		8C6D458C1200830A00EF8271 /* btGps.defs in Sources */ = {isa = PBXBuildFile; fileRef = 8C6D458B1200830A00EF8271 /* btGps.defs */; };
+		8C6D45961200841D00EF8271 /* log.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8C6D45951200841D00EF8271 /* log.mm */; };
 		8C7E5F711200323A00E05555 /* libsubstrate.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C7E5F701200323A00E05555 /* libsubstrate.dylib */; };
 /* End PBXBuildFile section */
 
@@ -22,6 +25,13 @@
 		8C39072112003CC60049EF92 /* EALocationAccessory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EALocationAccessory.h; sourceTree = "<group>"; };
 		8C39072212003CC60049EF92 /* EALocationAccessory.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EALocationAccessory.mm; sourceTree = "<group>"; };
 		8C39072812003D4A0049EF92 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
+		8C6D4576120082AA00EF8271 /* ipc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ipc.h; sourceTree = "<group>"; };
+		8C6D4577120082AA00EF8271 /* ipc.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ipc.mm; sourceTree = "<group>"; };
+		8C6D4582120082CC00EF8271 /* bootstrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bootstrap.h; sourceTree = "<group>"; };
+		8C6D458A120082F900EF8271 /* BtGpsDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BtGpsDefs.h; path = ../btGpsServer/BtGpsDefs.h; sourceTree = SOURCE_ROOT; };
+		8C6D458B1200830A00EF8271 /* btGps.defs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.mig; name = btGps.defs; path = ../btGpsServer/btGps.defs; sourceTree = SOURCE_ROOT; };
+		8C6D45941200841D00EF8271 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
+		8C6D45951200841D00EF8271 /* log.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = log.mm; sourceTree = "<group>"; };
 		8C7E5F6F1200319900E05555 /* substrate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = substrate.h; sourceTree = "<group>"; };
 		8C7E5F701200323A00E05555 /* libsubstrate.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libsubstrate.dylib; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* locationd_inject-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "locationd_inject-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
@@ -52,6 +62,9 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				8C6D45931200840600EF8271 /* Log */,
+				8C6D4581120082CC00EF8271 /* Missing Headers */,
+				8C6D45751200828C00EF8271 /* IPC */,
 				8C39072012003CA10049EF92 /* LocationAccessory */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -96,6 +109,34 @@
 				8C39072212003CC60049EF92 /* EALocationAccessory.mm */,
 			);
 			name = LocationAccessory;
+			sourceTree = "<group>";
+		};
+		8C6D45751200828C00EF8271 /* IPC */ = {
+			isa = PBXGroup;
+			children = (
+				8C6D458B1200830A00EF8271 /* btGps.defs */,
+				8C6D458A120082F900EF8271 /* BtGpsDefs.h */,
+				8C6D4576120082AA00EF8271 /* ipc.h */,
+				8C6D4577120082AA00EF8271 /* ipc.mm */,
+			);
+			name = IPC;
+			sourceTree = "<group>";
+		};
+		8C6D4581120082CC00EF8271 /* Missing Headers */ = {
+			isa = PBXGroup;
+			children = (
+				8C6D4582120082CC00EF8271 /* bootstrap.h */,
+			);
+			name = "Missing Headers";
+			sourceTree = "<group>";
+		};
+		8C6D45931200840600EF8271 /* Log */ = {
+			isa = PBXGroup;
+			children = (
+				8C6D45941200841D00EF8271 /* log.h */,
+				8C6D45951200841D00EF8271 /* log.mm */,
+			);
+			name = Log;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -160,6 +201,9 @@
 			files = (
 				1D60589B0D05DD56006BFB54 /* main.mm in Sources */,
 				8C39072312003CC60049EF92 /* EALocationAccessory.mm in Sources */,
+				8C6D4578120082AA00EF8271 /* ipc.mm in Sources */,
+				8C6D458C1200830A00EF8271 /* btGps.defs in Sources */,
+				8C6D45961200841D00EF8271 /* log.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,9 +253,11 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../btGpsServer/nmealib/include;
 				INIT_ROUTINE = _dlinit;
 				LD_DYLIB_INSTALL_NAME = "/usr/lib/locationd-inject.dylib";
 				MACH_O_TYPE = mh_dylib;
+				OTHER_MIGFLAGS = "-I/Developer/SDKs/MacOSX10.6.sdk/usr/include";
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos4.1;

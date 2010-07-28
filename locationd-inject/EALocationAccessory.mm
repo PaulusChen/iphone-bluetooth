@@ -7,7 +7,7 @@
 //
 
 #import "EALocationAccessory.h"
-
+#include "ipc.h"
 
 @implementation EALocationAccessory
 
@@ -42,7 +42,7 @@
 {
 	NSLog(@"[EALocationAccessory start]");
 	[self postNamedNotification:EAAccessoryDidConnectNotification];
-	[timer setFireDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+	gps_start(self);
 }
 
 +(void)stop
@@ -54,7 +54,7 @@
 {
 	NSLog(@"[EALocationAccessory stop]");
 	[self postNamedNotification:EAAccessoryDidDisconnectNotification];
-	[timer setFireDate:[NSDate distantFuture]];
+	gps_stop(self);
 }
 
 -(EALocationAccessory*)init
@@ -66,29 +66,23 @@
 	serialNumber = @"GPS_SerialNumber";
 	firmwareRevision = @"GPS_FirmwareRevision";
 	hardwareRevision = @"GPS_HardwareRevision";
-	timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
-	[timer setFireDate:[NSDate distantFuture]];
-
-	NSString *info = [NSString stringWithContentsOfFile:@"/lib/nmea.txt"];
-	currentIndex = 0;
-	nmeaSentences = [[NSArray alloc] initWithArray:[info componentsSeparatedByString:@"\n"] copyItems:YES];
-	NSLog(@"Loaded %i sentences", [nmeaSentences count]);
 	return self;
+}
+
+
+-(void)onNmea:(NSString*)data
+{
+	currentIndex = 0;
+	[nmeaSentences release];
+	nmeaSentences = [[NSArray alloc] initWithArray:[data componentsSeparatedByString:@"\n"] copyItems:YES];
+	NSLog(@"Added %i sentences", [nmeaSentences count]);	
+	[self postNamedNotification:EAAccessoryDidReceiveNMEASentenceNotification];
 }
 
 -(void)dealloc
 {
-	[timer invalidate];
-	[timer release];
 	[nmeaSentences release];
 	[super dealloc];
-}
-
--(void)onTimer:(NSTimer*)theTimer
-{
-	NSLog(@"[EALocationAccessory onTimer]");
-	dataLeft = currentIndex < [nmeaSentences count];
-	[self postNamedNotification:EAAccessoryDidReceiveNMEASentenceNotification];
 }
 
 -(void)postNamedNotification:(NSString*)notification
@@ -103,15 +97,17 @@
 
 -(BOOL)accessoryHasNMEASentencesAvailable
 {
+	dataLeft = currentIndex < [nmeaSentences count];
 	NSLog(@"[EALocationAccessory accessoryHasNMEASentencesAvailable] returning %i", dataLeft);
 	return dataLeft;
 }
 
 -(BOOL)getNMEASentence:(NSString**)outSentence
 {
+	if (![self accessoryHasNMEASentencesAvailable])
+		return NO;
 	*outSentence = [[[NSString alloc] initWithString:[nmeaSentences objectAtIndex:currentIndex++]] autorelease];
 	NSLog(@"[EALocationAccessory getNMEASentence] %@", *outSentence);
-	dataLeft = NO;
 	return YES;
 }
 

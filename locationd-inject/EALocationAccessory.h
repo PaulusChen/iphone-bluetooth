@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <ExternalAccessory/ExternalAccessory.h>
 
+
 EA_EXTERN NSString *const EAAccessoryDidReceiveNMEASentenceNotification __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0);
 EA_EXTERN NSString *const EAAccessoryDidReceiveLocationPointDataNotification __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0);
 
@@ -19,10 +20,11 @@ EA_EXTERN NSString *const EAAccessoryDidReceiveLocationPointDataNotification __O
 	BOOL dataLeft;
 	NSArray* nmeaSentences;
 	int currentIndex;
-	NSTimer* timer;
 }
 
 -(void)postNamedNotification:(NSString*)notification;
+
+-(void)onNmea:(NSString*)nmeaSentences;
 
 +(EALocationAccessory*)instance;
 
@@ -33,8 +35,6 @@ EA_EXTERN NSString *const EAAccessoryDidReceiveLocationPointDataNotification __O
 -(void)start;
 
 -(void)stop;
-
-- (void)onTimer:(NSTimer*)theTimer;
 
 -(EALocationAccessory*)init;
 
