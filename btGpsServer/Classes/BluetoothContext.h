@@ -27,6 +27,12 @@
 #define	BtAddressKey @"BtAddressKey"
 
 
+static const CFStringRef kAppId = CFSTR("com.msftguy.server.btgps");
+
+static const CFStringRef kBtDeviceAddress = CFSTR("BluetoothDeviceAddress");
+static const CFStringRef kBtDevicePasscode = CFSTR("BluetoothDevicePasscode");
+
+
 @interface BluetoothContext : NSObject {
 	@private BTSESSION session;
 	@private BTDEVICE device;
