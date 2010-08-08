@@ -41,7 +41,6 @@
 -(void)start
 {
 	NSLog(@"[EALocationAccessory start]");
-	[self postNamedNotification:EAAccessoryDidConnectNotification];
 	gps_start(self);
 }
 
@@ -53,7 +52,10 @@
 -(void)stop
 {
 	NSLog(@"[EALocationAccessory stop]");
-	[self postNamedNotification:EAAccessoryDidDisconnectNotification];
+	if (accessoryConnected) {
+		[self postNamedNotification:EAAccessoryDidDisconnectNotification];
+		accessoryConnected = NO;
+	}
 	gps_stop(self);
 }
 
@@ -67,6 +69,15 @@
 	firmwareRevision = @"GPS_FirmwareRevision";
 	hardwareRevision = @"GPS_HardwareRevision";
 	return self;
+}
+
+
+- (void) ensureAccessoryConnected
+{
+	if (!accessoryConnected) {
+		[self postNamedNotification:EAAccessoryDidConnectNotification];
+		accessoryConnected = YES;
+	}
 }
 
 

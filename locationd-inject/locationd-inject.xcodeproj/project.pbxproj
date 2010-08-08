@@ -14,7 +14,6 @@
 		8C6D4578120082AA00EF8271 /* ipc.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8C6D4577120082AA00EF8271 /* ipc.mm */; };
 		8C6D458C1200830A00EF8271 /* btGps.defs in Sources */ = {isa = PBXBuildFile; fileRef = 8C6D458B1200830A00EF8271 /* btGps.defs */; };
 		8C6D45961200841D00EF8271 /* log.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8C6D45951200841D00EF8271 /* log.mm */; };
-		8C7E5F711200323A00E05555 /* libsubstrate.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C7E5F701200323A00E05555 /* libsubstrate.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,8 +31,7 @@
 		8C6D458B1200830A00EF8271 /* btGps.defs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.mig; name = btGps.defs; path = ../btGpsServer/btGps.defs; sourceTree = SOURCE_ROOT; };
 		8C6D45941200841D00EF8271 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
 		8C6D45951200841D00EF8271 /* log.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = log.mm; sourceTree = "<group>"; };
-		8C7E5F6F1200319900E05555 /* substrate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = substrate.h; sourceTree = "<group>"; };
-		8C7E5F701200323A00E05555 /* libsubstrate.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libsubstrate.dylib; sourceTree = "<group>"; };
+		8C7E5F6F1200319900E05555 /* objsubstrate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = objsubstrate.h; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* locationd_inject-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "locationd_inject-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -43,7 +41,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
-				8C7E5F711200323A00E05555 /* libsubstrate.dylib in Frameworks */,
 				8C39072912003D4A0049EF92 /* ExternalAccessory.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -77,7 +74,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				8C7E5F6F1200319900E05555 /* substrate.h */,
+				8C7E5F6F1200319900E05555 /* objsubstrate.h */,
 				28A0AAE50D9B0CCF005BE974 /* locationd_inject_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.mm */,
 			);
@@ -95,7 +92,6 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8C7E5F701200323A00E05555 /* libsubstrate.dylib */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 				8C39072812003D4A0049EF92 /* ExternalAccessory.framework */,
 			);
@@ -149,6 +145,7 @@
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
 				1D60588F0D05DD3D006BFB54 /* Frameworks */,
+				8C8D55CA120D09E9008FCEA0 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -193,6 +190,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		8C8D55CA120D09E9008FCEA0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export CODESIGN_ALLOCATE=/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/codesign_allocate\nif [ \"${PLATFORM_NAME}\" == \"iphoneos\" ]; then\n\tcodesign -f -s \"ssc\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/\"\nfi";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1D60588E0D05DD3D006BFB54 /* Sources */ = {
@@ -251,6 +265,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = ../btGpsServer/nmealib/include;
@@ -268,12 +283,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../btGpsServer/nmealib/include;
+				INIT_ROUTINE = _dlinit;
+				LD_DYLIB_INSTALL_NAME = "/usr/lib/locationd-inject.dylib";
+				MACH_O_TYPE = mh_dylib;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				OTHER_MIGFLAGS = "-I/Developer/SDKs/MacOSX10.6.sdk/usr/include";
 				PREBINDING = NO;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos4.1;
 			};
 			name = Release;

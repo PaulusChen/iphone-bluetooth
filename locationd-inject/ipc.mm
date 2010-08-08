@@ -81,14 +81,18 @@ void gpsinfo_notification(
 		void* map = mmap(0, PAGE_SIZE, PROT_READ, MAP_SHARED, shmid, 0);
 		if (map != MAP_FAILED) {
 			g_shm_info = (gps_shared_mem_t*)map;
+			// FIXME: this drops the first update; need a separate notification for shared section creation?
+			lastRingbufPos = g_shm_info->ringbufPos;
 		}
 	}
 	if (g_shm_info != NULL) {
+		EALocationAccessory* accObj = (EALocationAccessory*)observer;
+		[accObj ensureAccessoryConnected];
 		char sentenceBuf[PAGE_SIZE];
 		size_t cbRead = shm_read_ringbuf(sentenceBuf, &lastRingbufPos);
 		if (cbRead != 0) {
 			sentenceBuf[cbRead] = '\0';
-			[(EALocationAccessory*)observer onNmea:[NSString stringWithUTF8String:sentenceBuf]];
+			[accObj onNmea:[NSString stringWithUTF8String:sentenceBuf]];
 		}
 	}
 }
@@ -108,7 +112,6 @@ void set_server_state(BtState state)
 	if (serverPort != MACH_PORT_NULL) {
 		mach_port_destroy(mach_task_self(), serverPort);
 	}
-	
 }
 
 void gps_start(EALocationAccessory* accObj) 
@@ -123,5 +126,5 @@ void gps_start(EALocationAccessory* accObj)
 void gps_stop(EALocationAccessory* accObj) 
 {
 	CFNotificationCenterRemoveObserver(CFNotificationCenterGetDarwinNotifyCenter(), accObj, BtGpsNotificationName, nil);
-	set_server_state(BtStatePowerKeep);
+	set_server_state(BtStateIdle);
 }

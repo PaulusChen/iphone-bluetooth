@@ -7,7 +7,7 @@
 //
 
 #include <Foundation/NSNotification.h>
-#include "substrate.h"
+#include "objsubstrate.h"
 #include "EALocationAccessory.h"
 
 @interface EAAccessoryManager(Prefix)
@@ -38,5 +38,5 @@ void dlinit() {
 		NSLog(@"EAAccessoryManager class not found, bailing!");
 		return;
 	}
-	MSHookMessage(eaAccessoryManagerClass, @selector(setAreLocationAccessoriesEnabled:), $EAAccessoryManager$setAreLocationAccessoriesEnabled$, MESSAGE_PREFIX);
+	MSHookMessage(eaAccessoryManagerClass, @selector(setAreLocationAccessoriesEnabled:), (IMP)$EAAccessoryManager$setAreLocationAccessoriesEnabled$, MESSAGE_PREFIX);
 }

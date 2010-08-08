@@ -20,41 +20,44 @@ EA_EXTERN NSString *const EAAccessoryDidReceiveLocationPointDataNotification __O
 	BOOL dataLeft;
 	NSArray* nmeaSentences;
 	int currentIndex;
+	BOOL accessoryConnected;
 }
 
--(void)postNamedNotification:(NSString*)notification;
+- (void) postNamedNotification:(NSString*)notification;
 
--(void)onNmea:(NSString*)nmeaSentences;
+- (void) onNmea:(NSString*)nmeaSentences;
 
-+(EALocationAccessory*)instance;
+- (void) ensureAccessoryConnected;
 
-+(void)start;
++ (EALocationAccessory*) instance;
 
-+(void)stop;
++ (void) start;
 
--(void)start;
++ (void) stop;
 
--(void)stop;
+- (void) start;
 
--(EALocationAccessory*)init;
+- (void) stop;
 
--(void)dealloc;
+- (EALocationAccessory*) init;
 
--(BOOL)accessoryHasNMEASentencesAvailable;
+- (void) dealloc;
 
--(BOOL)getNMEASentence:(NSString**)outSentence;
+- (BOOL) accessoryHasNMEASentencesAvailable;
 
--(BOOL)setNMEASentencesToFilter:(NSArray*)nsstringArray;
+- (BOOL) getNMEASentence:(NSString**)outSentence;
 
--(BOOL)setupEphemeris;
+- (BOOL) setNMEASentencesToFilter:(NSArray*)nsstringArray;
 
--(BOOL)supportsLocation;
+- (BOOL) setupEphemeris;
 
--(BOOL)sendGpsWeek:(float) week gpsTOW:(double)tow;
+- (BOOL) supportsLocation;
 
--(BOOL)sendEphemerisPointDataGpsWeek:(float)week gpsTOW:(double)tow latitude:(double)lat longitude:(double)lon accuracy:(short)acc;
+- (BOOL) sendGpsWeek:(float) week gpsTOW:(double)tow;
 
--(BOOL)getEphemerisURL:(NSString**)pUrl;
+- (BOOL) sendEphemerisPointDataGpsWeek:(float)week gpsTOW:(double)tow latitude:(double)lat longitude:(double)lon accuracy:(short)acc;
+
+- (BOOL) getEphemerisURL:(NSString**)pUrl;
 
 @property(nonatomic, readonly, getter=isConnected) BOOL connected __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0);
 @property(nonatomic, readonly) NSUInteger connectionID __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0);
