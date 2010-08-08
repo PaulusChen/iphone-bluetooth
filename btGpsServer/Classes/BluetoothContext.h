@@ -56,7 +56,7 @@ static const CFStringRef kBtDevicePasscode = CFSTR("BluetoothDevicePasscode");
 - (void) onSessionConnected:(BTSESSION)btSession;
 - (void) onSessionDisconnected;
 - (void) reconnectSessionTimerProc:(NSTimer*)theTimer;
-- (bool) reconnectSession;
+- (BOOL) reconnectSession;
 - (void) onPairingStatus:(BT_PAIRING_AGENT_STATUS)status;
 - (void) onPairingPincodeCallback;
 
@@ -75,6 +75,7 @@ static const CFStringRef kBtDevicePasscode = CFSTR("BluetoothDevicePasscode");
 //- (void) fsmPairing2Connected;
 - (void) fsmConnected2Connecting;
 
+- (BOOL) getPowerState;
 - (void) setPowerState:(BOOL)targetPowerState;
 - (void) setScanEnabled:(BOOL)scanEnabled;
 - (BOOL) tryCreateTargetDevice;

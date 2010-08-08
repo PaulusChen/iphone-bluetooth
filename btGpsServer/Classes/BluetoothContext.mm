@@ -32,8 +32,8 @@ const char* stateString(BtState state)
 {
 	static char buf[BUFSIZ];
 	switch (state) {
-		case BtStatePowerKeep:
-			return "PowerKeep";
+		case BtStateIdle:
+			return "Idle";
 			break;
 		case BtStatePowerOff:
 			return "PowerOff";
@@ -88,8 +88,8 @@ const char* stateString(BtState state)
 	discoveryAgent = NULL;
 	pairingAgent = NULL;
 	localDevice = NULL;
-	currentState = BtStatePowerKeep;
-	targetState = BtStatePowerKeep;
+	currentState = BtStateIdle;
+	targetState = BtStateIdle;
 	targetName = @"";
 	foundDevices = [[NSMutableDictionary alloc] init];
 
@@ -140,7 +140,7 @@ const char* stateString(BtState state)
 		BtState newTargetState = (BtState)[newTsVal intValue];
 		targetState = newTargetState;
 		switch (targetState) {
-			case BtStatePowerKeep:
+			case BtStateIdle:
 				targetState = currentState < BtStatePowerOn ? BtStatePowerOff : BtStatePowerOn;
 				break;
 			case BtStateScan:
@@ -151,13 +151,37 @@ const char* stateString(BtState state)
 	}	
 }
 
+- (BOOL) isStickyState:(BtState)state
+{
+	switch (state) {
+		case BtStatePowerOff:
+		case BtStatePowerOn:
+		case BtStateConnecting:
+			return NO;
+		case BtStateIdle:
+		case BtStateScan:
+		case BtStateConnected:
+			return YES;
+		default:
+			assert((state, FALSE));
+			return NO;
+	}
+}
+
 - (void) onStateChange:(BtState)newState
 {
 	LogMsg("onStateChange: %s -> %s", stateString(currentState), stateString(newState));
 	currentState = newState;
 	int direction = currentState > targetState ? -1 : currentState == targetState ? 0 : 1;
+	if (direction == 0 && ![self isStickyState:targetState]) {
+		targetState = BtStateIdle;
+	}
+	if (targetState == BtStateIdle) {
+		return;
+	}
 	switch (currentState) {
-		case BtStatePowerKeep:
+		case BtStateIdle:
+			[self onStateChange: [self getPowerState] ? BtStatePowerOn : BtStatePowerOff];
 			break;
 		case BtStatePowerOff:
 			if (direction > 0) {
@@ -247,7 +271,7 @@ const char* stateString(BtState state)
 	[self connectDisconnect:NO];
 }
 
-- (bool) getPowerState
+- (BOOL) getPowerState
 {
 	int currentPowerState = 0;
 
@@ -261,7 +285,7 @@ const char* stateString(BtState state)
 
 - (void) setPowerState:(BOOL)targetPowerState
 {	
-	bool currentPowerState = [self getPowerState];
+	BOOL currentPowerState = [self getPowerState];
 	if (targetPowerState != currentPowerState) {
 		int err = BTLocalDeviceSetModulePower(localDevice, 1, targetPowerState ? POWER_STATE_ON : POWER_STATE_OFF);
 		if (err !=  0) {
@@ -447,7 +471,7 @@ const char* stateString(BtState state)
 		pairingAgent = btPairingAgent;
 	}
 	
-	bool powerState = [self getPowerState];
+	BOOL powerState = [self getPowerState];
 	LogMsg("Power state: %s", powerState ? "ON" : "OFF");
 	BtState newState = powerState ? BtStatePowerOn : BtStatePowerOff;
 	
@@ -455,9 +479,6 @@ const char* stateString(BtState state)
 		[self startStopPairingAgent:YES];
 	}
 
-	if (targetState == BtStatePowerKeep) {
-		targetState = newState;
-	}
 	[self onStateChange:newState];
 }
 
@@ -465,7 +486,7 @@ const char* stateString(BtState state)
 {
 	int err;
 	
-	currentState = BtStatePowerKeep;
+	currentState = BtStateIdle;
 	device = nil;
 	
 	if (session == nil) {
@@ -473,11 +494,11 @@ const char* stateString(BtState state)
 	}
 	
 	if (pairingAgent != nil) {
-		BTPairingAgentStop(pairingAgent);
-		err = BTPairingAgentDestroy(pairingAgent);
-		if (err != 0) {
-			LogMsg("onSessionDisconnected: BTPairingAgentDestroy failed: 0x%x",  err);
-		}
+//		BTPairingAgentStop(pairingAgent);
+//		err = BTPairingAgentDestroy(pairingAgent); // CRASH here on BT stack restart...
+//		if (err != 0) {
+//			LogMsg("onSessionDisconnected: BTPairingAgentDestroy failed: 0x%x",  err);
+//		}
 		pairingAgent = nil;
 	}
 	
@@ -510,7 +531,7 @@ static const NSString* BtSessionKey = @"BtSessionKey";
 	[self reconnectSession];
 }
 
-- (bool) reconnectSession
+- (BOOL) reconnectSession
 {
 	int err;
 	if (session != nil) 
@@ -528,7 +549,7 @@ static const NSString* BtSessionKey = @"BtSessionKey";
 
 - (void) onLocalPowerChanged
 {
-	bool newPowerState = [self getPowerState];
+	BOOL newPowerState = [self getPowerState];
 	BtState newState = currentState;
 	if (newPowerState) {
 		[self startStopPairingAgent:YES];

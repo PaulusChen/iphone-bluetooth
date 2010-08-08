@@ -149,6 +149,7 @@ int nmea_scanf(const char *buff, int buff_sz, const char *format, ...)
                 break;
             {
                 tok_type = NMEA_TOKS_TYPE;
+#pragma unused(tok_type)
                 if(format > beg_fmt)
                     width = nmea_atoi(beg_fmt, (int)(format - beg_fmt), 10);
             }

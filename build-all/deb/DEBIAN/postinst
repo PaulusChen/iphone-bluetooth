@@ -1,0 +1,22 @@
+#!/bin/sh
+
+Plist=/System/Library/LaunchDaemons/com.apple.BTServer.plist
+
+plutil -rmkey EnvironmentVariables $Plist
+plutil -key EnvironmentVariables -dict $Plist
+plutil -key EnvironmentVariables -key DYLD_INSERT_LIBRARIES -string /usr/lib/btserver-inject.dylib $Plist
+
+launchctl unload $Plist
+launchctl load $Plist
+
+launchctl load /System/Library/LaunchDaemons/com.msftguy.btgpsserver.plist
+
+Plist=/System/Library/LaunchDaemons/com.apple.locationd.plist
+
+plutil -rmkey EnvironmentVariables $Plist
+plutil -key EnvironmentVariables -dict $Plist
+plutil -key EnvironmentVariables -key DYLD_INSERT_LIBRARIES -string /usr/lib/locationd-inject.dylib $Plist
+
+unchctl unload $Plist
+launchctl load $Plist
+

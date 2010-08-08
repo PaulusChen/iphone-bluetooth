@@ -21,7 +21,7 @@ void print_timestamp()
 	gettimeofday(&tv, &tz);
 	tm = localtime(&tv.tv_sec);
 	size_t pos = strftime(buf, size, "%H:%M:%S", tm);
-	pos += snprintf(buf + pos, size - pos, ".%04.0Lf", 10000 * (long double)tv.tv_usec/1.0E+6);
+	snprintf(buf + pos, size - pos, ".%04.0Lf", 10000 * (long double)tv.tv_usec/1.0E+6);
 	printf("[%s]", buf);
 }
 

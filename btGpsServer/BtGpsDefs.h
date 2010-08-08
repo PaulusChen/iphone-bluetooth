@@ -15,7 +15,7 @@
 #define STATIC_ASSERT(x, msg) typedef char ASSERT_FAILED__##msg[(x) ? 1 : -1]
 
 typedef enum {
-	BtStatePowerKeep,
+	BtStateIdle,
 	BtStatePowerOff,
 	BtStatePowerOn,
 	BtStateScan,

@@ -1,0 +1,10 @@
+Package: com.msftguy.iphonebluetooth
+Version: 1.0.0-0
+Architecture: iphoneos-arm
+Section: Utilities
+Depends: firmware (>= 4.0), com.ericasadun.utilities
+Installed-Size: 4096
+Maintainer: repo maintainer<maintainer@repo.com>
+Description: Prototype iPhone Bluetooth app/stack
+Author: msft.guy<msft.guy@gmail.com>
+Homepage: http://code.google.com/p/iphone-bluetooth

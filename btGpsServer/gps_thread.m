@@ -172,7 +172,9 @@ void enableNmeaLog(bool enable)
 
 void gpsStartThreadOnce()
 {
-	[NSThread detachNewThreadSelector:@selector(threadProc:) toTarget:[[GpsThread alloc] init] withObject:nil];
+	GpsThread* threadObj = [[GpsThread alloc] init];
+	[NSThread detachNewThreadSelector:@selector(threadProc:) toTarget:threadObj withObject:nil];
+	[threadObj release];
 }
 
 static pthread_once_t s_gpsThreadOnce = PTHREAD_ONCE_INIT;

@@ -171,4 +171,5 @@ void start_mach_server(mach_port_t portNum) {
 	CFRunLoopRef CFRunLoop = CFRunLoopGetCurrent();
 	CFRunLoopAddSource(CFRunLoop, s_rls, kCFRunLoopDefaultMode);
 	CFRelease(s_rls);
+	CFRelease(s_port);
 }

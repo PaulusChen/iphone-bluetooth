@@ -38,7 +38,7 @@ char g_macAddr[BUFSIZ] = "";
 mach_port_t g_serverPort;
 
 boolean_t g_wait = FALSE;
-BtState g_targetState = BtStatePowerKeep;
+BtState g_targetState = BtStateIdle;
 
 void parseOptions(int argc, char *argv[])
 {
@@ -159,7 +159,7 @@ void client_test(int argc, char *argv[])
 			LogMsg("set_name failed, 0x%x", result);
 		}
 	}
-	if (g_targetState != BtStatePowerKeep) {
+	if (g_targetState != BtStateIdle) {
 		result = set_state(g_serverPort, g_targetState);
 		if (result != KERN_SUCCESS) {
 			LogMsg("set_state failed, 0x%x", result);

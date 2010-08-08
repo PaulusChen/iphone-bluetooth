@@ -1,0 +1,311 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		8C8D5579120D073E008FCEA0 /* Aggregate1 */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 8C8D558A120D0789008FCEA0 /* Build configuration list for PBXAggregateTarget "Aggregate1" */;
+			buildPhases = (
+				8C8D55DE120D0A5F008FCEA0 /* ShellScript */,
+			);
+			dependencies = (
+				8C8D557D120D0748008FCEA0 /* PBXTargetDependency */,
+				8C8D5581120D074F008FCEA0 /* PBXTargetDependency */,
+				8C8D557F120D074F008FCEA0 /* PBXTargetDependency */,
+				8C8D55AB120D098F008FCEA0 /* PBXTargetDependency */,
+			);
+			name = Aggregate1;
+			productName = Aggregate1;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXContainerItemProxy section */
+		8C8D556B120D0711008FCEA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8C8D5567120D0711008FCEA0 /* btGpsServer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1D6058910D05DD3D006BFB54;
+			remoteInfo = btGpsServer;
+		};
+		8C8D5571120D071B008FCEA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8C8D556D120D071B008FCEA0 /* btGpsClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1D6058910D05DD3D006BFB54;
+			remoteInfo = btGpsClient;
+		};
+		8C8D5577120D0729008FCEA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8C8D5573120D0729008FCEA0 /* locationd-inject.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1D6058910D05DD3D006BFB54;
+			remoteInfo = "locationd-inject";
+		};
+		8C8D557C120D0748008FCEA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8C8D5567120D0711008FCEA0 /* btGpsServer.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1D6058900D05DD3D006BFB54;
+			remoteInfo = btGpsServer;
+		};
+		8C8D557E120D074F008FCEA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8C8D5573120D0729008FCEA0 /* locationd-inject.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1D6058900D05DD3D006BFB54;
+			remoteInfo = "locationd-inject";
+		};
+		8C8D5580120D074F008FCEA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8C8D556D120D071B008FCEA0 /* btGpsClient.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1D6058900D05DD3D006BFB54;
+			remoteInfo = btGpsClient;
+		};
+		8C8D55A8120D0981008FCEA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8C8D559C120D0981008FCEA0 /* btserver-inject.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1D6058910D05DD3D006BFB54;
+			remoteInfo = "btserver-inject";
+		};
+		8C8D55AA120D098F008FCEA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8C8D559C120D0981008FCEA0 /* btserver-inject.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1D6058900D05DD3D006BFB54;
+			remoteInfo = "btserver-inject";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		8C8D5567120D0711008FCEA0 /* btGpsServer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = btGpsServer.xcodeproj; path = ../btGpsServer/btGpsServer.xcodeproj; sourceTree = SOURCE_ROOT; };
+		8C8D556D120D071B008FCEA0 /* btGpsClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = btGpsClient.xcodeproj; path = ../btGpsClient/btGpsClient.xcodeproj; sourceTree = SOURCE_ROOT; };
+		8C8D5573120D0729008FCEA0 /* locationd-inject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "locationd-inject.xcodeproj"; path = "../locationd-inject/locationd-inject.xcodeproj"; sourceTree = SOURCE_ROOT; };
+		8C8D559C120D0981008FCEA0 /* btserver-inject.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "btserver-inject.xcodeproj"; path = "../btserver-inject/btserver-inject.xcodeproj"; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		8C8D555D120D06EF008FCEA0 = {
+			isa = PBXGroup;
+			children = (
+				8C8D559C120D0981008FCEA0 /* btserver-inject.xcodeproj */,
+				8C8D5573120D0729008FCEA0 /* locationd-inject.xcodeproj */,
+				8C8D556D120D071B008FCEA0 /* btGpsClient.xcodeproj */,
+				8C8D5567120D0711008FCEA0 /* btGpsServer.xcodeproj */,
+			);
+			sourceTree = "<group>";
+		};
+		8C8D5568120D0711008FCEA0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8C8D556C120D0711008FCEA0 /* btGpsServer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8C8D556E120D071B008FCEA0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8C8D5572120D071B008FCEA0 /* btGpsClient.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8C8D5574120D0729008FCEA0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8C8D5578120D0729008FCEA0 /* locationd-inject.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8C8D559D120D0981008FCEA0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8C8D55A9120D0981008FCEA0 /* btserver-inject.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		8C8D555F120D06EF008FCEA0 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 8C8D5562120D06EF008FCEA0 /* Build configuration list for PBXProject "build-all" */;
+			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 8C8D555D120D06EF008FCEA0;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 8C8D556E120D071B008FCEA0 /* Products */;
+					ProjectRef = 8C8D556D120D071B008FCEA0 /* btGpsClient.xcodeproj */;
+				},
+				{
+					ProductGroup = 8C8D5568120D0711008FCEA0 /* Products */;
+					ProjectRef = 8C8D5567120D0711008FCEA0 /* btGpsServer.xcodeproj */;
+				},
+				{
+					ProductGroup = 8C8D559D120D0981008FCEA0 /* Products */;
+					ProjectRef = 8C8D559C120D0981008FCEA0 /* btserver-inject.xcodeproj */;
+				},
+				{
+					ProductGroup = 8C8D5574120D0729008FCEA0 /* Products */;
+					ProjectRef = 8C8D5573120D0729008FCEA0 /* locationd-inject.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				8C8D5579120D073E008FCEA0 /* Aggregate1 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		8C8D556C120D0711008FCEA0 /* btGpsServer.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = btGpsServer.app;
+			remoteRef = 8C8D556B120D0711008FCEA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8C8D5572120D071B008FCEA0 /* btGpsClient.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = btGpsClient.app;
+			remoteRef = 8C8D5571120D071B008FCEA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8C8D5578120D0729008FCEA0 /* locationd-inject.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "locationd-inject.app";
+			remoteRef = 8C8D5577120D0729008FCEA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8C8D55A9120D0981008FCEA0 /* btserver-inject.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "btserver-inject.app";
+			remoteRef = 8C8D55A8120D0981008FCEA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		8C8D55DE120D0A5F008FCEA0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo custom build step";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8C8D557D120D0748008FCEA0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = btGpsServer;
+			targetProxy = 8C8D557C120D0748008FCEA0 /* PBXContainerItemProxy */;
+		};
+		8C8D557F120D074F008FCEA0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "locationd-inject";
+			targetProxy = 8C8D557E120D074F008FCEA0 /* PBXContainerItemProxy */;
+		};
+		8C8D5581120D074F008FCEA0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = btGpsClient;
+			targetProxy = 8C8D5580120D074F008FCEA0 /* PBXContainerItemProxy */;
+		};
+		8C8D55AB120D098F008FCEA0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "btserver-inject";
+			targetProxy = 8C8D55AA120D098F008FCEA0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		8C8D5560120D06EF008FCEA0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				SDKROOT = iphoneos4.1;
+			};
+			name = Debug;
+		};
+		8C8D5561120D06EF008FCEA0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				SDKROOT = iphoneos4.1;
+			};
+			name = Release;
+		};
+		8C8D557A120D073E008FCEA0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = Aggregate1;
+			};
+			name = Debug;
+		};
+		8C8D557B120D073E008FCEA0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PRODUCT_NAME = Aggregate1;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8C8D5562120D06EF008FCEA0 /* Build configuration list for PBXProject "build-all" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8C8D5560120D06EF008FCEA0 /* Debug */,
+				8C8D5561120D06EF008FCEA0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8C8D558A120D0789008FCEA0 /* Build configuration list for PBXAggregateTarget "Aggregate1" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8C8D557A120D073E008FCEA0 /* Debug */,
+				8C8D557B120D073E008FCEA0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8C8D555F120D06EF008FCEA0 /* Project object */;
+}
