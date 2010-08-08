@@ -1,0 +1,21 @@
+#!/bin/sh
+
+Plist=/System/Library/LaunchDaemons/com.apple.locationd.plist
+
+plutil -rmkey EnvironmentVariables $Plist
+
+launchctl unload $Plist
+launchctl load $Plist
+
+launchctl unload /System/Library/LaunchDaemons/com.msftguy.btgpsserver.plist
+
+Plist=/System/Library/LaunchDaemons/com.apple.BTServer.plist
+
+plutil -rmkey EnvironmentVariables $Plist
+
+launchctl unload $Plist
+launchctl load $Plist
+
+
+
+

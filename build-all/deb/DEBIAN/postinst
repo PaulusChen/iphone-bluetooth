@@ -17,6 +17,6 @@ plutil -rmkey EnvironmentVariables $Plist
 plutil -key EnvironmentVariables -dict $Plist
 plutil -key EnvironmentVariables -key DYLD_INSERT_LIBRARIES -string /usr/lib/locationd-inject.dylib $Plist
 
-unchctl unload $Plist
+launchctl unload $Plist
 launchctl load $Plist
 

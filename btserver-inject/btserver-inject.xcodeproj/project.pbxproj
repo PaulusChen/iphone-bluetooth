@@ -17,6 +17,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		8C8D1596120EF38D00CE810C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8CF45DFE11FA169B00366FBA /* impHook.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D /* impHook */;
+			remoteInfo = impHook;
+		};
 		8CF45E0711FA169B00366FBA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8CF45DFE11FA169B00366FBA /* impHook.xcodeproj */;
@@ -139,6 +146,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				8C8D1597120EF38D00CE810C /* PBXTargetDependency */,
 			);
 			name = "btserver-inject";
 			productName = "btserver-inject";
@@ -225,6 +233,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8C8D1597120EF38D00CE810C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = impHook;
+			targetProxy = 8C8D1596120EF38D00CE810C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1D6058940D05DD3E006BFB54 /* Debug */ = {

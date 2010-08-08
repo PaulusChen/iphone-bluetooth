@@ -15,7 +15,7 @@
 		"com.msftguy.server.btgps" = true;
 	};
 	ProgramArguments = (
-		"/lib/btGpsServer",
+		"/usr/libexec/btGpsServer",
 	);
 	RunAtLoad = YES;
 }

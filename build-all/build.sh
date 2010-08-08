@@ -15,7 +15,7 @@ mkdir -p $Bins || err "Cannot create work dirs"
 
 mkdir -p build/CurrentFlavor/bin || err "Cannot create work dirs-2"
 
-#xcodebuild -target Aggregate1 -configuration $Flavor clean || err "Clean failed!"
+xcodebuild -target Aggregate1 -configuration $Flavor clean || err "Clean failed!"
 
 xcodebuild -target Aggregate1 -configuration $Flavor || err "Build failed!"
 
@@ -30,6 +30,9 @@ ln -s $Bins/* build/CurrentFlavor/bin || err "Failed to create CurrentFlavor sym
 Debdir=`pwd`/build/$Flavor/deb
 
 cp -LR deb $Debdir || err "Failed to collect deb contents"
+
+find . -name '.svn' -or -name '.DS_Store' -print0 | xargs -0 rm -rf || err "Failed to clean up deb dir"
+
 
 sudo chown -R root:wheel $Debdir || err "Failed to chown the deb dir"
 sudo chmod -R 755 $Debdir || err "Failed to chmod the deb dir"
