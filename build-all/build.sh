@@ -31,8 +31,7 @@ Debdir=`pwd`/build/$Flavor/deb
 
 cp -LR deb $Debdir || err "Failed to collect deb contents"
 
-find . -name '.svn' -or -name '.DS_Store' -print0 | xargs -0 rm -rf || err "Failed to clean up deb dir"
-
+find $Debdir  \( -name '.svn' -or -name '.DS_Store' \)  -print0 | xargs -0 rm -rf || err "Failed to clean up deb dir"
 
 sudo chown -R root:wheel $Debdir || err "Failed to chown the deb dir"
 sudo chmod -R 755 $Debdir || err "Failed to chmod the deb dir"
