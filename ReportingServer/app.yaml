@@ -5,5 +5,19 @@ api_version: 1
 
 handlers:
 
-- url: /(.*)
+- url: /\.*\/*Packages.bz2
+  static_files: debs/Packages.bz2
+  upload: debs/Packages.bz2
+  
+- url: /\.*\/*([^\/]*\.deb)
+  static_files: debs/\1
+  upload: debs/(.*\.deb)
+
+- url: /
+  script: service.py
+
+- url: /up
+  script: service.py
+
+- url: /report
   script: service.py
