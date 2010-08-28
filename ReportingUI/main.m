@@ -10,7 +10,8 @@
 
 int main(int argc, char *argv[]) {
 	NSLog(@"test5:main");
-    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     int retVal = UIApplicationMain(argc, argv, nil, nil);
     [pool release];
     return retVal;

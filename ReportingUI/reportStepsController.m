@@ -12,7 +12,7 @@
 
 @synthesize rightNavBarButton;
 @synthesize textView;
-@synthesize otherTextView;
+@synthesize steps = _steps;
 
 - (IBAction) rightNavbarButtonClicked:(id)sender
 {
@@ -22,7 +22,7 @@
 - (void) viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
-	self.textView.text = self.otherTextView.text;
+	self.textView.text = self.steps;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillResize:) name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillResize:) name:UIKeyboardWillHideNotification object:nil];
 }
@@ -30,7 +30,7 @@
 - (void) viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
-	self.otherTextView.text = textView.text;
+	[self.steps setString:textView.text];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }

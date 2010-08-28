@@ -9,18 +9,43 @@
 #import <Foundation/Foundation.h>
 #include "PostController.h"
 
-@interface reportMainController : UIViewController<UITextViewDelegate> {
+@interface reportMainController : UITableViewController<UITextViewDelegate, UploadProgressDelegate> {
 	PostController* postCt;
+	NSMutableString* _steps;
+	UITableView* _tableView;
 } 
+
+//table view delegate & data source  methods
+- (NSInteger)tableView:(UITableView *)table numberOfRowsInSection:(NSInteger)section;
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+
+// upload delegates
+- (void)stoppedWithStatus:(NSString*)statusString;
+- (void)reportProgress:(float)progress forStep:(int)step;
+
+
+- (void) editSteps;
+
+- (void) sendReportInternal;
+
+- (void) sendReport;
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView;
 
-- (IBAction) onEditStepsButton:(id)sender;
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
 
-- (IBAction) onStartLoggingButton:(id)sender;
+- (NSString*) loggingEnabledFile;
 
-- (IBAction) onSendReportButton:(id)sender;
 
-@property (nonatomic, retain) IBOutlet UITextView* stepsTextView;
+@property (nonatomic, retain) NSMutableString* steps;
+@property (nonatomic, retain) UIProgressView* uploadProgress;
+@property (nonatomic, retain) IBOutlet UITableView* tableView;
+@property (nonatomic, assign, readonly) BOOL loggingEnabled;
+
 
 @end

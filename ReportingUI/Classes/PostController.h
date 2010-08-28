@@ -55,6 +55,12 @@
 #include "DataStream.h"
 #include "bzlib.h"
 
+@protocol UploadProgressDelegate <NSObject>
+@optional
+- (void)stoppedWithStatus:(NSString*)statusString;
+- (void)reportProgress:(float)progress forStep:(int)step;
+@end
+
 @interface PostController : NSObject <NSStreamDelegate, DataStreamSource>
 {
 	NSURLConnection *           _connection;
@@ -81,5 +87,10 @@
 - (BOOL) openDataStream:(id)userInfo;
 - (NSInteger) readDataFromStream:(id)userInfo buffer:(void*)buffer maxLength:(NSUInteger)length; //Return num read bytes on success, 0 at end or <0 on error
 - (void) closeDataStream:(id)userInfo;
+
+@property (nonatomic, assign) id<UploadProgressDelegate> delegate;
+@property (nonatomic, readonly) int numSteps;
+@property (nonatomic, readonly) BOOL              isSending;
+
 
 @end

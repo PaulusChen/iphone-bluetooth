@@ -1,0 +1,16 @@
+#!/bin/sh
+
+test -f /Applications/ReportingUI.app/logging_enabled && {
+	/Applications/ReportingUI.app/toggle_logging.sh 0
+	
+	declare -a cydia
+	cydia=($CYDIA)
+
+	if [[ ${CYDIA+@} ]]; then
+		eval "echo 'finish:restart' >&${cydia[0]}"
+	else
+		killall SpringBoard
+	fi
+}
+
+exit 0

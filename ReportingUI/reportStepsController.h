@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface reportStepsController : UIViewController {
+	NSMutableString* _steps;
 }
 
 - (IBAction) rightNavbarButtonClicked:(id)sender;
@@ -17,7 +18,6 @@
 
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* rightNavBarButton;
 @property (nonatomic, retain) IBOutlet UITextView* textView;
-@property (nonatomic, retain) UITextView* otherTextView;
-
+@property (nonatomic, retain) NSMutableString* steps;
 
 @end

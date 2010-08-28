@@ -13,10 +13,16 @@
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
+		8C157F4212248FE30050441A /* CmdRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C157F4112248FE30050441A /* CmdRunner.m */; };
+		8C157FAE1224CA690050441A /* ReportingUI.sh in Resources */ = {isa = PBXBuildFile; fileRef = 8C157FAD1224CA690050441A /* ReportingUI.sh */; };
 		8C19F79612117433009D5CCF /* PostController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C19F79512117433009D5CCF /* PostController.m */; };
 		8C19F79E1211755B009D5CCF /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C19F79D1211755B009D5CCF /* CFNetwork.framework */; };
+		8C22A7B912154E0600DF7D72 /* toggle_logging.sh in Resources */ = {isa = PBXBuildFile; fileRef = 8C22A7B812154E0600DF7D72 /* toggle_logging.sh */; };
 		8C6029D71212BF1500D8CE48 /* DataStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C6029D61212BF1500D8CE48 /* DataStream.m */; };
 		8C602A82121301AD00D8CE48 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C602A81121301AD00D8CE48 /* libbz2.dylib */; };
+		8C79AF6A1228915000852896 /* control in Resources */ = {isa = PBXBuildFile; fileRef = 8C79AF671228915000852896 /* control */; };
+		8C79AF6B1228915000852896 /* postinst in Resources */ = {isa = PBXBuildFile; fileRef = 8C79AF681228915000852896 /* postinst */; };
+		8C79AF6C1228915000852896 /* prerm in Resources */ = {isa = PBXBuildFile; fileRef = 8C79AF691228915000852896 /* prerm */; };
 		8CB80F30120D66FF0058A1CD /* reportMain.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8CB80F2F120D66FF0058A1CD /* reportMain.xib */; };
 		8CB80F32120D670B0058A1CD /* reportSteps.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8CB80F31120D670B0058A1CD /* reportSteps.xib */; };
 		8CB80F36120D67A70058A1CD /* reportStepsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CB80F35120D67A70058A1CD /* reportStepsController.m */; };
@@ -33,14 +39,21 @@
 		28AD733E0D9D9553002E5188 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* ReportingUI_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReportingUI_Prefix.pch; sourceTree = "<group>"; };
+		8C157F4012248FE30050441A /* CmdRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmdRunner.h; sourceTree = "<group>"; };
+		8C157F4112248FE30050441A /* CmdRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CmdRunner.m; sourceTree = "<group>"; };
+		8C157FAD1224CA690050441A /* ReportingUI.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = ReportingUI.sh; sourceTree = "<group>"; };
 		8C19F79412117433009D5CCF /* PostController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostController.h; sourceTree = "<group>"; };
 		8C19F79512117433009D5CCF /* PostController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostController.m; sourceTree = "<group>"; };
 		8C19F79D1211755B009D5CCF /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		8C19F82512118A0D009D5CCF /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
+		8C22A7B812154E0600DF7D72 /* toggle_logging.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = toggle_logging.sh; sourceTree = "<group>"; };
 		8C6029D51212BF1500D8CE48 /* DataStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataStream.h; sourceTree = "<group>"; };
 		8C6029D61212BF1500D8CE48 /* DataStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataStream.m; sourceTree = "<group>"; };
 		8C602A81121301AD00D8CE48 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		8C602A911213041200D8CE48 /* bzlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bzlib.h; sourceTree = "<group>"; };
+		8C79AF671228915000852896 /* control */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = control; path = deb/DEBIAN/control; sourceTree = SOURCE_ROOT; };
+		8C79AF681228915000852896 /* postinst */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = postinst; path = deb/DEBIAN/postinst; sourceTree = SOURCE_ROOT; };
+		8C79AF691228915000852896 /* prerm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = prerm; path = deb/DEBIAN/prerm; sourceTree = SOURCE_ROOT; };
 		8CB80F2F120D66FF0058A1CD /* reportMain.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = reportMain.xib; sourceTree = "<group>"; };
 		8CB80F31120D670B0058A1CD /* reportSteps.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = reportSteps.xib; sourceTree = "<group>"; };
 		8CB80F34120D67A70058A1CD /* reportStepsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = reportStepsController.h; path = ../reportStepsController.h; sourceTree = "<group>"; };
@@ -79,6 +92,8 @@
 				1D3623250D0F684500981E51 /* ReportingUIAppDelegate.m */,
 				8C6029D51212BF1500D8CE48 /* DataStream.h */,
 				8C6029D61212BF1500D8CE48 /* DataStream.m */,
+				8C157F4012248FE30050441A /* CmdRunner.h */,
+				8C157F4112248FE30050441A /* CmdRunner.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -94,6 +109,8 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				8C79AF651228913000852896 /* deb */,
+				8C22A7B612154DB700DF7D72 /* Scripts */,
 				8C602A90121302CE00D8CE48 /* Missing headers */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
@@ -137,6 +154,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		8C22A7B612154DB700DF7D72 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				8C22A7B812154E0600DF7D72 /* toggle_logging.sh */,
+				8C157FAD1224CA690050441A /* ReportingUI.sh */,
+			);
+			name = Scripts;
+			sourceTree = "<group>";
+		};
 		8C602A90121302CE00D8CE48 /* Missing headers */ = {
 			isa = PBXGroup;
 			children = (
@@ -144,6 +170,25 @@
 			);
 			name = "Missing headers";
 			sourceTree = "<group>";
+		};
+		8C79AF651228913000852896 /* deb */ = {
+			isa = PBXGroup;
+			children = (
+				8C79AF661228915000852896 /* DEBIAN */,
+			);
+			name = deb;
+			sourceTree = "<group>";
+		};
+		8C79AF661228915000852896 /* DEBIAN */ = {
+			isa = PBXGroup;
+			children = (
+				8C79AF671228915000852896 /* control */,
+				8C79AF681228915000852896 /* postinst */,
+				8C79AF691228915000852896 /* prerm */,
+			);
+			name = DEBIAN;
+			path = deb/DEBIAN;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -198,6 +243,11 @@
 				28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */,
 				8CB80F30120D66FF0058A1CD /* reportMain.xib in Resources */,
 				8CB80F32120D670B0058A1CD /* reportSteps.xib in Resources */,
+				8C22A7B912154E0600DF7D72 /* toggle_logging.sh in Resources */,
+				8C157FAE1224CA690050441A /* ReportingUI.sh in Resources */,
+				8C79AF6A1228915000852896 /* control in Resources */,
+				8C79AF6B1228915000852896 /* postinst in Resources */,
+				8C79AF6C1228915000852896 /* prerm in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -215,7 +265,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export CODESIGN_ALLOCATE=/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/codesign_allocate\nif [ \"${PLATFORM_NAME}\" == \"iphoneos\" ]; then\n\tcodesign -f -s \"ssc\" --entitlements \"${PROJECT_DIR}/ent.xcent\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/\"\nfi";
+			shellScript = "export CODESIGN_ALLOCATE=/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/codesign_allocate\nif [ \"${PLATFORM_NAME}\" == \"iphoneos\" ]; then\n\t# codesign -f -s \"ssc\" --entitlements \"${PROJECT_DIR}/ent.xcent\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/\"\n\tcodesign -f -s \"ssc\" --entitlements \"${PROJECT_DIR}/ent.xcent\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/${EXECUTABLE_NAME}\"\nfi";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -230,6 +281,7 @@
 				8CB80F3D120D6C220058A1CD /* reportMainController.m in Sources */,
 				8C19F79612117433009D5CCF /* PostController.m in Sources */,
 				8C6029D71212BF1500D8CE48 /* DataStream.m in Sources */,
+				8C157F4212248FE30050441A /* CmdRunner.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,9 +324,15 @@
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_ENABLE_SYMBOL_SEPARATION = NO;
+				GCC_FORCE_CPU_SUBTYPE_ALL = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LLVM_LTO = NO;
+				OTHER_CFLAGS = "";
 				PREBINDING = NO;
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos4.1;
 			};
@@ -287,9 +345,11 @@
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				LLVM_LTO = NO;
+				OTHER_CFLAGS = "";
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos4.1;

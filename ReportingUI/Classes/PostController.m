@@ -24,7 +24,6 @@ enum {
 
 // Properties that don't need to be seen by the outside world.
 
-@property (nonatomic, readonly) BOOL              isSending;
 @property (nonatomic, retain)   NSURLConnection * connection;
 @property (nonatomic, retain)   NSData*			  mappedFile;
 //@property (nonatomic, retain)   NSOutputStream *  producerStream;
@@ -39,6 +38,8 @@ enum {
 @end
 
 @implementation PostController
+
+@synthesize delegate;
 
 + (void)releaseObj:(id)obj
     // +++ See comment in -_stopSendWithStatus:.
@@ -114,7 +115,6 @@ enum {
 		return;
 	}
 	
-    BOOL                    success;
     NSMutableURLRequest *   request;
     
 	assert(self.connection == nil);         // don't tap send twice in a row!
@@ -124,33 +124,29 @@ enum {
 
 	NSLog(@"_startUpload: %@", self.uploadUrl);
 
-    if ( ! success) {
-        NSLog(@"Invalid URL");
-    } else {        
-		self.boundaryStr = [self _generateBoundaryString];
-		assert(self.boundaryStr != nil);
-		
-		self.dataStream = [[[DataReadStream alloc] initWithDataSource:self userInfo:self]autorelease];
-        // Open a connection for the URL, configured to POST the file.
+	self.boundaryStr = [self _generateBoundaryString];
+	assert(self.boundaryStr != nil);
+	
+	self.dataStream = [[[DataReadStream alloc] initWithDataSource:self userInfo:self]autorelease];
+	// Open a connection for the URL, configured to POST the file.
 
-        request = [NSMutableURLRequest requestWithURL:self.uploadUrl];
-        assert(request != nil);
-        
-        [request setHTTPMethod:@"POST"];
-        
-		[request setHTTPBodyStream:self.dataStream];
-        
-        [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=\"%@\"", self.boundaryStr] forHTTPHeaderField:@"Content-Type"];
-		[request setValue:@"chunked" forHTTPHeaderField:@"Transfer-Encoding"];
-		[request setValue:@"100-continue" forHTTPHeaderField:@"Expect"];
-		
-		//[request setValue:[NSString stringWithFormat:@"%llu", ???] forHTTPHeaderField:@"Content-Length"];
-        
-        self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
-        assert(self.connection != nil);
-        
-        // Tell the UI we're sending.
-    }
+	request = [NSMutableURLRequest requestWithURL:self.uploadUrl];
+	assert(request != nil);
+	
+	[request setHTTPMethod:@"POST"];
+	
+	[request setHTTPBodyStream:self.dataStream];
+	
+	[request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=\"%@\"", self.boundaryStr] forHTTPHeaderField:@"Content-Type"];
+	[request setValue:@"chunked" forHTTPHeaderField:@"Transfer-Encoding"];
+	[request setValue:@"100-continue" forHTTPHeaderField:@"Expect"];
+	
+	//[request setValue:[NSString stringWithFormat:@"%llu", ???] forHTTPHeaderField:@"Content-Length"];
+	
+	self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
+	assert(self.connection != nil);
+	
+	// Tell the UI we're sending.
 }
 
 - (void)_stopSendWithStatus:(NSString *)statusString
@@ -170,6 +166,7 @@ enum {
 	}
 
 	[self _sendDidStopWithStatus:statusString];
+	[self.delegate stoppedWithStatus:statusString];
 }
 
 - (BOOL) openDataStream:(id)userInfo
@@ -298,7 +295,8 @@ nextfile:
 					if (_bzStream.next_in != NULL) {
 						BZ2_bzCompressEnd(&_bzStream);
 						memset(&_bzStream, 0, sizeof(_bzStream));
-					}
+					}				
+					[self.delegate reportProgress:1.0 forStep:_currentFileIndex];
 					++_currentFileIndex;
 					
 					NSString* suffixString;
@@ -324,9 +322,9 @@ nextfile:
 				bytesRead += bytesWritten;
 			}
 		}
-		NSLog(@"stream:readDataFromStream(loop): file %u, bufOffs=%u, ret=%u", _currentFileIndex, _bufferOffset, bytesRead);
+		NSLog(@"stream:readDataFromStream(loop): file %u, bufOffs=%lu, ret=%u", _currentFileIndex, _bufferOffset, bytesRead);
 	} while (bytesRead < length);
-	NSLog(@"stream:readDataFromStream(leaving): file %u, bufOffs=%u, ret=%u", _currentFileIndex, _bufferOffset, bytesRead);
+	NSLog(@"stream:readDataFromStream(leaving): file %u, bufOffs=%lu, ret=%u", _currentFileIndex, _bufferOffset, bytesRead);
 	return bytesRead;
 }
 
@@ -354,7 +352,7 @@ nextfile:
     #pragma unused(theConnection)
     NSHTTPURLResponse * httpResponse;
 
-    assert(theConnection == self.connection);
+    //assert(theConnection == self.connection);
     
     httpResponse = (NSHTTPURLResponse *) response;
     assert( [httpResponse isKindOfClass:[NSHTTPURLResponse class]] );
@@ -374,7 +372,7 @@ nextfile:
     #pragma unused(theConnection)
     #pragma unused(data)
 
-    assert(theConnection == self.connection);
+    //assert(theConnection == self.connection);
 
     // do nothing
 }
@@ -386,7 +384,7 @@ nextfile:
 {
     #pragma unused(theConnection)
     #pragma unused(error)
-    assert(theConnection == self.connection);
+    //assert(theConnection == self.connection);
     
     [self _stopSendWithStatus:@"Connection failed"];
 }
@@ -408,6 +406,11 @@ nextfile:
 {
 	self.filesToSend = p_filesToSend;
 	_currentFileIndex = 0;
+}
+
+- (int) numSteps
+{
+	return [self.filesToSend count];
 }
 
 - (IBAction)cancelAction:(id)sender

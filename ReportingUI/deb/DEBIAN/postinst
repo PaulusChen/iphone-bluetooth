@@ -1,0 +1,14 @@
+#!/bin/sh
+
+chmod +s /Applications/ReportingUI.app/ReportingUI
+
+declare -a cydia
+cydia=($CYDIA)
+
+if [[ ${CYDIA+@} ]]; then
+	eval "echo 'finish:restart' >&${cydia[0]}"
+else
+	killall SpringBoard
+fi
+
+exit 0
