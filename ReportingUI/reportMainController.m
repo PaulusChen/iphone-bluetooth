@@ -274,18 +274,36 @@ Additional details: \n\
 						  self.steps, @"ReproSteps", 
 						  nil];
 	[postCt addFiles:[NSArray arrayWithObjects: dict, 
+					  // syslog
 					  @"/var/log/syslog",
+					  // iphone-bluetooth stack logs
 					  @"/tmp/BtGpsServer.log", 
 					  @"/tmp/BtGpsServer.err", 
+					  // v4 stack logs
+					  @"/tmp/roqyBluetooth4d.log",
+					  @"/tmp/roqyBluetooth4d.err",
+					  // v0.9 stack logs
 					  @"/var/log/roqyBT.log", 
 					  @"/var/log/roqyBT.err", 
+					  // v0.9 settings
 					  @"/private/var/mobile/Documents/roqyBT/Autoconnect",
 					  @"/private/var/mobile/Documents/roqyBT/Config",
 					  @"/private/var/mobile/Documents/roqyBT/Licence",
-					  @"/private/var/mobile/Documents/roqyBT/nmea_log.txt",	
+					  // v4 settings
+					  @"/private/var/mobile/Documents/roqyBT/Config4",
+					  @"/private/var/mobile/Documents/roqyBT/License4",
+					  // v0.9 logs
+					  @"/private/var/mobile/Documents/roqyBT/nmea_log.txt",
+					  // mobile crash logs, v0.9
 					  @"/private/var/mobile/Library/Logs/CrashReporter/LatestCrash-roqyBT.plist",
+					  // mobile crash logs, v4
+					  @"/private/var/mobile/Library/Logs/CrashReporter/LatestCrash-roqyBT4.plist",
+					  @"/private/var/mobile/Library/Logs/CrashReporter/LatestCrash-roqyBluetooth4d.plist",
+					  // Stack log, v4
 					  @"/private/var/mobile/Library/Logs/BTServer_stdout.log", 
+					  // root crash logs, v0.9
 					  @"/private/var/logs/CrashReporter/LatestCrash-roqyBluetooth.plist",
+					  // self crash logs
 					  @"/private/var/logs/CrashReporter/LatestCrash-ReportingUI.plist",
 					  nil]];
 	postCt.delegate = self;
