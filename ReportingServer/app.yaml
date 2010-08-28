@@ -1,5 +1,6 @@
+
 application: icrashrep
-version: 1
+version: 1-1-002
 runtime: python
 api_version: 1
 
@@ -8,10 +9,12 @@ handlers:
 - url: /\.*\/*Packages.bz2
   static_files: debs/Packages.bz2
   upload: debs/Packages.bz2
+  mime_type: application/octet-stream
   
 - url: /\.*\/*([^\/]*\.deb)
   static_files: debs/\1
   upload: debs/(.*\.deb)
+  mime_type: application/octet-stream
 
 - url: /
   script: service.py
@@ -21,3 +24,10 @@ handlers:
 
 - url: /report
   script: service.py
+
+- url: /manage/(.*)
+  script: manage.py
+  login: admin 
+
+- url: /styles
+  static_dir: styles
