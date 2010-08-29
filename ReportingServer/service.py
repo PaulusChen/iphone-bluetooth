@@ -66,7 +66,7 @@ name="udid" value="001122"></div>
           </form>""" % blobstore.create_upload_url('/up'))
 
 application = webapp.WSGIApplication([('/report', ReportHandler),
-                                          ('/', UploadForm),
+                                          ('/test', UploadForm),
                                           ('/up', UploadHandler)],
                                          debug=True)
 
