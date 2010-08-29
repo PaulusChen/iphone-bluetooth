@@ -1,5 +1,5 @@
 Package: com.msftguy.errorreporter
-Version: 1.0.7-0
+Version: 1.0.8-0
 Architecture: iphoneos-arm
 Section: Utilities
 Depends: com.ericasadun.utilities, syslogd

@@ -6,7 +6,10 @@ declare -a cydia
 cydia=($CYDIA)
 
 if [[ ${CYDIA+@} ]]; then
-	eval "echo 'finish:restart' >&${cydia[0]}"
+	if [ -f /var/log/syslog ];
+	then eval "echo 'finish:restart' >&${cydia[0]}";
+	else eval "echo 'finish:reboot' >&${cydia[0]}";
+	fi
 else
 	killall SpringBoard
 fi
