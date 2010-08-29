@@ -1,3 +1,6 @@
+th {
+  background-color: #C0C0FF;
+}
 tr:nth-child(odd) {
   background-color: #C0C0C0;
 }

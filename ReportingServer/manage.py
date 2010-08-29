@@ -16,6 +16,7 @@
 #
 
 import cgi
+import datetime
 
 from google.appengine.ext import webapp
 from google.appengine.ext import db
@@ -80,11 +81,12 @@ class ItemInfoHandler(webapp.RequestHandler):
         
         self.response.out.write('<h3>%s</h3>' % cgi.escape(str(report.date)))
 
-        reportMetaBlobData = blobstore.BlobReader(report.userProps).read()
+        if report.userProps:
+            reportMetaBlobData = blobstore.BlobReader(report.userProps).read()
 
-        reportMetaPlist = plistlib.readPlistFromString(reportMetaBlobData)
+            reportMetaPlist = plistlib.readPlistFromString(reportMetaBlobData)
 
-        self.response.out.write('Repro steps: <pre>%s</pre>' % cgi.escape(reportMetaPlist['ReproSteps']))
+            self.response.out.write('Repro steps: <pre>%s</pre>' % cgi.escape(reportMetaPlist['ReproSteps']))
 
         self.response.out.write('<a href="getlogs?id=%s">Download logs</a>' % id)
         
@@ -93,6 +95,8 @@ class ItemInfoHandler(webapp.RequestHandler):
 
 class ListHandler(webapp.RequestHandler):
     def get(self):
+        offset = int(self.request.get('offset', '0'))
+        pagesize = 10
         self.response.out.write('<html>')
         
         self.response.out.write('<head>')
@@ -106,8 +110,12 @@ function showItem(id) {
         
         self.response.out.write('<body>')
 
-        reports = db.GqlQuery("SELECT * FROM ReportModel ORDER BY date DESC LIMIT 10")
+        query = db.Query(ReportModel)
+
+        query.order('-date')
         
+        reports = query.fetch(pagesize, offset)
+                
         self.response.out.write('<table>')
 
         self.response.out.write('<tr>')
@@ -116,11 +124,34 @@ function showItem(id) {
             self.response.out.write('<th>%s</th>' % colName)
         self.response.out.write('</tr>')
 
+        todayOrd = datetime.date.today().toordinal()
+
+        lastHeader = None
         for report in reports:
             id = cgi.escape(str(report.key().id()))
-            self.response.out.write("<tr onclick='showItem(""%s"")'><td>%s</td><td>%s</td><td>%s</td></tr>"  % (id, cgi.escape(str(report.date)), cgi.escape(str(report.udid)), id))
+            ord = report.date.date().toordinal()
+
+            if ord == todayOrd:
+                header = "Today"
+            elif ord == todayOrd - 1:
+                header = "Yesterday"
+            else:
+                header = "%u days ago" % (todayOrd - ord)
+            if header != lastHeader:
+                lastHeader = header
+                self.response.out.write("<tr><th colspan='100'>%s</th></tr>"  % header)
+            
+            self.response.out.write("<tr onclick='showItem(""%s"")'><td>%s</td><td>%s</td><td>%s</td></tr>"  % (id, cgi.escape(str(report.date.strftime('%H:%M:%S'))), cgi.escape(str(report.udid)), id))
             
         self.response.out.write('</table>')
+
+        prevOffset = offset - 10
+        if prevOffset < 0:
+            prevOffset = 0
+        if prevOffset != offset:
+            self.response.out.write('<a href="?offset=%u">&lt;&lt;Prev</a>' % prevOffset)        
+        if len(reports) == pagesize:
+            self.response.out.write('<a href="?offset=%u">Next&gt;&gt;</a>' % (offset + pagesize))        
 
         self.response.out.write('</body></html>')
         
