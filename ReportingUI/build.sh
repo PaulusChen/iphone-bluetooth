@@ -36,6 +36,16 @@ bzip2 Packages || err "Failed to compress package index"
 
 popd
 
+if [ -n "$1" ]
+then
+	Version=$1
+	ArchivePath=Archive/$Version
+	mkdir -p $ArchivePath
+	cp -R build/$Flavor/ftp/ $ArchivePath/
+	cp -R build/Debug-iphoneos/ReportingUI.app.dSYM $ArchivePath
+fi
+
+
 test -d /Volumes/upload && { 
 	rm -rf /Volumes/upload/ftp
 	cp -R build/$Flavor/ftp /Volumes/upload
