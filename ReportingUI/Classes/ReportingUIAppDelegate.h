@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface test5AppDelegate : NSObject <UIApplicationDelegate> {
+@interface ReportingUIAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
 }
 

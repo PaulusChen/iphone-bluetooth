@@ -11,11 +11,20 @@ rm -rf build/$Flavor build/CurrentFlavor || err "Cannot clean the work dir"
 
 mkdir -p build/CurrentFlavor build/$Flavor/deb build/$Flavor/ftp
 
-xcodebuild -target ReportingUI -configuration $Flavor clean || err "Clean failed!"
+xcodebuild -target ReportingUI -configuration $Flavor clean || err "ReportingUI clean failed!"
 
-xcodebuild -target ReportingUI -configuration $Flavor || err "Build failed!"
+xcodebuild -target ReportingUI -configuration $Flavor || err "ReportingUI build failed!"
 
-cp -R build/$Flavor-iphoneos/ReportingUI.app build/CurrentFlavor || err "copy failed"
+pushd ../btserver-inject
+
+xcodebuild -target btserver-inject -configuration $Flavor-logging clean || err "BTServer-inject clean failed!"
+
+xcodebuild -target btserver-inject -configuration $Flavor-logging || err "BTServer-inject build failed!"
+
+popd
+
+cp -R build/$Flavor-iphoneos/ReportingUI.app build/CurrentFlavor || err "ReportingUI copy failed"
+cp ../btserver-inject/build/$Flavor-logging-iphoneos/btserver-inject.app/btserver-inject build/CurrentFlavor/btserver-inject-logging.dylib || err "ReportingUI copy failed"
 
 Debdir=`pwd`/build/$Flavor/deb
 
@@ -47,8 +56,7 @@ fi
 
 
 test -d /Volumes/upload && { 
-	rm -rf /Volumes/upload/ftp
-	cp -R build/$Flavor/ftp /Volumes/upload
+	cp -R build/$Flavor/ftp /Volumes/upload/ftp
 }
 
 echo BUILD SCRIPT FINISHED OK

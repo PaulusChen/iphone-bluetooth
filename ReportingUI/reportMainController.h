@@ -12,6 +12,7 @@
 @interface reportMainController : UITableViewController<UITextViewDelegate, UploadProgressDelegate> {
 	PostController* postCt;
 	NSMutableString* _steps;
+	NSMutableDictionary* _options;
 	UITableView* _tableView;
 } 
 
@@ -44,6 +45,7 @@
 - (IBAction) optionsButtonClicked:(id)sender;
 
 @property (nonatomic, retain) NSMutableString* steps;
+@property (nonatomic, retain) NSMutableDictionary* options;
 @property (nonatomic, retain) UIProgressView* uploadProgress;
 @property (nonatomic, retain) IBOutlet UITableView* tableView;
 @property (nonatomic, assign, readonly) BOOL loggingEnabled;

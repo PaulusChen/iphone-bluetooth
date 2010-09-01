@@ -28,7 +28,7 @@ void set_timestamp(char* buf, size_t size)
 bool log_open() {
 	if (hLog == NULL) {
 		char pathBuffer[BUFSIZ];
-		snprintf(pathBuffer, sizeof(pathBuffer), "%s/Library/Logs/btsrvinj-%li.log", getenv("HOME"), time(NULL));
+		snprintf(pathBuffer, sizeof(pathBuffer), "%s/Library/Logs/btsrvinj.log", getenv("HOME"));
 		hLog = fopen(pathBuffer, "a");
 	}
 	return hLog != NULL;

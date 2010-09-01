@@ -21,7 +21,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 8CF45DFE11FA169B00366FBA /* impHook.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC07D0554694100DB518D /* impHook */;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = impHook;
 		};
 		8CF45E0711FA169B00366FBA /* PBXContainerItemProxy */ = {
@@ -278,6 +278,97 @@
 			};
 			name = Release;
 		};
+		9D3D274B122EFABE00644FD6 /* Debug-logging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = armv6;
+				BUILD_VARIANTS = normal;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEPLOYMENT_POSTPROCESSING = NO;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DEBUGGING_SYMBOLS = full;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_SYMBOL_SEPARATION = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
+				GCC_THUMB_SUPPORT = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INIT_ROUTINE = _dlInit;
+				LD_DYLIB_INSTALL_NAME = "/usr/lib/btserver-inject-logging.dylib";
+				MACH_O_TYPE = mh_dylib;
+				OTHER_LDFLAGS = "";
+				PREBINDING = NO;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos4.1;
+				SEPARATE_STRIP = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_STYLE = "non-global";
+				VALID_ARCHS = armv6;
+			};
+			name = "Debug-logging";
+		};
+		9D3D274C122EFABE00644FD6 /* Debug-logging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "btserver-inject_Prefix.pch";
+				INFOPLIST_FILE = "btserver-inject-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/Frameworks/IOKit.framework\"",
+				);
+				PRODUCT_NAME = "btserver-inject";
+			};
+			name = "Debug-logging";
+		};
+		9D3D274D122EFACD00644FD6 /* Release-logging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = armv6;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
+				COPY_PHASE_STRIP = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_THUMB_SUPPORT = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INIT_ROUTINE = _dlInit;
+				LD_DYLIB_INSTALL_NAME = "/usr/lib/btserver-inject-logging.dylib";
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PREBINDING = NO;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos4.1;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = "non-global";
+				VALID_ARCHS = armv6;
+			};
+			name = "Release-logging";
+		};
+		9D3D274E122EFACD00644FD6 /* Release-logging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "btserver-inject_Prefix.pch";
+				INFOPLIST_FILE = "btserver-inject-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/Frameworks/IOKit.framework\"",
+				);
+				PRODUCT_NAME = "btserver-inject";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-logging";
+		};
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -341,7 +432,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,
+				9D3D274C122EFABE00644FD6 /* Debug-logging */,
 				1D6058950D05DD3E006BFB54 /* Release */,
+				9D3D274E122EFACD00644FD6 /* Release-logging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -350,7 +443,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
+				9D3D274B122EFABE00644FD6 /* Debug-logging */,
 				C01FCF5008A954540054247B /* Release */,
+				9D3D274D122EFACD00644FD6 /* Release-logging */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

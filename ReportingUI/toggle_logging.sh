@@ -51,18 +51,35 @@ function disable_btserver_logging {
 }
 
 function enable_roqybt_nmea_logging {
-	if [ ! -f /var/mobile/Documents/roqyBT/Config.orig ]; 
-	then 
+	if [ ! -f /var/mobile/Documents/roqyBT/Config.orig ]; then 
 		touch /var/mobile/Documents/roqyBT/Config
 		cp /var/mobile/Documents/roqyBT/Config /User/Documents/roqyBT/Config.orig
 		printf "%s\nNMEA_log=1\n" `grep -v NMEA_log < /User/Documents/roqyBT/Config` > /User/Documents/roqyBT/Config
-	fi;
+	fi
 }
 
 function restore_roqybt_nmea_logging {
-	if [ -f /User/Documents/roqyBT/Config.orig ]; 
-	then mv /User/Documents/roqyBT/Config.orig /User/Documents/roqyBT/Config;
-	fi;
+	if [ -f /User/Documents/roqyBT/Config.orig ]; then 
+		mv /User/Documents/roqyBT/Config.orig /User/Documents/roqyBT/Config
+	fi
+}
+
+function enable_btserver_hci_logging {
+	Plist=/System/Library/LaunchDaemons/com.apple.BTServer.plist
+	if [ -f $Plist.bak ]; then
+		exit
+	fi
+	cp $Plist $Plist.bak
+	plutil -rmkey EnvironmentVariables $Plist &>/dev/null
+	plutil -key EnvironmentVariables -dict $Plist
+	plutil -key EnvironmentVariables -key DYLD_INSERT_LIBRARIES -string /usr/lib/btserver-inject-logging.dylib $Plist
+	touch /tmp/log_btserver_io
+}
+
+function restore_btserver_hci_logging {
+	Plist=/System/Library/LaunchDaemons/com.apple.BTServer.plist
+	mv $Plist.bak $Plist &>/dev/null
+	rm /tmp/log_btserver_io &>/dev/null
 }
 
 function enable_logging {
@@ -77,6 +94,7 @@ function enable_logging {
 }
 
 function disable_logging {
+	restore_btserver_hci_logging
 	restore_roqybt_nmea_logging
 	disable_btserver_logging
 
@@ -89,9 +107,13 @@ function disable_logging {
 
 test -z "$1" && { echo Need an argument: 0 to disable, 1 to enable; exit; }
 
-if [ $1 -ne 0 ] ;
-then enable_logging;
-else disable_logging;
-fi;
+if [ $1 -ne 0 ]; then
+	if [ $1 -eq 2 ]; then 
+		enable_btserver_hci_logging
+	fi
+	enable_logging
+else 
+	disable_logging
+fi
 
 

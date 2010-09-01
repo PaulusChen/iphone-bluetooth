@@ -7,6 +7,7 @@
 
 #import "reportMainController.h"
 #import "reportStepsController.h"
+#import "OptionsPage.h"
 #import "ReportingUIAppDelegate.h"
 #import "CmdRunner.h"
 
@@ -16,6 +17,7 @@ NSString* disableLoggingMessage = @"Disable logging?";
 NSString* confirmLoglessReportMessage = @"Send report without logs?";
 
 @synthesize steps = _steps;
+@synthesize options = _options;
 @synthesize tableView = _tableView;
 @synthesize uploadProgress;
 @synthesize optionsNavBarButton;
@@ -28,7 +30,7 @@ NSString* confirmLoglessReportMessage = @"Send report without logs?";
 {
 	[super viewDidLoad];
 	[self navigationItem].title = @"Report a Problem";
-	//[self navigationItem].leftBarButtonItem = optionsNavBarButton;
+	[self navigationItem].leftBarButtonItem = optionsNavBarButton;
 	postCt = [[PostController alloc]init];
 	self.steps = [NSMutableString stringWithString:
 @"Describe the steps to reproduce the problem:\n\
@@ -43,6 +45,7 @@ What actually happened: \n\
 Additional details: \n\
 "
 				  ];
+	self.options = [NSMutableDictionary dictionary];
 }
 
 - (void) dealloc
@@ -52,6 +55,8 @@ Additional details: \n\
 	}
 	self.uploadResult = nil;
 	self.uploadResultDetails = nil;
+	self.options = nil;
+	self.steps = nil;
 	[super dealloc];
 }
 
@@ -187,7 +192,11 @@ Additional details: \n\
 - (void) toggleLogging:(BOOL)enable
 {
 	NSLog(@"cmd test: running '%@'", self.loggingScript);
-	[CmdRunner runCommandInBackground:@"/bin/bash" withArguments:[NSArray arrayWithObjects:self.loggingScript, enable ? @"1" : @"0", nil] 
+	BOOL hciToggleOn = [[self.options valueForKey:optionHciToggle] boolValue];
+	
+	NSLog(@"hciToggleOn: %i", hciToggleOn);
+
+	[CmdRunner runCommandInBackground:@"/bin/bash" withArguments:[NSArray arrayWithObjects:self.loggingScript, enable ? (hciToggleOn ? @"2" : @"1") : @"0", nil] 
 					 completionObject:self andCallback:@selector(taskFinishedWithResult:context:) andContext:nil];
 	
 	UIActivityIndicatorView* ai = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray] autorelease];
@@ -318,7 +327,7 @@ Additional details: \n\
 {
 	reportStepsController* stepsCt = [[[reportStepsController alloc] initWithNibName:@"reportSteps" bundle:nil] autorelease];
 	stepsCt.steps = self.steps;
-	[[test5AppDelegate navController] pushViewController:stepsCt animated:YES];
+	[[ReportingUIAppDelegate navController] pushViewController:stepsCt animated:YES];
 }
 
 - (void) sendReportInternal
@@ -356,6 +365,8 @@ Additional details: \n\
 					  @"/private/var/mobile/Library/Logs/CrashReporter/LatestCrash-roqyBluetooth4d.plist",
 					  // Stack log, v4
 					  @"/private/var/mobile/Library/Logs/BTServer_stdout.log", 
+					  // Verbose HCI log, v4
+					  @"/private/var/mobile/Library/Logs/btsrvinj.log",
 					  // root crash logs, v0.9
 					  @"/private/var/logs/CrashReporter/LatestCrash-roqyBluetooth.plist",
 					  // self crash logs
@@ -393,6 +404,9 @@ Additional details: \n\
 
 - (IBAction) optionsButtonClicked:(id)sender
 {
+	OptionsPage* optionsCt = [[[OptionsPage alloc] initWithNibName:@"OptionsPage" bundle:nil] autorelease];
+	optionsCt.options = self.options;
+	[[ReportingUIAppDelegate navController] pushViewController:optionsCt animated:YES];
 	
 }
 

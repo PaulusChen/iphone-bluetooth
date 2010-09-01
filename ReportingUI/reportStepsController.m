@@ -16,7 +16,7 @@
 
 - (IBAction) rightNavbarButtonClicked:(id)sender
 {
-	[[test5AppDelegate navController] popToRootViewControllerAnimated:YES];
+	[[ReportingUIAppDelegate navController] popToRootViewControllerAnimated:YES];
 }
 
 - (void) viewWillAppear:(BOOL)animated

@@ -8,7 +8,7 @@
 
 #import "ReportingUIAppDelegate.h"
 
-@implementation test5AppDelegate
+@implementation ReportingUIAppDelegate
 
 @synthesize window;
 @synthesize navCt;
@@ -28,7 +28,7 @@
 
 + (UINavigationController*) navController
 {
-	return ((test5AppDelegate*)[[UIApplication sharedApplication] delegate]).navCt;
+	return ((ReportingUIAppDelegate*)[[UIApplication sharedApplication] delegate]).navCt;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

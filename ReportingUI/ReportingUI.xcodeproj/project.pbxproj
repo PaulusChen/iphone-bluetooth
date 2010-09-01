@@ -27,6 +27,9 @@
 		8CB80F32120D670B0058A1CD /* reportSteps.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8CB80F31120D670B0058A1CD /* reportSteps.xib */; };
 		8CB80F36120D67A70058A1CD /* reportStepsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CB80F35120D67A70058A1CD /* reportStepsController.m */; };
 		8CB80F3D120D6C220058A1CD /* reportMainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CB80F3C120D6C220058A1CD /* reportMainController.m */; };
+		9D3CF4BE122F0E640032D372 /* build.sh in Resources */ = {isa = PBXBuildFile; fileRef = 9D3CF4BD122F0E640032D372 /* build.sh */; };
+		9D3D2768122F006000644FD6 /* OptionsPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D3D2766122F006000644FD6 /* OptionsPage.m */; };
+		9D3D2769122F006000644FD6 /* OptionsPage.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9D3D2767122F006000644FD6 /* OptionsPage.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +64,10 @@
 		8CB80F3B120D6C220058A1CD /* reportMainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = reportMainController.h; path = ../reportMainController.h; sourceTree = "<group>"; };
 		8CB80F3C120D6C220058A1CD /* reportMainController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = reportMainController.m; path = ../reportMainController.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* ReportingUI-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "ReportingUI-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		9D3CF4BD122F0E640032D372 /* build.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build.sh; sourceTree = "<group>"; };
+		9D3D2765122F006000644FD6 /* OptionsPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OptionsPage.h; path = ../OptionsPage.h; sourceTree = "<group>"; };
+		9D3D2766122F006000644FD6 /* OptionsPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OptionsPage.m; path = ../OptionsPage.m; sourceTree = "<group>"; };
+		9D3D2767122F006000644FD6 /* OptionsPage.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OptionsPage.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +89,8 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				9D3D2765122F006000644FD6 /* OptionsPage.h */,
+				9D3D2766122F006000644FD6 /* OptionsPage.m */,
 				8C19F79412117433009D5CCF /* PostController.h */,
 				8C19F79512117433009D5CCF /* PostController.m */,
 				8CB80F3B120D6C220058A1CD /* reportMainController.h */,
@@ -133,6 +142,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9D3D2767122F006000644FD6 /* OptionsPage.xib */,
 				8C19F82512118A0D009D5CCF /* Entitlements.plist */,
 				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
 				8D1107310486CEB800E47090 /* ReportingUI-Info.plist */,
@@ -157,6 +167,7 @@
 		8C22A7B612154DB700DF7D72 /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
+				9D3CF4BD122F0E640032D372 /* build.sh */,
 				8C22A7B812154E0600DF7D72 /* toggle_logging.sh */,
 				8C157FAD1224CA690050441A /* ReportingUI.sh */,
 			);
@@ -248,6 +259,8 @@
 				8C79AF6A1228915000852896 /* control in Resources */,
 				8C79AF6B1228915000852896 /* postinst in Resources */,
 				8C79AF6C1228915000852896 /* prerm in Resources */,
+				9D3D2769122F006000644FD6 /* OptionsPage.xib in Resources */,
+				9D3CF4BE122F0E640032D372 /* build.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,6 +295,7 @@
 				8C19F79612117433009D5CCF /* PostController.m in Sources */,
 				8C6029D71212BF1500D8CE48 /* DataStream.m in Sources */,
 				8C157F4212248FE30050441A /* CmdRunner.m in Sources */,
+				9D3D2768122F006000644FD6 /* OptionsPage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

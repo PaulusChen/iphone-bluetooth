@@ -13,51 +13,50 @@
 #include <dlfcn.h>
 #include <mach-o/dyld.h>
 
+#include <sys/stat.h>
+
 #include "substrate.h"
 #include "impHookApi.h"
 
 #include "logging.h"
 #include "safe.h"
 #include "fuzz.h"
-//
-//static ssize_t my_read(int fd, void* buf, size_t size) {
-//	int result = read(fd, buf, size);
-//	log_io(fd, "_read", buf, result > 0 ? result : 0, result);
-//	return result;
-//}
-//
-//static ssize_t my_write(int fd, const void* buf, size_t size) {
-//	int result = write(fd, buf, size);
-//	log_io(fd, "_write", buf, size, result);
-//	return result;
-//}
-//
-//void hook_read_write_ops()
-//{
-//	//FIXME: use correct module handle
-//	void* hBS = dlopen("/usr/lib/blacksn0w.dylib", RTLD_GLOBAL);
-//	NSLog(@"dlopen(blacksnow) = %p", hBS);
-//
-//	const mach_header* mh = NULL;
-//
-//	for (int i = 0; i < _dyld_image_count(); ++i) {
-//		if (NULL != strcasestr(_dyld_get_image_name(i), "blacksn0w")) {
-//			mh = _dyld_get_image_header(i);
-//			NSLog(@"blacksn0w module found at %p", mh);
-//			break;
-//		}
-//	}
-//	if (mh == NULL) {
-//		NSLog(@"blacksn0w module not found!!!");
-//		return;
-//	}
-//	
-//	uintptr_t* pReadImp = get_import_ptr(mh, "_read");
-//	uintptr_t* pWriteImp = get_import_ptr(mh, "_write");
-//	*pReadImp = (uintptr_t)my_read;
-//	*pWriteImp = (uintptr_t)my_write;
-//	NSLog(@"Blacksn0w IO hooked: r=%p w=%p", pReadImp, pWriteImp);
-//}
+
+static ssize_t my_read(int fd, void* buf, size_t size) {
+	int result = read(fd, buf, size);
+	log_io(fd, "_read", buf, result > 0 ? result : 0, result);
+	return result;
+}
+
+static ssize_t my_write(int fd, const void* buf, size_t size) {
+	int result = write(fd, buf, size);
+	log_io(fd, "_write", buf, size, result);
+	return result;
+}
+
+void hook_read_write_ops()
+{
+	const char* moduleName = "BTServer";
+	const mach_header* mh = NULL;
+
+	for (int i = 0; i < _dyld_image_count(); ++i) {
+		if (NULL != strstr(_dyld_get_image_name(i), moduleName)) {
+			mh = _dyld_get_image_header(i);
+			log_progress("%s module found at %p", moduleName, mh);
+			break;
+		}
+	}
+	if (mh == NULL) {
+		log_progress("%s module not found!!!", moduleName);
+		return;
+	}
+	
+	uintptr_t* pReadImp = get_import_ptr(mh, "_read");
+	uintptr_t* pWriteImp = get_import_ptr(mh, "_write");
+	*pReadImp = (uintptr_t)my_read;
+	*pWriteImp = (uintptr_t)my_write;
+	log_progress("%s IO hooked: r=%p w=%p", moduleName, pReadImp, pWriteImp);
+}
 
 void setup_hooks()
 {
@@ -68,6 +67,12 @@ void setup_hooks()
 	} else {
 		log_progress("setup_hooks: ensure_braille_service OK!");
 	}
+	struct stat info;
+	if (0 == stat("/tmp/log_btserver_io", &info)) {
+		log_progress("setup_hooks: calling hook_read_write_ops()");		
+		hook_read_write_ops();
+	}
+	
 	safe_reportStartSuccess();
 	
 
