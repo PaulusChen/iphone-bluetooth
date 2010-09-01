@@ -19,7 +19,9 @@ from google.appengine.ext import db
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.ext.webapp import util
+
 import logging
+import plistlib
 
 class ReportModel(db.Model): 
     blobKeys = db.StringListProperty()
@@ -31,6 +33,17 @@ class ReportHandler(webapp.RequestHandler):
     def get(self):
         udid = self.request.headers.get("Udid", None)
         self.redirect(blobstore.create_upload_url('/up?udid=%s' % udid))
+
+class ResponseHandler(webapp.RequestHandler):
+    def get(self):
+        id = self.request.get('id', None)
+        if not id:
+            return
+        responseDict = { 'reportId': id,
+            }
+        self.response.headers['Content-Type'] = 'application/xml'
+        self.response.out.write(plistlib.writePlistToString(responseDict))
+
   
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler): 
     def post(self):
@@ -44,8 +57,7 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
          
         report = ReportModel(blobKeys = blobKeys, userProps = userProps, udid = udid)
         db.put(report)
-        self.redirect('/')
-
+        self.redirect('/response?id=%u' % report.key().id())
     def get(self):
         self.redirect('/')
 
@@ -67,7 +79,8 @@ name="udid" value="001122"></div>
 
 application = webapp.WSGIApplication([('/report', ReportHandler),
                                           ('/test', UploadForm),
-                                          ('/up', UploadHandler)],
+                                          ('/up', UploadHandler),
+                                          ('/response', ResponseHandler)],
                                          debug=True)
 
 def main():
