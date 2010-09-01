@@ -33,6 +33,7 @@ enum {
 @property (nonatomic, retain)   NSURL*		      uploadUrl;
 @property (nonatomic, retain)   NSArray*		  filesToSend;
 @property (nonatomic, retain)   DataReadStream*	  dataStream;
+@property (nonatomic, retain)	NSMutableData*	  responseData;
 
 
 @end
@@ -69,6 +70,7 @@ enum {
 @synthesize uploadUrl		= _uploadUrl;
 @synthesize filesToSend		= _filesToSend;
 @synthesize dataStream		= _dataStream;
+@synthesize responseData	= _responseData;
 
 - (BOOL)isSending
 {
@@ -120,6 +122,7 @@ enum {
 	assert(self.connection == nil);         // don't tap send twice in a row!
     assert(self.mappedFile == nil);         // ditto
 
+	[self.responseData setLength:0];
     // If the URL is bogus, let the user know.  Otherwise kick off the connection.
 
 	NSLog(@"_startUpload: %@", self.uploadUrl);
@@ -166,7 +169,18 @@ enum {
 	}
 
 	[self _sendDidStopWithStatus:statusString];
-	[self.delegate stoppedWithStatus:statusString];
+	id plist = nil;
+	if (statusString == nil) {
+		NSError* error = nil;
+		NSPropertyListFormat format;
+		
+		plist = [NSPropertyListSerialization propertyListWithData:self.responseData options:0 format:&format error:&error];
+		if (plist == nil) {
+			statusString = [NSString stringWithFormat:@"Error reading server response: %@", error];
+		}
+		
+	}
+	[self.delegate stoppedWithStatus:statusString response:plist];
 }
 
 - (BOOL) openDataStream:(id)userInfo
@@ -361,7 +375,7 @@ nextfile:
         [self _stopSendWithStatus:[NSString stringWithFormat:@"HTTP error %zd", (ssize_t) httpResponse.statusCode]];
     } else {
         NSLog(@"Response OK.");
-    }    
+    }
 }
 
 - (void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)data
@@ -371,8 +385,10 @@ nextfile:
 {
     #pragma unused(theConnection)
     #pragma unused(data)
-
-    //assert(theConnection == self.connection);
+	if (theConnection == self.connection) {
+		[self.responseData appendData:data];
+	}
+	//assert(theConnection == self.connection);
 
     // do nothing
 }
@@ -422,6 +438,7 @@ nextfile:
 - (PostController*) init
 {
 	NSLog(@"[PostController init]");
+	self.responseData = [NSMutableData data];
 	_buffers = [[NSMutableArray alloc] init];
 	_inited = YES;
 	//self.serverUrl = [NSURL URLWithString:@"http://192.168.0.185/report"];
@@ -442,6 +459,7 @@ nextfile:
 	[_serverUrl release];
 	[_uploadUrl release];
 	[_filesToSend release];
+	self.responseData = nil;
 	
     [super dealloc];
 }

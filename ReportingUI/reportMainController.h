@@ -25,7 +25,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 
 // upload delegates
-- (void)stoppedWithStatus:(NSString*)statusString;
+- (void)stoppedWithStatus:(NSString*)statusString response:(id)response;
 - (void)reportProgress:(float)progress forStep:(int)step;
 
 
@@ -41,11 +41,17 @@
 
 - (NSString*) loggingEnabledFile;
 
+- (IBAction) optionsButtonClicked:(id)sender;
 
 @property (nonatomic, retain) NSMutableString* steps;
 @property (nonatomic, retain) UIProgressView* uploadProgress;
 @property (nonatomic, retain) IBOutlet UITableView* tableView;
 @property (nonatomic, assign, readonly) BOOL loggingEnabled;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* optionsNavBarButton;
+@property (nonatomic, assign) BOOL uploadResultShown;
+@property (nonatomic, assign) BOOL uploadResultSuccess;
+@property (nonatomic, retain) NSString* uploadResult;
+@property (nonatomic, retain) NSString* uploadResultDetails;
 
 
 @end

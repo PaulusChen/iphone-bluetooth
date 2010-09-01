@@ -18,11 +18,17 @@ NSString* confirmLoglessReportMessage = @"Send report without logs?";
 @synthesize steps = _steps;
 @synthesize tableView = _tableView;
 @synthesize uploadProgress;
+@synthesize optionsNavBarButton;
+@synthesize uploadResultShown = _uploadResultShown;
+@synthesize uploadResultSuccess = _uploadResultSuccess;
+@synthesize uploadResult = _uploadResult;
+@synthesize uploadResultDetails = _uploadResultDetails;
 
 - (void) viewDidLoad
 {
 	[super viewDidLoad];
 	[self navigationItem].title = @"Report a Problem";
+	//[self navigationItem].leftBarButtonItem = optionsNavBarButton;
 	postCt = [[PostController alloc]init];
 	self.steps = [NSMutableString stringWithString:
 @"Describe the steps to reproduce the problem:\n\
@@ -44,6 +50,8 @@ Additional details: \n\
 	if (postCt != nil) {
 		[postCt release];
 	}
+	self.uploadResult = nil;
+	self.uploadResultDetails = nil;
 	[super dealloc];
 }
 
@@ -96,6 +104,8 @@ Additional details: \n\
 {
 	if (section == 1) {
 		return 0;
+	} else if (section == 3 && self.uploadResultShown) {
+		return 2;
 	}
 	return 1;
 }
@@ -111,7 +121,7 @@ Additional details: \n\
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	NSString* cellReuseId = @"MyCell";
+	NSString* cellReuseId = @"MyCellStyleValue1";
 	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:cellReuseId];
 	if (cell == nil) {
 		cell = [[[UITableViewCell alloc]
@@ -134,20 +144,33 @@ Additional details: \n\
 			cell.detailTextLabel.text = self.steps;
 			break;
 		case 3:
-			cell.textLabel.text = @"Send report";
-			if (self.uploadProgress == nil) {
-				self.uploadProgress = [[[UIProgressView alloc] 
-											initWithProgressViewStyle:UIProgressViewStyleDefault]
-										   autorelease];
-				self.uploadProgress.hidden = YES;
+			if (indexPath.row == 0) {
+				cell.textLabel.text = @"Send report";
+				if (self.uploadProgress == nil) {
+					self.uploadProgress = [[[UIProgressView alloc] 
+												initWithProgressViewStyle:UIProgressViewStyleDefault]
+											   autorelease];
+					self.uploadProgress.hidden = YES;
+				}
+				cell.accessoryView = self.uploadProgress;
+			} else {
+				NSString* cellReuseId2 = @"MyCellStyleSubtitle";
+				UITableViewCell* cell2 = [tableView dequeueReusableCellWithIdentifier:cellReuseId2];
+				if (cell2 == nil) {
+					cell2 = [[[UITableViewCell alloc]
+							 initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellReuseId2] 
+							autorelease];
+				}
+				
+				cell2.textLabel.textColor = self.uploadResultSuccess ? [UIColor darkTextColor] : [UIColor redColor];
+				cell2.textLabel.text = self.uploadResult;
+				cell2.detailTextLabel.text = self.uploadResultDetails;
+				cell = cell2;
 			}
-			cell.accessoryView = self.uploadProgress;
 			break;
 		default:
 			assert(false);
 	}
-//	cell.textLabel.text = @"label";
-//	cell.detailTextLabel.text = @"detail";
 	return cell;
 }
 
@@ -235,19 +258,52 @@ Additional details: \n\
 	}
 }
 
-- (void)stoppedWithStatus:(NSString*)statusString
+- (void) showOrHideUploadStatus:(BOOL)show
 {
+	if (show != self.uploadResultShown) {
+		NSArray* paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:3]]; 
+		[self.tableView beginUpdates];
+		self.uploadResultShown = show;
+		if (show) {
+			[self.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationTop];
+		} else {
+			[self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationTop];
+		}
+		[self.tableView endUpdates];
+	}
+}
+
+- (void) stoppedWithStatus:(NSString*)statusString response:(id)response
+{
+	self.uploadResultSuccess = NO;
+	if (statusString == nil) {
+		NSDictionary* responseDict = response;
+		NSString* reportId = [responseDict valueForKey:@"reportId"];
+		if (reportId != nil) {
+			self.uploadResultSuccess = YES;
+			self.uploadResult = [NSString stringWithFormat:@"Report id: %@", reportId];	
+			self.uploadResultDetails = @"Include when contacting support";
+		}
+	}
+	if (!self.uploadResultSuccess) {
+		self.uploadResult = statusString;
+		self.uploadResultDetails = @"Check your internet connection";
+	}
+	
 	UITableViewCell* cell =	[self reportCell];
 	cell.accessoryView = nil;
 	cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-	if (statusString != nil) {
-		cell.detailTextLabel.textColor = [UIColor redColor];
-		cell.detailTextLabel.text = statusString;
-	} else {
+
+	if (self.uploadResultSuccess) {
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
 		cell.detailTextLabel.textColor = [UIColor darkTextColor];
 		cell.detailTextLabel.text = @"Success";
+	} else {
+		cell.accessoryType = UITableViewCellAccessoryNone;
+		cell.detailTextLabel.textColor = [UIColor redColor];
+		cell.detailTextLabel.text = @"Failed";
 	}
+	[self showOrHideUploadStatus:YES];
 	if (self.loggingEnabled) {
 		[self toggleLogging:NO];
 	}
@@ -267,7 +323,6 @@ Additional details: \n\
 
 - (void) sendReportInternal
 {	
-	// [CoreReportingLogic submitReportWithRepro:(NSString*)stepsTextView.text];
 	NSLog(@"sendReportInternal");
 	NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:
 						  [[UIDevice currentDevice] uniqueIdentifier], @"uuid", 
@@ -313,6 +368,7 @@ Additional details: \n\
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	self.uploadProgress.progress = 0.01;
 	self.uploadProgress.hidden = NO;
+	[self showOrHideUploadStatus:NO];
 }
 
 - (void) sendReport
@@ -333,6 +389,11 @@ Additional details: \n\
 {
 	[self editSteps];
 	return NO;
+}
+
+- (IBAction) optionsButtonClicked:(id)sender
+{
+	
 }
 
 @end

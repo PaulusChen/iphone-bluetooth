@@ -57,7 +57,7 @@
 
 @protocol UploadProgressDelegate <NSObject>
 @optional
-- (void)stoppedWithStatus:(NSString*)statusString;
+- (void)stoppedWithStatus:(NSString*)statusString response:(id)response;
 - (void)reportProgress:(float)progress forStep:(int)step;
 @end
 
