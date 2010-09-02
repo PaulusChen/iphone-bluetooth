@@ -18,7 +18,7 @@
 void round_to_pages(void* addr, size_t size, vm_address_t* pVmaddr, vm_size_t* pVmsize)
 {
 	*pVmaddr = (vm_address_t)addr & ~PAGE_MASK;
-	*pVmsize = (size + (vm_address_t)addr & PAGE_MASK + PAGE_SIZE - 1) & ~PAGE_MASK;
+	*pVmsize = (size + ((vm_address_t)addr & PAGE_MASK) + PAGE_MASK) & ~PAGE_MASK;
 }
 
 bool get_mem_prot(void* addr, size_t size, vm_prot_t* outProt)

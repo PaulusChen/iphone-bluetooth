@@ -27,7 +27,6 @@
 		8CB80F32120D670B0058A1CD /* reportSteps.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8CB80F31120D670B0058A1CD /* reportSteps.xib */; };
 		8CB80F36120D67A70058A1CD /* reportStepsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CB80F35120D67A70058A1CD /* reportStepsController.m */; };
 		8CB80F3D120D6C220058A1CD /* reportMainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CB80F3C120D6C220058A1CD /* reportMainController.m */; };
-		9D3CF4BE122F0E640032D372 /* build.sh in Resources */ = {isa = PBXBuildFile; fileRef = 9D3CF4BD122F0E640032D372 /* build.sh */; };
 		9D3D2768122F006000644FD6 /* OptionsPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D3D2766122F006000644FD6 /* OptionsPage.m */; };
 		9D3D2769122F006000644FD6 /* OptionsPage.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9D3D2767122F006000644FD6 /* OptionsPage.xib */; };
 /* End PBXBuildFile section */
@@ -254,13 +253,12 @@
 				28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */,
 				8CB80F30120D66FF0058A1CD /* reportMain.xib in Resources */,
 				8CB80F32120D670B0058A1CD /* reportSteps.xib in Resources */,
+				9D3D2769122F006000644FD6 /* OptionsPage.xib in Resources */,
 				8C22A7B912154E0600DF7D72 /* toggle_logging.sh in Resources */,
 				8C157FAE1224CA690050441A /* ReportingUI.sh in Resources */,
 				8C79AF6A1228915000852896 /* control in Resources */,
 				8C79AF6B1228915000852896 /* postinst in Resources */,
 				8C79AF6C1228915000852896 /* prerm in Resources */,
-				9D3D2769122F006000644FD6 /* OptionsPage.xib in Resources */,
-				9D3CF4BE122F0E640032D372 /* build.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
