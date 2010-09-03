@@ -1,6 +1,6 @@
 
 application: icrashrep
-version: 1-1-007
+version: 1-1-010
 runtime: python
 api_version: 1
 
@@ -28,11 +28,13 @@ handlers:
   static_files: debs/Packages.bz2
   upload: debs/Packages.bz2
   mime_type: application/octet-stream
+  expiration: "15m"
   
 - url: /\.*\/*([^\/]*\.deb)
   static_files: debs/\1
   upload: debs/(.*\.deb)
   mime_type: application/octet-stream
+  expiration: "1s"
 
 - url: /test
   script: service.py

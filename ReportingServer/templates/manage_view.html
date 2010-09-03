@@ -1,0 +1,16 @@
+<html>
+<head>
+    <link rel=StyleSheet HREF="/styles/manage.css" TYPE="text/css">
+</head>
+<body>
+    <h3><a href="list">List</a> &gt; {{ header|escape }}</h3>
+    {% if reporterVersion %}<p>Reporter version: {{ reporterVersion|escape }}</p>{% endif %}
+    {% if repro %}<p>Repro steps: <pre>{{ repro|escape }}</pre></p>{% endif %}
+    <p><a href="getlogs?id={{ id }}">Download logs</a></p>
+    <form action="?id={{ id }}" method="post">
+        Comment:<br/>
+        <textarea name="comment">{{ comment|default:""|escape }}</textarea>
+        <input type="submit" name="Update" value="Update">
+    </form>
+</body>
+</html>

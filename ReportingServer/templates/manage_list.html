@@ -1,0 +1,23 @@
+<html>
+<head>
+    <link rel=StyleSheet HREF="/styles/manage.css" TYPE="text/css">
+    <script>
+        function showItem(id) {
+            window.location = "view?id=" + id;
+        }
+    </script>
+</head>
+<body>
+    <h3>List</h3>
+    <table>
+        <tr>{% for header in columnHeaders %}<th>{{ header|escape }}</th>{% endfor %}</tr>
+        {% for report in reports %}{% if report.header %}<tr><th colspan='100'>{{ report.header|escape }}</th></tr>
+            {% else %}<tr onclick='showItem({{ report.id }})'>
+                {% for value in report.columnValues %}<td>{{ value|default:""|escape }}</td>{% endfor %}                      
+            </tr>{% endif %}
+        {% endfor %}        
+    </table>
+{% ifnotequal prevOffset None %}<a href="?offset={{ prevOffset }}">&lt;&lt;Prev</a>&nbsp;{% endifnotequal %}
+{% if nextOffset %}<a href="?offset={{ nextOffset }}">Next&gt;&gt;</a>{% endif %}
+</body>
+</html>

@@ -19,6 +19,7 @@ from google.appengine.ext import db
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.ext.webapp import util
+from google.appengine.api import mail
 
 import logging
 import plistlib
@@ -28,6 +29,7 @@ class ReportModel(db.Model):
     userProps = blobstore.BlobReferenceProperty()
     udid = db.StringProperty(multiline=False)
     date = db.DateTimeProperty(auto_now_add=True)
+    comment = db.StringProperty(multiline=True)
 
 class ReportHandler(webapp.RequestHandler):
     def get(self):
@@ -44,6 +46,22 @@ class ResponseHandler(webapp.RequestHandler):
         self.response.headers['Content-Type'] = 'application/xml'
         self.response.out.write(plistlib.writePlistToString(responseDict))
 
+def sendMailForReport(report):
+    reportText = "<Empty>"
+    if report.userProps:
+        reportMetaBlobData = blobstore.BlobReader(report.userProps).read()
+        reportMetaPlist = plistlib.readPlistFromString(reportMetaBlobData)
+        reportText = str(reportMetaPlist.get('ReproSteps', reportText))
+
+    mail.send_mail(sender="Problem Reporter Notifications <ireporter.notifications@gmail.com>",
+              to="msft.guy <msft.guy@gmail.com>",
+              subject="New report has been submitted",
+              body="""
+UDID: %s
+Repro steps:
+%s
+URL: http://icrashrep.appspot.com/manage/view?id=%s
+""" % (report.udid, reportText, str(report.key().id())))
   
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler): 
     def post(self):
@@ -57,6 +75,7 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
          
         report = ReportModel(blobKeys = blobKeys, userProps = userProps, udid = udid)
         db.put(report)
+        sendMailForReport(report)
         self.redirect('/response?id=%u' % report.key().id())
     def get(self):
         self.redirect('/')

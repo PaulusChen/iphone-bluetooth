@@ -15,6 +15,7 @@
 # limitations under the License.
 #
 
+import os
 import cgi
 import datetime
 
@@ -23,10 +24,11 @@ from google.appengine.ext import db
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.ext.webapp import util
+from google.appengine.ext.webapp import template
 
 import logging
 import plistlib
-from  StringIO import StringIO
+from StringIO import StringIO
 
 import zipfile
 
@@ -71,44 +73,49 @@ class ZippedLogHandler(webapp.RequestHandler):
        
 
 class ItemInfoHandler(webapp.RequestHandler):
-    def get(self):
-        self.response.out.write('<html>')
-        self.response.out.write('<head><link rel=StyleSheet HREF="/styles/manage.css" TYPE="text/css"></head>')
-        self.response.out.write('<body>')
-        id = self.request.get('id', None)
-        
+    def get(self):        
+        id = self.request.get('id', None)       
         report = ReportModel.get_by_id(int(id))
         
-        self.response.out.write('<h3>%s</h3>' % cgi.escape(str(report.date)))
-
+        reproSteps = None
+        reporterVersion = None
         if report.userProps:
             reportMetaBlobData = blobstore.BlobReader(report.userProps).read()
 
             reportMetaPlist = plistlib.readPlistFromString(reportMetaBlobData)
+            reproSteps = reportMetaPlist.get('ReproSteps', None)
+            reporterVersion = reportMetaPlist.get('ReporterVersion', None)
 
-            self.response.out.write('Repro steps: <pre>%s</pre>' % cgi.escape(reportMetaPlist['ReproSteps']))
+        template_values = {
+            'id': id,
+            'header': "Report %u (%s)" % (int(id), report.date.strftime('%Y-%m-%d %H:%M:%S')),
+            'repro': reproSteps,
+            'reporterVersion': reporterVersion,
+            'comment': report.comment,
+            }
 
-        self.response.out.write('<a href="getlogs?id=%s">Download logs</a>' % id)
+        path = os.path.join(os.path.dirname(__file__), 'templates', 'manage_view.html')
+        self.response.out.write(template.render(path, template_values))
         
-        self.response.out.write('</body></html>')
-        
+    def post(self):
+        comment = self.request.get('comment', None)
 
+        id = self.request.get('id', None)
+        report = ReportModel.get_by_id(int(id))
+
+        report.comment = comment
+        report.put()
+        
+        self.redirect('view?id=%u' % report.key().id())
+
+class Row:
+    def __init__(self):
+        return
+    
 class ListHandler(webapp.RequestHandler):
     def get(self):
         offset = int(self.request.get('offset', '0'))
         pagesize = 10
-        self.response.out.write('<html>')
-        
-        self.response.out.write('<head>')
-        self.response.out.write('<link rel=StyleSheet HREF="/styles/manage.css" TYPE="text/css">')
-        self.response.out.write("""<script>
-function showItem(id) {
-    window.location = "view?id=" + id;
-}
-</script>""")
-        self.response.out.write('</head>')
-        
-        self.response.out.write('<body>')
 
         query = db.Query(ReportModel)
 
@@ -116,21 +123,16 @@ function showItem(id) {
         
         reports = query.fetch(pagesize, offset)
                 
-        self.response.out.write('<table>')
-
-        self.response.out.write('<tr>')
-        columns = ["Date", "UDID", "db ID"]
-        for colName in columns:
-            self.response.out.write('<th>%s</th>' % colName)
-        self.response.out.write('</tr>')
+        columnHeaders = ["ID", "Time", "UDID", "Comment"]
 
         todayOrd = datetime.date.today().toordinal()
 
+        reportRows = []
         lastHeader = None
         for report in reports:
-            id = cgi.escape(str(report.key().id()))
+            id = report.key().id()
             ord = report.date.date().toordinal()
-
+            
             if ord == todayOrd:
                 header = "Today"
             elif ord == todayOrd - 1:
@@ -139,22 +141,35 @@ function showItem(id) {
                 header = "%u days ago" % (todayOrd - ord)
             if header != lastHeader:
                 lastHeader = header
-                self.response.out.write("<tr><th colspan='100'>%s</th></tr>"  % header)
-            
-            self.response.out.write("<tr onclick='showItem(""%s"")'><td>%s</td><td>%s</td><td>%s</td></tr>"  % (id, cgi.escape(str(report.date.strftime('%H:%M:%S'))), cgi.escape(str(report.udid)), id))
-            
-        self.response.out.write('</table>')
+                headerRow = Row()
 
-        prevOffset = offset - 10
+                headerRow.header = header
+                reportRows.append(headerRow)
+            row = Row()
+            row.id = id
+            row.columnValues = [id, report.date.strftime('%H:%M:%S'), str(report.udid), report.comment]
+            reportRows.append(row)         
+
+
+        prevOffset = offset - pagesize
         if prevOffset < 0:
             prevOffset = 0
-        if prevOffset != offset:
-            self.response.out.write('<a href="?offset=%u">&lt;&lt;Prev</a>' % prevOffset)        
+        if prevOffset == offset:
+            prevOffset = None
+        nextOffset = None
         if len(reports) == pagesize:
-            self.response.out.write('<a href="?offset=%u">Next&gt;&gt;</a>' % (offset + pagesize))        
+            nextOffset = offset + pagesize      
 
-        self.response.out.write('</body></html>')
-        
+        template_values = {
+            'columnHeaders': columnHeaders,
+            'reports': reportRows,
+            'prevOffset': prevOffset,
+            'nextOffset': nextOffset,
+            }
+        path = os.path.join(os.path.dirname(__file__), 'templates', 'manage_list.html')
+        self.response.out.write(template.render(path, template_values))
+
+       
 
 application = webapp.WSGIApplication([('/manage/list', ListHandler),
                                       ('/manage/view', ItemInfoHandler),
