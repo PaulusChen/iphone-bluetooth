@@ -7,6 +7,13 @@ function err {
 
 Flavor=Debug
 
+if [ -n "$1" ]; then
+	Version=$1
+	agvtool new-version -all $Version
+else
+	Version=`agvtool what-version -terse`
+fi
+
 rm -rf build/$Flavor build/CurrentFlavor || err "Cannot clean the work dir"
 
 mkdir -p build/CurrentFlavor build/$Flavor/deb build/$Flavor/ftp
@@ -45,14 +52,11 @@ bzip2 Packages || err "Failed to compress package index"
 
 popd
 
-if [ -n "$1" ]
-then
-	Version=$1
-	ArchivePath=Archive/$Version
-	mkdir -p $ArchivePath
-	cp -R build/$Flavor/ftp/ $ArchivePath/
-	cp -R build/Debug-iphoneos/ReportingUI.app.dSYM $ArchivePath
-fi
+ArchivePath=Archive/$Version
+svn info $ArchivePath &>/dev/null && err "Bump the version from $Version first"
+mkdir -p $ArchivePath
+cp -R build/$Flavor/ftp/ $ArchivePath/
+cp -R build/Debug-iphoneos/ReportingUI.app.dSYM $ArchivePath
 
 
 test -d /Volumes/upload && { 
