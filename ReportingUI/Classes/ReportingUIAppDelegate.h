@@ -12,6 +12,7 @@
     UIWindow *window;
 }
 
++ (NSString*) appVersion;
 + (UINavigationController*) navController;
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;

@@ -1,0 +1,10 @@
+Package: com.msftguy.errorreporter
+Version: CURRENT_DEB_VERSION
+Architecture: iphoneos-arm
+Section: Utilities
+Depends: com.ericasadun.utilities, syslogd
+Installed-Size: 4096
+Name: roqyBT problem reporter
+Description: Error report submission utility (roqyBT)
+Author: msft.guy <msft.guy@gmail.com>
+Homepage: http://www.roqy-bluetooth.net/forum

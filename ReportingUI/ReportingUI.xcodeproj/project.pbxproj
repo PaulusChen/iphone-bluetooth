@@ -26,6 +26,7 @@
 		8CB80F3D120D6C220058A1CD /* reportMainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CB80F3C120D6C220058A1CD /* reportMainController.m */; };
 		9D3D2768122F006000644FD6 /* OptionsPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D3D2766122F006000644FD6 /* OptionsPage.m */; };
 		9D3D2769122F006000644FD6 /* OptionsPage.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9D3D2767122F006000644FD6 /* OptionsPage.xib */; };
+		9DFE73AB1230E3C700D7651B /* trollface.png in Resources */ = {isa = PBXBuildFile; fileRef = 9DFE73AA1230E3C700D7651B /* trollface.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +65,7 @@
 		9D3D2766122F006000644FD6 /* OptionsPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OptionsPage.m; path = ../OptionsPage.m; sourceTree = "<group>"; };
 		9D3D2767122F006000644FD6 /* OptionsPage.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OptionsPage.xib; sourceTree = "<group>"; };
 		9DFE730D1230961600D7651B /* control */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = control; sourceTree = SOURCE_ROOT; };
+		9DFE73AA1230E3C700D7651B /* trollface.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trollface.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +140,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9DFE73AA1230E3C700D7651B /* trollface.png */,
 				9D3D2767122F006000644FD6 /* OptionsPage.xib */,
 				8C19F82512118A0D009D5CCF /* Entitlements.plist */,
 				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
@@ -253,6 +256,7 @@
 				9D3D2769122F006000644FD6 /* OptionsPage.xib in Resources */,
 				8C22A7B912154E0600DF7D72 /* toggle_logging.sh in Resources */,
 				8C157FAE1224CA690050441A /* ReportingUI.sh in Resources */,
+				9DFE73AB1230E3C700D7651B /* trollface.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,7 +333,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
-				CURRENT_PROJECT_VERSION = 1.0.11;
+				CURRENT_PROJECT_VERSION = 1.0.12;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_SYMBOL_SEPARATION = NO;
 				GCC_FORCE_CPU_SUBTYPE_ALL = NO;

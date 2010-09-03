@@ -26,6 +26,11 @@
     return YES;
 }
 
++ (NSString*) appVersion
+{
+	return [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString*)kCFBundleVersionKey];
+}
+
 + (UINavigationController*) navController
 {
 	return ((ReportingUIAppDelegate*)[[UIApplication sharedApplication] delegate]).navCt;

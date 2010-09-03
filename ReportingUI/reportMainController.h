@@ -9,6 +9,11 @@
 #import <Foundation/Foundation.h>
 #include "PostController.h"
 
+static NSString* kReportDictUuid = @"uuid";
+static NSString* kReportDictReproSteps = @"ReproSteps";
+static NSString* kReportDictReporterVersion = @"ReporterVersion";
+
+
 @interface reportMainController : UITableViewController<UITextViewDelegate, UploadProgressDelegate> {
 	PostController* postCt;
 	NSMutableString* _steps;

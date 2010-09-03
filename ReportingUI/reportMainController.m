@@ -267,6 +267,14 @@ Additional details: \n\
 	}
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+	if (section == 3) {
+		return [NSString stringWithFormat:@"Version %@", [ReportingUIAppDelegate appVersion]];
+	}
+	return nil;
+}
+
 - (void) showOrHideUploadStatus:(BOOL)show
 {
 	if (show != self.uploadResultShown) {
@@ -334,8 +342,9 @@ Additional details: \n\
 {	
 	NSLog(@"sendReportInternal");
 	NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:
-						  [[UIDevice currentDevice] uniqueIdentifier], @"uuid", 
-						  self.steps, @"ReproSteps", 
+						  [[UIDevice currentDevice] uniqueIdentifier], kReportDictUuid, 
+						  self.steps, kReportDictReproSteps, 
+						  [ReportingUIAppDelegate appVersion], kReportDictReporterVersion,
 						  nil];
 	[postCt addFiles:[NSArray arrayWithObjects: dict, 
 					  // syslog
