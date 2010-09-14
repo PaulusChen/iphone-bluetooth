@@ -51,17 +51,18 @@ def sendMailForReport(report):
     if report.userProps:
         reportMetaBlobData = blobstore.BlobReader(report.userProps).read()
         reportMetaPlist = plistlib.readPlistFromString(reportMetaBlobData)
-        reportText = str(reportMetaPlist.get('ReproSteps', reportText))
+        reportText = unicode(reportMetaPlist.get('ReproSteps', reportText))
 
-    mail.send_mail(sender="Problem Reporter Notifications <ireporter.notifications@gmail.com>",
-              to="msft.guy <msft.guy@gmail.com>",
-              subject="New report has been submitted",
-              body="""
+    body=u"""
 UDID: %s
 Repro steps:
 %s
 URL: http://icrashrep.appspot.com/manage/view?id=%s
-""" % (report.udid, reportText, str(report.key().id())))
+""" % (report.udid, reportText, str(report.key().id()))
+    mail.send_mail(sender="Problem Reporter Notifications <ireporter.notifications@gmail.com>",
+              to="msft.guy <msft.guy@gmail.com>",
+              subject="New report has been submitted",
+              body=body.encode("utf8"))
   
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler): 
     def post(self):
