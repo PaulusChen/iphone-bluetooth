@@ -193,10 +193,19 @@ Additional details: \n\
 {
 	NSLog(@"cmd test: running '%@'", self.loggingScript);
 	BOOL hciToggleOn = [[self.options valueForKey:optionHciToggle] boolValue];
+	BOOL filterToggleOn = [[self.options valueForKey:optionFilterToggle] boolValue];
 	
-	NSLog(@"hciToggleOn: %i", hciToggleOn);
+	NSLog(@"Toggles: HCI=%i, Filter=%i", hciToggleOn, filterToggleOn);
 
-	[CmdRunner runCommandInBackground:@"/bin/bash" withArguments:[NSArray arrayWithObjects:self.loggingScript, enable ? (hciToggleOn ? @"2" : @"1") : @"0", nil] 
+	NSMutableArray* args = [NSMutableArray arrayWithObjects:self.loggingScript, enable ? @"1" : @"0", nil];
+	if (hciToggleOn)
+		[args addObject:@"hci"];
+	if (filterToggleOn)
+		[args addObject:@"filter"];
+	
+	NSLog(@"Args: %@", args);
+	
+	[CmdRunner runCommandInBackground:@"/bin/bash" withArguments:[NSArray arrayWithArray:args]  
 					 completionObject:self andCallback:@selector(taskFinishedWithResult:context:) andContext:nil];
 	
 	UIActivityIndicatorView* ai = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray] autorelease];
@@ -372,12 +381,16 @@ Additional details: \n\
 					  // mobile crash logs, v4
 					  @"/private/var/mobile/Library/Logs/CrashReporter/LatestCrash-roqyBT4.plist",
 					  @"/private/var/mobile/Library/Logs/CrashReporter/LatestCrash-roqyBluetooth4d.plist",
+					  // since we inject here..
+					  @"/private/var/mobile/Library/Logs/CrashReporter/LatestCrash-BTServer.plist",
 					  // Stack log, v4
 					  @"/private/var/mobile/Library/Logs/BTServer_stdout.log", 
 					  // Verbose HCI log, v4
 					  @"/private/var/mobile/Library/Logs/btsrvinj.log",
 					  // root crash logs, v0.9
 					  @"/private/var/logs/CrashReporter/LatestCrash-roqyBluetooth.plist",
+					  // root crash logs, v4 - locationd injection
+					  @"/private/var/logs/CrashReporter/LatestCrash-locationd.plist",
 					  // self crash logs
 					  @"/private/var/logs/CrashReporter/LatestCrash-ReportingUI.plist",
 					  nil]];

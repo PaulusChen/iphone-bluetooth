@@ -64,7 +64,7 @@ function restore_roqybt_nmea_logging {
 	fi
 }
 
-function enable_btserver_hci_logging {
+function enable_btserver_injection {
 	Plist=/System/Library/LaunchDaemons/com.apple.BTServer.plist
 	if [ -f $Plist.bak ]; then
 		exit
@@ -73,13 +73,13 @@ function enable_btserver_hci_logging {
 	plutil -rmkey EnvironmentVariables $Plist &>/dev/null
 	plutil -key EnvironmentVariables -dict $Plist
 	plutil -key EnvironmentVariables -key DYLD_INSERT_LIBRARIES -string /usr/lib/btserver-inject-logging.dylib $Plist
-	touch /tmp/log_btserver_io
 }
 
-function restore_btserver_hci_logging {
+function restore_btserver_injection {
 	Plist=/System/Library/LaunchDaemons/com.apple.BTServer.plist
 	mv $Plist.bak $Plist &>/dev/null
-	rm /tmp/log_btserver_io &>/dev/null
+	rm /tmp/btserver_filter_hci &>/dev/null
+	rm /tmp/btserver_log_io &>/dev/null
 }
 
 function enable_logging {
@@ -94,7 +94,7 @@ function enable_logging {
 }
 
 function disable_logging {
-	restore_btserver_hci_logging
+	restore_btserver_injection
 	restore_roqybt_nmea_logging
 	disable_btserver_logging
 
@@ -107,13 +107,38 @@ function disable_logging {
 
 test -z "$1" && { echo Need an argument: 0 to disable, 1 to enable; exit; }
 
-if [ $1 -ne 0 ]; then
-	if [ $1 -eq 2 ]; then 
-		enable_btserver_hci_logging
+fDisable=0
+fEnable=0
+fHci=0
+fFilter=0
+
+for ARG in "$@"
+do
+	if [ $ARG = 0 ] ; then 
+		fDisable=1
+	elif [ $ARG = 1 ] ; then 
+		fEnable=1
+	elif [ $ARG = hci ] ; then 
+		fHci=1
+	elif [ $ARG = filter ] ; then 
+		fFilter=1
+	fi
+done
+
+if [ $fDisable -ne 0 ]; then
+	disable_logging
+elif [ $fEnable -ne 0 ]; then
+	if [ $fFilter -ne 0 ]; then
+		touch /tmp/btserver_filter_hci
+	fi
+	if [ $fHci -ne 0 ]; then
+		touch /tmp/btserver_log_io
+	fi
+	
+	if [ $fHci -ne 0 -o $fFilter -ne 0 ]; then 
+		enable_btserver_injection
 	fi
 	enable_logging
-else 
-	disable_logging
 fi
 
 

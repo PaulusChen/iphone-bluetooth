@@ -14,6 +14,7 @@
 		9D57842011CE9A8E003BF173 /* fuzz.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D5783CB11CE8484003BF173 /* fuzz.mm */; };
 		9DC3D06C11C9AF19001C9680 /* logging.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9DC3D06B11C9AF19001C9680 /* logging.mm */; };
 		9DCD982211BB716C00CCCEDE /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DCD982111BB716C00CCCEDE /* IOKit.framework */; };
+		9DD8F34F123BAF4D0037B6B3 /* filter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9DD8F34E123BAF4D0037B6B3 /* filter.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,8 @@
 		9DC3D0C611CA0D7B001C9680 /* safe.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = safe.mm; sourceTree = "<group>"; };
 		9DCD982111BB716C00CCCEDE /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		9DCD994911BB976200CCCEDE /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
+		9DD8F34D123BAF4D0037B6B3 /* filter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filter.h; sourceTree = "<group>"; };
+		9DD8F34E123BAF4D0037B6B3 /* filter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = filter.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +105,8 @@
 				9DC3D0C611CA0D7B001C9680 /* safe.mm */,
 				9D5783CA11CE8484003BF173 /* fuzz.h */,
 				9D5783CB11CE8484003BF173 /* fuzz.mm */,
+				9DD8F34D123BAF4D0037B6B3 /* filter.h */,
+				9DD8F34E123BAF4D0037B6B3 /* filter.mm */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -229,6 +234,7 @@
 				9D53FD3811C8F79F0013E4CD /* hook_main.mm in Sources */,
 				9DC3D06C11C9AF19001C9680 /* logging.mm in Sources */,
 				9D57842011CE9A8E003BF173 /* fuzz.mm in Sources */,
+				9DD8F34F123BAF4D0037B6B3 /* filter.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,7 +291,7 @@
 				BUILD_VARIANTS = normal;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEPLOYMENT_POSTPROCESSING = NO;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_DEBUGGING_SYMBOLS = full;

@@ -12,6 +12,7 @@
 @implementation OptionsPage
 
 @synthesize hciToggle;
+@synthesize filterToggle;
 @synthesize options = _options;
 
 /*
@@ -34,6 +35,7 @@
 {
 	[super viewWillAppear:animated];
 	self.hciToggle.on = [[self.options valueForKey:optionHciToggle] boolValue];
+	self.filterToggle.on = [[self.options valueForKey:optionFilterToggle] boolValue];
 }
 /*
 // Override to allow orientations other than the default portrait orientation.
@@ -46,6 +48,12 @@
 - (IBAction) hciLoggingToggled:(id)sender
 {
 	[self.options setValue:[NSNumber numberWithBool:self.hciToggle.on] forKey:optionHciToggle];
+	NSLog(@"options: %@", self.options);
+}
+
+- (IBAction) filterToggled:(id)sender
+{
+	[self.options setValue:[NSNumber numberWithBool:self.filterToggle.on] forKey:optionFilterToggle];
 	NSLog(@"options: %@", self.options);
 }
 

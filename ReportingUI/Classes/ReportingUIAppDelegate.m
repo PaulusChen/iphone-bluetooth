@@ -22,7 +22,7 @@
     // Override point for customization after application launch.
     
     [window makeKeyAndVisible];
-    
+    [window addSubview:[self.navCt view]];
     return YES;
 }
 

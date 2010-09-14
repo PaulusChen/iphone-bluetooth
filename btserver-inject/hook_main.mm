@@ -21,16 +21,31 @@
 #include "logging.h"
 #include "safe.h"
 #include "fuzz.h"
+#include "filter.h"
+
+static BOOL g_logIo = NO;
+static BOOL g_filterHci = NO;
+
 
 static ssize_t my_read(int fd, void* buf, size_t size) {
 	int result = read(fd, buf, size);
-	log_io(fd, "_read", buf, result > 0 ? result : 0, result);
+	if (g_logIo)  {
+		log_io(fd, "_read", buf, result > 0 ? result : 0, result);
+	}
+	if (result > 0 && g_filterHci) {
+		BOOL dirty = filter_read_inplace(fd, (char*)buf, result);
+		if (dirty) {
+			log_io(fd, "_read_flt", buf, result > 0 ? result : 0, result);	
+		}
+	}
 	return result;
 }
 
 static ssize_t my_write(int fd, const void* buf, size_t size) {
 	int result = write(fd, buf, size);
-	log_io(fd, "_write", buf, size, result);
+	if (g_logIo) {
+		log_io(fd, "_write", buf, size, result);
+	}
 	return result;
 }
 
@@ -68,7 +83,9 @@ void setup_hooks()
 		log_progress("setup_hooks: ensure_braille_service OK!");
 	}
 	struct stat info;
-	if (0 == stat("/tmp/log_btserver_io", &info)) {
+	g_logIo = (0 == stat("/tmp/btserver_log_io", &info));
+	g_filterHci = (0 == stat("/tmp/btserver_filter_hci", &info));
+	if (g_logIo || g_filterHci) {
 		log_progress("setup_hooks: calling hook_read_write_ops()");		
 		hook_read_write_ops();
 	}

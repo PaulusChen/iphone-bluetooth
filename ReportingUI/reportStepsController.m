@@ -37,17 +37,30 @@
 
 - (void) keyboardWillResize:(NSNotification *)aNotification 
 {
-	CGRect keyboardRectBegin = [[[aNotification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
-	CGRect keyboardRectEnd = [[[aNotification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    
+	CGRect frame = self.view.frame;
+
 	NSTimeInterval animationDuration;
 	[[[aNotification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
-    
-	CGRect frame = self.view.frame;
-    frame.size.height += keyboardRectEnd.origin.y - keyboardRectBegin.origin.y;
 
-    [UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionLayoutSubviews|UIViewAnimationOptionBeginFromCurrentState 
-					 animations:^{self.view.frame = frame;} completion:nil];
+	id keyboardRectBeginObj = [[aNotification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey];
+	if (nil != keyboardRectBeginObj) {
+		CGRect keyboardRectBegin = [keyboardRectBeginObj CGRectValue];
+		CGRect keyboardRectEnd = [[[aNotification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+		
+		frame.size.height += keyboardRectEnd.origin.y - keyboardRectBegin.origin.y;
+
+		if ([[[UIDevice currentDevice] systemVersion] compare:@"4.0"] >= 0) {
+			[UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionLayoutSubviews|UIViewAnimationOptionBeginFromCurrentState 
+						 animations:^{self.view.frame = frame;} completion:nil];
+		} else {
+			self.view.frame = frame;
+		}
+	} else {
+		CGRect keyboardRect = [[[aNotification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] CGRectValue];
+		frame.size.height = self.view.superview.frame.size.height - keyboardRect.size.height;
+		
+		self.view.frame = frame;
+	}
 }
 
 

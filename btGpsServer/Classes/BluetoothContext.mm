@@ -657,6 +657,17 @@ static const NSString* BtSessionKey = @"BtSessionKey";
 	[self postScanNotification];
 }
 
+void pruneNonAscii(char* buf, size_t cb)
+{
+	for (int i = 0; i < cb; ++i) {
+		unsigned char c = (unsigned)buf[i];
+		if (c == '\0')
+			break;
+		if (c < ' ' || c > '\x7F')
+			buf[i] = '?';
+	}	
+}
+
 - (void) onDiscoveryFoundDevice:(BTDEVICE)foundDevice event:(BT_DISCOVERY_EVENT)event attributes:(BTDeviceAttributes)attr
 {
 	int svc;
@@ -665,6 +676,8 @@ static const NSString* BtSessionKey = @"BtSessionKey";
 	if (err != 0) {
 		LogMsg("BTDeviceGetName error: %X", err);
 	} else {
+		pruneNonAscii(cName, sizeof(cName));
+		cName[sizeof(cName) - 1] = '\0';
 		LogMsg("BTDeviceGetName()=%s", cName);	
 	}
 	NSString* name = [NSString stringWithCString:cName encoding:NSASCIIStringEncoding];

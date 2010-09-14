@@ -171,12 +171,15 @@ enum {
 	[self _sendDidStopWithStatus:statusString];
 	id plist = nil;
 	if (statusString == nil) {
-		NSError* error = nil;
+		//NSError* error = nil;
+		NSString* errorString;
 		NSPropertyListFormat format;
 		
-		plist = [NSPropertyListSerialization propertyListWithData:self.responseData options:0 format:&format error:&error];
+		//plist = [NSPropertyListSerialization propertyListWithData:self.responseData options:0 format:&format error:&error];
+		
+		plist = [NSPropertyListSerialization propertyListFromData:self.responseData mutabilityOption:NSPropertyListImmutable format:&format errorDescription:&errorString];
 		if (plist == nil) {
-			statusString = [NSString stringWithFormat:@"Error reading server response: %@", error];
+			statusString = [NSString stringWithFormat:@"Error reading server response: %@", errorString];
 		}
 		
 	}
@@ -410,10 +413,9 @@ nextfile:
     // done successfully.  We shut down the connection with a nil status, which 
     // causes the image to be displayed.
 {
-    #pragma unused(theConnection)
-    assert(theConnection == self.connection);
-    
-    [self _stopSendWithStatus:nil];
+    if (theConnection == self.connection) {
+		[self _stopSendWithStatus:nil];
+	}
 }
 
 #pragma mark * Actions
