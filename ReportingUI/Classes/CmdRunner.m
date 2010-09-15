@@ -24,9 +24,9 @@
 	[self.completionObject performSelector:self.completionCallback withObject:(id)self.result withObject:self.completionContext];
 }
 
-- (void) doExec
+- (char**) prepExecArgs
 {
-	NSLog(@"doExec enter");
+	NSLog(@"prepExecArgs enter");
 	int numArgs = [self.args count];
 	const char** cargs = malloc(sizeof(char*) * (numArgs + 2));
 	cargs[0] = [self.command UTF8String];
@@ -34,10 +34,17 @@
 		cargs[i + 1] = [[[self args] objectAtIndex:i] UTF8String];
 	}
 	cargs[numArgs + 1] = NULL;
-	
+	return cargs;
+}
+
+
+void doExec(const char** cargs)
+{
+	NSLog(@"doExec() enter");
 	setuid(0);
 	NSLog(@"About to call execv(%s)", cargs[0]);
 	execv(cargs[0], (char* const*)cargs);
+	NSLog(@"BUGBUG: doExec: execv returned!!");
 	exit(-1);
 }
 
@@ -46,6 +53,7 @@
 	pid_t child_pid, wpid;
 	int status;
 	
+	char** cargs = [self prepExecArgs];
 	
 	child_pid = fork();
 	if (child_pid == -1) {      /* fork() failed */
@@ -54,7 +62,7 @@
 	
 	if (child_pid == 0) {       /* This is the child */
 		/* Child does some work and then terminates */
-		[self doExec];
+		doExec(cargs);
 		assert(false);
 		return -1;
 		
