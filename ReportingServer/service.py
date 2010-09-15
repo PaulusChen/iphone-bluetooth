@@ -23,6 +23,8 @@ from google.appengine.api import mail
 
 import logging
 import plistlib
+import urlparse
+import urllib
 
 class ReportModel(db.Model): 
     blobKeys = db.StringListProperty()
@@ -31,10 +33,28 @@ class ReportModel(db.Model):
     date = db.DateTimeProperty(auto_now_add=True)
     comment = db.StringProperty(multiline=True)
 
+def getBaseUrl(requestHandler, secure=None):
+    scheme, host, path, parameters, query, fragment = urlparse.urlparse(requestHandler.request.url)
+    if secure:
+        scheme = 'https'
+    return "%s://%s" % (scheme, host)
+
+def getUploadUrl(requestHandler):
+    udid = requestHandler.request.headers.get("Udid", None)
+    qp = {}
+    if udid:
+        qp['udid'] = udid
+    if requestHandler.request.scheme == 'https':
+        qp['s'] = 1
+    qs = urllib.urlencode(qp)
+    upload_redir_url = '%s/up' % getBaseUrl(requestHandler)
+    if len(qs) != 0:
+        upload_redir_url += '?' + qs
+    return blobstore.create_upload_url(upload_redir_url)
+    
 class ReportHandler(webapp.RequestHandler):
     def get(self):
-        udid = self.request.headers.get("Udid", None)
-        self.redirect(blobstore.create_upload_url('/up?udid=%s' % udid))
+        self.redirect(getUploadUrl(self))
 
 class ResponseHandler(webapp.RequestHandler):
     def get(self):
@@ -46,24 +66,6 @@ class ResponseHandler(webapp.RequestHandler):
         self.response.headers['Content-Type'] = 'application/xml'
         self.response.out.write(plistlib.writePlistToString(responseDict))
 
-def sendMailForReport(report):
-    reportText = "<Empty>"
-    if report.userProps:
-        reportMetaBlobData = blobstore.BlobReader(report.userProps).read()
-        reportMetaPlist = plistlib.readPlistFromString(reportMetaBlobData)
-        reportText = unicode(reportMetaPlist.get('ReproSteps', reportText))
-
-    body=u"""
-UDID: %s
-Repro steps:
-%s
-URL: http://icrashrep.appspot.com/manage/view?id=%s
-""" % (report.udid, reportText, str(report.key().id()))
-    mail.send_mail(sender="Problem Reporter Notifications <ireporter.notifications@gmail.com>",
-              to="msft.guy <msft.guy@gmail.com>",
-              subject="New report has been submitted",
-              body=body.encode("utf8"))
-  
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler): 
     def post(self):
         udid = self.request.get('udid', None)
@@ -76,10 +78,34 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
          
         report = ReportModel(blobKeys = blobKeys, userProps = userProps, udid = udid)
         db.put(report)
-        sendMailForReport(report)
-        self.redirect('/response?id=%u' % report.key().id())
+
+        self.sendMailForReport(report)
+        self.redirect('%s/response?id=%u' % (self.baseUrl(), report.key().id()))
+
     def get(self):
-        self.redirect('/')
+        self.redirect(self.baseUrl())
+
+    def baseUrl(self):
+        return getBaseUrl(self, self.request.get('s', None))
+    
+    def sendMailForReport(self, report):
+        reportText = "<Empty>"
+        if report.userProps:
+            reportMetaBlobData = blobstore.BlobReader(report.userProps).read()
+            reportMetaPlist = plistlib.readPlistFromString(reportMetaBlobData)
+            reportText = unicode(reportMetaPlist.get('ReproSteps', reportText))
+
+        body=u"""
+UDID: %s
+Repro steps:
+%s
+URL: %s/manage/view?id=%s
+""" % (report.udid, reportText, self.baseUrl(), str(report.key().id()))
+        mail.send_mail(sender="Problem Reporter Notifications <ireporter.notifications@gmail.com>",
+                  to="msft.guy <msft.guy@gmail.com>",
+                  subject="New report has been submitted",
+                  body=body.encode("utf8"))
+  
 
 class UploadForm(webapp.RequestHandler):
     def get(self):
@@ -92,10 +118,10 @@ class UploadForm(webapp.RequestHandler):
             <div>file3:<br><input type="file" name="file" size="50"/ 
 ></div> 
             <div>UDID: <input type="text" 
-name="udid" value="001122"></div>
+name="udid" value="test"></div>
 
             <div><input type="submit" value="Upload file"></div> 
-          </form>""" % blobstore.create_upload_url('/up'))
+          </form>""" % getUploadUrl(self))
 
 application = webapp.WSGIApplication([('/report', ReportHandler),
                                           ('/test', UploadForm),
