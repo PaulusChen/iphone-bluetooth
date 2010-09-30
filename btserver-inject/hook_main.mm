@@ -33,7 +33,7 @@ static ssize_t my_read(int fd, void* buf, size_t size) {
 		log_io(fd, "_read", buf, result > 0 ? result : 0, result);
 	}
 	if (result > 0 && g_filterHci) {
-		BOOL dirty = filter_read_inplace(fd, (char*)buf, result);
+		BOOL dirty = filter_read_h4_inplace(fd, (char*)buf, result);
 		if (dirty) {
 			log_io(fd, "_read_flt", buf, result > 0 ? result : 0, result);	
 		}
@@ -91,11 +91,4 @@ void setup_hooks()
 	}
 	
 	safe_reportStartSuccess();
-	
-
-//	void* pAtHandler = NULL;
-//	if (find_at_handler(&pAtHandler, (void**)&g_pingResponseXref)) {
-//		log_progress("find_at_handler: %p; %p", pAtHandler, g_pingResponseXref);
-//		at_cmd_handler_call_orig = *(at_cmd_handler_t*)pAtHandler;
-//	}
 }

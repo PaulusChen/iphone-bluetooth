@@ -33,6 +33,7 @@ typedef struct {
 } ACL_HEADER;
 
 typedef struct {
+	char hciType;
 	size_t cbMatch;
 	const unsigned char* matchPattern;
 	unsigned char wildcardChar;
@@ -47,11 +48,11 @@ typedef struct {
 //
 //HCI_PATCH mbt1k_lmpFeaturesPatch = {sizeof(mbt1k_lmpFeatures), mbt1k_lmpFeatures, '*'/*0x2A*/, sizeof(garmin_lmp_features), garmin_lmp_features, -1};
 //
-unsigned char mbt1k_lmpExtFeatures[] = {HCI_EVENT, 0x23, 0x0D, 0x00, '*', '*',  '*', '*',  '*', '*', '*', '*',  '*', '*', '*', '*'};
+unsigned char mbt1k_lmpExtFeaturesEvent[] = {0x23, 0x0D, 0x00, '*', '*',  '*', '*',  '*', '*', '*', '*',  '*', '*', '*', '*'};
 
 unsigned char garmin_lmp_extfeat[]	=  {01, 00,   0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00};
 
-HCI_PATCH mbt1k_lmpExtFeaturesPatch = {sizeof(mbt1k_lmpExtFeatures), mbt1k_lmpExtFeatures, '*'/*0x2A*/, sizeof(garmin_lmp_extfeat), garmin_lmp_extfeat, -1};
+HCI_PATCH mbt1k_lmpExtFeaturesPatch = {HCI_EVENT, sizeof(mbt1k_lmpExtFeaturesEvent), mbt1k_lmpExtFeaturesEvent, '*'/*0x2A*/, sizeof(garmin_lmp_extfeat), garmin_lmp_extfeat, -1};
 
 typedef struct {
 	HCI_PATCH* patch;
@@ -112,24 +113,148 @@ BOOL update_match(MATCH_STATE* state, size_t bufOffset, char* buf, size_t cbBuf,
 	return matchComplete;
 }
 
-BOOL update_matches(size_t bufOffset, char* buf, size_t cbBuf)
+typedef enum {
+	MATCH_SEARCHING,
+	MATCH_NONE,
+	MATCH_FOUND,
+} MATCH_RESULT;
+
+MATCH_RESULT update_matches(char hciType, size_t bufOffset, char* buf, size_t cbBuf)
 {
-	BOOL dirty = NO;
+	BOOL matchFound = NO;
+	BOOL matchesPossible = NO;
 	for (int i = 0; i < s_matches.cMatches; ++i) {
 		MATCH_STATE* state = s_matches.matches + i;
-		if (bufOffset != 0 && !state->matchState)
+		if (bufOffset == 0) {
+			state->matchState = (hciType == state->patch->hciType);
+		}
+		if (!state->matchState)
 			continue;
 		BOOL verboseMatch =  bufOffset != 0 && state->matchState;
-		dirty = update_match(state, bufOffset, buf, cbBuf, verboseMatch);
-		if (dirty) 
+		matchFound = update_match(state, bufOffset, buf, cbBuf, verboseMatch);
+		if (state->matchState) {
+			matchesPossible = YES;
+		}
+		if (matchFound) 
 			break;
 	}
-	return dirty;
+	return matchFound ? MATCH_FOUND : matchesPossible ? MATCH_SEARCHING : MATCH_NONE;
 }
 
-BOOL filter_read_inplace(int fd, char* buf, size_t cbRead)
+const char slip_boundary = (char)0xC0;
+const char slip_escape = (char)0xDB;
+const char slip_escaped_boundary = (char)0xDC;
+const char slip_escaped_escape = (char)0xDD;
+ 
+typedef struct {
+	BOOL boundary;
+	BOOL escape;
+} SLIP_STATE;
+
+size_t slip_decode_data(char* inputBuf, size_t cbInput, char* outputBuf, size_t* cbOutput)
 {
-	BOOL dirty = NO;
+	size_t cbWritten = 0;
+	BOOL escape = FALSE;
+	size_t i;
+	for (i = 0; i < cbInput && cbWritten < *cbOutput; ++i) {
+		char inByte = inputBuf[i], outByte;
+		if (escape) {
+			switch (inByte) {
+				case slip_escaped_boundary:
+					outByte = slip_boundary;
+					break;
+				case slip_escaped_escape:
+					outByte = slip_escape;
+					break;
+				default:
+					assert(("Unrecognized SLIP escape sequence!", FALSE));
+					outByte = inByte;
+					break;
+			}
+		} else {
+			if (inByte == slip_boundary)
+				break;
+			else if (inByte == slip_escape) {
+				escape = TRUE;
+				continue;
+			} else {
+				outByte = inByte;
+			}
+		}
+		outputBuf[cbWritten++] = outByte;
+	}
+	*cbOutput = cbWritten;
+	return i;
+}
+
+typedef	union {
+	struct { 
+		unsigned int seqNumber:3;
+		unsigned int ackNumber:3;
+		unsigned int integrityCheck:1;
+		unsigned int reliablePacket:1;
+		unsigned int type:4;
+		unsigned int payloadLength:12;
+		unsigned int checksum:8;
+	};
+	char bytes[4];
+} SLIP_HEADER;
+
+BOOL filter_read_h5_inplace(int fd, char* buf, size_t cbRead)
+{
+	SLIP_HEADER slipHeader;
+	static char s_matchBuf[sizeof(mbt1k_lmpExtFeaturesEvent)]; // FIXME: don't hardcode sizes plz
+	BOOL valid = NO;
+	size_t cbDecoded = 0;
+	for (size_t i = 0; i < cbRead; i += cbDecoded) {
+		if (buf[i] == slip_boundary) {
+			valid = TRUE;
+			cbDecoded = 1;
+			continue;
+		}
+		if (!valid) {
+			char* pNextBlock = (char*)memchr(buf + i, '\xC0', cbRead - i);
+			if (pNextBlock == nil) {
+				log_progress("filter_read_h5_inplace: SYNC ERROR: could not resync after the previous fuckup ;(");
+				return FALSE;
+			}
+			cbDecoded = pNextBlock - buf - i;
+			valid = YES;
+			continue;
+		}
+		size_t cbWritten = sizeof(slipHeader);
+		cbDecoded = slip_decode_data(buf + i, cbRead - i, slipHeader.bytes, &cbWritten);
+		if (cbWritten != sizeof(slipHeader)) {
+			log_progress("filter_read_h5_inplace: SLIP header fuckup: could only decode %u bytes", cbWritten);
+			valid = FALSE;
+			continue;
+		}
+		// process header..
+		MATCH_RESULT matchResult = update_matches(slipHeader.type, 0, nil, 0);
+		if (matchResult == MATCH_NONE) {
+			valid = NO;
+			continue;
+		}
+
+		i += cbDecoded;
+		cbWritten = sizeof(s_matchBuf);
+		cbDecoded = slip_decode_data(buf + i, cbRead - i, s_matchBuf, &cbWritten);
+
+		// process data..
+		matchResult = update_matches(slipHeader.type, 0, nil, cbWritten);
+		if (matchResult == MATCH_NONE) {
+			valid = NO;
+			continue;
+		}
+		// TODO: reencode; fix checksum; resize the output buffer if necessary
+		
+	}
+	//FIXME
+	return FALSE;
+}
+
+BOOL filter_read_h4_inplace(int fd, char* buf, size_t cbRead)
+{
 	static size_t fullBlockSize = 0;
 	static size_t readPosition = 0;
 	static union HEADER_BUF
@@ -169,7 +294,20 @@ BOOL filter_read_inplace(int fd, char* buf, size_t cbRead)
 	}
 	
 	// process data..
-	dirty = update_matches(readPosition, buf, cbRead);
+	char* adjBuf = buf;
+	size_t adjCbRead = cbRead;
+	size_t adjReadPosition = readPosition;
+	if (readPosition == 0) { //skip packet type byte 
+		adjBuf++;
+		adjCbRead--;
+	} else {
+		adjReadPosition--;
+	}
+#ifdef DEBUG
+	log_progress("filter_read_inplace DEBUG: update_matches(%u, %u, %p vs %p, %u)", 
+				 headerBuf.hci.type, adjReadPosition, adjBuf, buf, adjCbRead);
+#endif
+	MATCH_RESULT matchResult = update_matches(headerBuf.hci.type, adjReadPosition, adjBuf, adjCbRead);
 	
 	readPosition += cbRead;
 	if (readPosition > fullBlockSize) {
@@ -180,7 +318,7 @@ BOOL filter_read_inplace(int fd, char* buf, size_t cbRead)
 	if (readPosition == fullBlockSize) {
 		readPosition = fullBlockSize = 0;
 	}
-	return dirty;
+	return matchResult == MATCH_FOUND;
 }
 
 BOOL filter_write_inplace(int fd, char* buf, size_t cbWrite)

@@ -14,11 +14,6 @@ enum {
     kPostBufferSize = 32768
 };
 
-//#if TARGET_IPHONE_SIMULATOR
-//    static NSString * kDefaultPostURLText = @"http://localhost:9000/cgi-bin/PostIt.py";
-//#else
-//    static NSString * kDefaultPostURLText = @"";
-//#endif
 
 @interface PostController ()
 
@@ -444,7 +439,7 @@ nextfile:
 	_buffers = [[NSMutableArray alloc] init];
 	_inited = YES;
 	//self.serverUrl = [NSURL URLWithString:@"http://192.168.0.185/report"];
-	self.serverUrl = [NSURL URLWithString:@"http://icrashrep.appspot.com/report"];
+	self.serverUrl = [NSURL URLWithString:@"https://icrashrep.appspot.com/report"];
 	return self;
 }
 

@@ -7,4 +7,6 @@
  *
  */
 
-BOOL filter_read_inplace(int fd, char* buf, size_t cbRead);
+BOOL filter_read_h5_inplace(int fd, char* buf, size_t cbRead);
+
+BOOL filter_read_h4_inplace(int fd, char* buf, size_t cbRead);

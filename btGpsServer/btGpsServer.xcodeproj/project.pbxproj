@@ -397,7 +397,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = nmealib/include;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				MACH_O_TYPE = mh_execute;
 				MIG_GENERATE_CLIENT_SOURCES = NO;
 				MIG_GENERATE_SERVER_SOURCES = YES;
@@ -405,7 +405,7 @@
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos4.2;
 				SEPARATE_STRIP = YES;
 				STRIP_INSTALLED_PRODUCT = NO;
 				VALID_ARCHS = "armv6 armv7";
@@ -431,7 +431,7 @@
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos4.2;
 				SEPARATE_STRIP = YES;
 				VALID_ARCHS = "armv6 armv7";
 			};

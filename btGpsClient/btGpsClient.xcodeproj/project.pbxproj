@@ -250,7 +250,7 @@
 				OTHER_MIGFLAGS = "-I/Developer/SDKs/MacOSX10.6.sdk/usr/include";
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos4.2;
 			};
 			name = Debug;
 		};
@@ -269,7 +269,7 @@
 				OTHER_MIGFLAGS = "-I/Developer/SDKs/MacOSX10.6.sdk/usr/include";
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos4.2;
 			};
 			name = Release;
 		};

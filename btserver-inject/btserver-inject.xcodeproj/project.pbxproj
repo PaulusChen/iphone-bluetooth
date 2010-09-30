@@ -10,6 +10,8 @@
 		1D60589B0D05DD56006BFB54 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.mm */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		8C2CB70411FA17C2006D9980 /* libimpHook.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CF45E0811FA169B00366FBA /* libimpHook.a */; };
+		9D1E0D101247759100C57546 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D1E0D0F1247759100C57546 /* CoreFoundation.framework */; };
+		9D1E0D40124777B100C57546 /* utilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D1E0D3F124777B100C57546 /* utilities.mm */; };
 		9D53FD3811C8F79F0013E4CD /* hook_main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D53FD3711C8F79F0013E4CD /* hook_main.mm */; };
 		9D57842011CE9A8E003BF173 /* fuzz.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D5783CB11CE8484003BF173 /* fuzz.mm */; };
 		9DC3D06C11C9AF19001C9680 /* logging.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9DC3D06B11C9AF19001C9680 /* logging.mm */; };
@@ -42,6 +44,9 @@
 		8CF45DFD11FA168700366FBA /* btserver-inject_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "btserver-inject_Prefix.pch"; sourceTree = "<group>"; };
 		8CF45DFE11FA169B00366FBA /* impHook.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = impHook.xcodeproj; path = impHook/impHook.xcodeproj; sourceTree = SOURCE_ROOT; };
 		8CF45E1C11FA16E200366FBA /* btserver-inject-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "btserver-inject-Info.plist"; sourceTree = "<group>"; };
+		9D1E0D0F1247759100C57546 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		9D1E0D3E124777B100C57546 /* utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utilities.h; sourceTree = "<group>"; };
+		9D1E0D3F124777B100C57546 /* utilities.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = utilities.mm; sourceTree = "<group>"; };
 		9D53FD3611C8F79F0013E4CD /* hook_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hook_main.h; sourceTree = "<group>"; };
 		9D53FD3711C8F79F0013E4CD /* hook_main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = hook_main.mm; sourceTree = "<group>"; };
 		9D5783CA11CE8484003BF173 /* fuzz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fuzz.h; sourceTree = "<group>"; };
@@ -64,6 +69,7 @@
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				9DCD982211BB716C00CCCEDE /* IOKit.framework in Frameworks */,
 				8C2CB70411FA17C2006D9980 /* libimpHook.a in Frameworks */,
+				9D1E0D101247759100C57546 /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,6 +113,8 @@
 				9D5783CB11CE8484003BF173 /* fuzz.mm */,
 				9DD8F34D123BAF4D0037B6B3 /* filter.h */,
 				9DD8F34E123BAF4D0037B6B3 /* filter.mm */,
+				9D1E0D3E124777B100C57546 /* utilities.h */,
+				9D1E0D3F124777B100C57546 /* utilities.mm */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -122,6 +130,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9D1E0D0F1247759100C57546 /* CoreFoundation.framework */,
 				9DCD982111BB716C00CCCEDE /* IOKit.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 			);
@@ -235,6 +244,7 @@
 				9DC3D06C11C9AF19001C9680 /* logging.mm in Sources */,
 				9D57842011CE9A8E003BF173 /* fuzz.mm in Sources */,
 				9DD8F34F123BAF4D0037B6B3 /* filter.mm in Sources */,
+				9D1E0D40124777B100C57546 /* utilities.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,7 +297,7 @@
 		9D3D274B122EFABE00644FD6 /* Debug-logging */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = armv6;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				BUILD_VARIANTS = normal;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
 				COPY_PHASE_STRIP = NO;
@@ -307,11 +317,11 @@
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos4.2;
 				SEPARATE_STRIP = YES;
 				STRIP_INSTALLED_PRODUCT = NO;
 				STRIP_STYLE = "non-global";
-				VALID_ARCHS = armv6;
+				VALID_ARCHS = "armv6 armv7";
 			};
 			name = "Debug-logging";
 		};
@@ -351,7 +361,7 @@
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos4.2;
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = "non-global";
 				VALID_ARCHS = armv6;
@@ -398,7 +408,7 @@
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos4.2;
 				SEPARATE_STRIP = YES;
 				STRIP_INSTALLED_PRODUCT = NO;
 				STRIP_STYLE = "non-global";
@@ -424,7 +434,7 @@
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos4.2;
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = "non-global";
 				VALID_ARCHS = armv6;

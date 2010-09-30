@@ -10,6 +10,7 @@
 #include "fuzz.h"
 
 #include "logging.h"
+#include "utilities.h"
 
 #include <mach/mach.h>
 #include <mach-o/dyld.h>
@@ -102,7 +103,7 @@ char* findBytesInSect(const mach_header* mh, size_t slide, const char* segname, 
 	return foundLoc;
 }
 
-static int enabledServicesArray[] = 
+const static int enabledServicesArrayTemplate[] = 
 {
 	0x0003,	// 0 - iPhone Orig
 	0x0000,	// 1 - iPod Touch 1G
@@ -116,6 +117,26 @@ static int enabledServicesArray[] =
 	0x29FB, // 9 - ???
 	0x28F8, // 10 -???
 	0x08B8, // 11 -???
+};
+
+const static int enabledServicesArrayTemplate42[] = 
+{
+	0x403,  // 0 - iPhone Orig
+	0,      // 1 - iPod Touch 1G				
+	0xD9B,  // 2 - iPhone 3G
+	0xCD8,  // 3 - iPod Touch 2G
+	0x2DFB, // 4 - iPhone 3GS
+	0x2CB8, // 5 - ???
+	0xCD8,  // 6 - ???
+	0x2FFB, // 7 - iPhone 4
+	0x2CF8, // 8 - ???
+	0x2FFB, // 9 - ???
+	0x2CF9, // 10 - ???
+	0x2CB8, // 11 - ???
+	0x2FFB, // 12 - ???
+	0x2FFB, // 13 - ???
+	0x20,   // 14 - ???
+	0xCB8,  // 15 - ???	
 };
 
 //unsigned char codeBytes[] = 
@@ -150,31 +171,38 @@ bool ensure_braille_service()
 //	log_progress("ensure_braille_service: patched profile check");	
 //
 	
+	#ifdef DEBUG
+	log_progress("ensure_braille_service DEBUG: isOsVersion_4_2_OrHigher()=%u", isOsVersion_4_2_OrHigher());
+	#endif
+	
 	/* data patch */
-	int* pEnabledServicesArray = (int*)findBytesInSect(mh, slide, "__TEXT", "__const", (const char*)enabledServicesArray, 
-					sizeof(enabledServicesArray), sizeof(int));
+	const int* pServicesArrayTemplate = isOsVersion_4_2_OrHigher() ? enabledServicesArrayTemplate42 : enabledServicesArrayTemplate;
+	size_t servicesArraySize = isOsVersion_4_2_OrHigher() ? sizeof(enabledServicesArrayTemplate42) : sizeof(enabledServicesArrayTemplate);
+	
+	int* pEnabledServicesArray = (int*)findBytesInSect(mh, slide, "__TEXT", "__const", (const char*)pServicesArrayTemplate, 
+					servicesArraySize, sizeof(int));
 	if (pEnabledServicesArray == NULL) {
 		log_progress("ensure_braille_service: could not locate enabledServicesArray; check for updates!");
 		return false;
 	}
 
 	vm_prot_t oldProt;
-	if (!get_mem_prot(pEnabledServicesArray, sizeof(enabledServicesArray), &oldProt)) {
+	if (!get_mem_prot(pEnabledServicesArray, servicesArraySize, &oldProt)) {
 		log_progress("ensure_braille_service: get_mem_prot() failed!");
 		return false;
 	}
-	if (!set_mem_prot(pEnabledServicesArray, sizeof(enabledServicesArray), VM_PROT_READ | VM_PROT_WRITE)) {
+	if (!set_mem_prot(pEnabledServicesArray, servicesArraySize, VM_PROT_READ | VM_PROT_WRITE)) {
 		log_progress("ensure_braille_service: set_mem_prot() failed!");
 		return false;		
 	}
 
 	const int BRAILLE_SERVICE = 0x2000;
 	
-	for (int i = 0; i < sizeof(enabledServicesArray) / sizeof(int); ++i) {
+	for (int i = 0; i < servicesArraySize / sizeof(int); ++i) {
 		pEnabledServicesArray[i] |= BRAILLE_SERVICE;
 	}
 	
-	if (!set_mem_prot(pEnabledServicesArray, sizeof(enabledServicesArray), oldProt)) {
+	if (!set_mem_prot(pEnabledServicesArray, servicesArraySize, oldProt)) {
 		log_progress("ensure_braille_service: set_mem_prot(RESTORE) failed!");
 		return false;
 	}
