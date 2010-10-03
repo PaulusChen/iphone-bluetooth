@@ -24,7 +24,7 @@
 	[self.completionObject performSelector:self.completionCallback withObject:(id)self.result withObject:self.completionContext];
 }
 
-- (char**) prepExecArgs
+- (const char**) prepExecArgs
 {
 	NSLog(@"prepExecArgs enter");
 	int numArgs = [self.args count];
@@ -53,7 +53,7 @@ void doExec(const char** cargs)
 	pid_t child_pid, wpid;
 	int status;
 	
-	char** cargs = [self prepExecArgs];
+	const char** cargs = [self prepExecArgs];
 	
 	child_pid = fork();
 	if (child_pid == -1) {      /* fork() failed */
