@@ -7,6 +7,9 @@ function err {
 
 Flavor=Debug
 
+# If XCode4 must be used, point to /XCode4 manually.. 
+Xcodebuild=/Developer/usr/bin/xcodebuild
+
 rm -rf build/$Flavor build/CurrentFlavor || err "Cannot clean the work dir"
 
 Bins=`pwd`/build/$Flavor/bin
@@ -15,9 +18,11 @@ mkdir -p $Bins || err "Cannot create work dirs"
 
 mkdir -p build/CurrentFlavor/bin || err "Cannot create work dirs-2"
 
-xcodebuild -target Aggregate1 -configuration $Flavor clean || err "Clean failed!"
+Buildopts="-target Aggregate1 -configuration $Flavor"
 
-xcodebuild -target Aggregate1 -configuration $Flavor || err "Build failed!"
+$Xcodebuild $Buildopts clean || err "Clean failed!"
+
+$Xcodebuild $Buildopts || err "Build failed!"
 
 cp ../btGpsClient/build/$Flavor-iphoneos/btGpsClient.app/btGpsClient $Bins/ || err "cp1 fail"
 cp ../btGpsServer/build/$Flavor-iphoneos/btGpsServer.app/btGpsServer $Bins/ || err "cp2 fail"
