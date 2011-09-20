@@ -73,8 +73,9 @@ typedef enum BT_PAIRING_AGENT_STATUS BT_PAIRING_AGENT_STATUS;
 
 enum BT_SERVICE_TYPE
 {
-	BT_SERVICE_BRAILLE = 0x2000,
-	BT_SERVICE_ANY = 0xFFFFffff,
+    BT_SERVICE_A2DP     =   0x10,
+	BT_SERVICE_BRAILLE  = 0x2000,
+	BT_SERVICE_ANY  = 0xFFFFffff,
 };
 
 typedef enum BT_SERVICE_TYPE BT_SERVICE_TYPE;
@@ -180,6 +181,8 @@ int BTLocalDeviceAddCallbacks(BTLOCALDEVICE localDevice, PLOCAL_DEVICE_CALLBACKS
 int BTLocalDeviceSetModulePower(BTLOCALDEVICE localDevice, int unk_must_be_1, MODULE_POWER_STATE powerState);
 
 int BTLocalDeviceGetModulePower(BTLOCALDEVICE localDevice, int unk_must_be_1, int* powerStatus);
+    
+int BTLocalDeviceGetPairedDevices(BTLOCALDEVICE localDevice, BTDEVICE* buffer, unsigned int* pCntOut, unsigned int cntBuf);
 
 int BTSessionAttachWithRunLoopAsync(CFRunLoopRef runLoop, const char* sessionName, PSESSION_CALLBACKS pCallbacks, void* ctx, PBTSESSION pSession);
 
@@ -191,9 +194,9 @@ int BTDiscoveryAgentStartScan(BTDISCOVERYAGENT agent, int magic1, int magic2);
 
 int BTDiscoveryAgentStopScan(BTDISCOVERYAGENT agent);
 
-int	BTDiscoveryAgentDestroy(BTDISCOVERYAGENT agent);
+int	BTDiscoveryAgentDestroy(PBTDISCOVERYAGENT pAgent);
 	
-int BTDeviceGetSupportedServices(BTDEVICE device, int* svc);
+int BTDeviceGetSupportedServices(BTDEVICE device, int* pServices);
 
 int BTDeviceGetName(BTDEVICE device, char* nameBuf, size_t cbNameBuf);
 
@@ -204,6 +207,9 @@ int BTDeviceFromAddress(BTSESSION session, char macAddr[6], PBTDEVICE pDeviceOut
 int BTDeviceSetVirtualType(BTDEVICE device, int type);
 
 int BTDeviceConnect(BTDEVICE device);
+
+// iOS 5
+int BTDeviceConnectServices(BTDEVICE device, int services);
 
 int BTDeviceDisconnect(BTDEVICE device);
 
@@ -222,7 +228,7 @@ int BTPairingAgentStart(PAIRING_AGENT pairingAgent);
 
 int BTPairingAgentStop(PAIRING_AGENT pairingAgent);
 
-int BTPairingAgentDestroy(PAIRING_AGENT pairingAgent);
+int BTPairingAgentDestroy(PPAIRING_AGENT pPairingAgent);
 
 int BTPairingAgentSetPincode(PAIRING_AGENT pairingAgent, BTDEVICE device, const char* pinUtf8);
 

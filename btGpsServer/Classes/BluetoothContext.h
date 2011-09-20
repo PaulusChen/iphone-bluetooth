@@ -34,19 +34,20 @@ static const CFStringRef kBtDevicePasscode = CFSTR("BluetoothDevicePasscode");
 
 
 @interface BluetoothContext : NSObject {
-	@private BTSESSION session;
-	@private BTDEVICE device;
-	@private BTDISCOVERYAGENT discoveryAgent;
-	@private PAIRING_AGENT pairingAgent;
-	@private BTLOCALDEVICE localDevice;
-	@private BtState targetState;
-	@private BtState currentState;
-	@private NSString* targetName;
-	@private NSString* targetAddr;
-	@private NSString* targetPin;
-	@private NSMutableDictionary* foundDevices;
-	
-	@private int magic;
+    @private BTSESSION _session;
+    @private BTDEVICE _device;
+    @private BTDISCOVERYAGENT _discoveryAgent;
+    @private PAIRING_AGENT _pairingAgent;
+    @private BOOL _pairingAgentStarted;
+    @private BTLOCALDEVICE _localDevice;
+    @private BtState _targetState;
+    @private BtState _currentState;
+    @private NSString* _targetName;
+    @private NSString* _targetAddr;
+    @private NSString* _targetPin;
+    @private NSMutableDictionary* _foundDevices;
+    
+    @private int magic;
 }
 
 + (void) postNotificationWithKey:(NSString*)key value:(id)value;
@@ -60,7 +61,7 @@ static const CFStringRef kBtDevicePasscode = CFSTR("BluetoothDevicePasscode");
 - (void) onPairingStatus:(BT_PAIRING_AGENT_STATUS)status;
 - (void) onPairingPincodeCallback;
 
-
+- (BOOL) onDiscoveryFoundDevice:(BTDEVICE)foundDevice;
 
 - (void) onStateChange:(BtState)newState;
 
@@ -74,13 +75,18 @@ static const CFStringRef kBtDevicePasscode = CFSTR("BluetoothDevicePasscode");
 //- (void) fsmPairing2Connecting;
 //- (void) fsmPairing2Connected;
 - (void) fsmConnected2Connecting;
+- (void) fsmConnected;
+
 
 - (BOOL) getPowerState;
 - (void) setPowerState:(BOOL)targetPowerState;
-- (void) setScanEnabled:(BOOL)scanEnabled;
-- (BOOL) tryCreateTargetDevice;
+- (void) scanNeeded:(BOOL)needScan;
+//- (BOOL) tryCreateTargetDevice;
 - (void) connectDisconnect:(BOOL)fConnect;
-- (void) startStopPairingAgent:(BOOL)start;
+
+- (BOOL) createAndStartPairingAgent;
+
+- (BOOL) pairingAgentEnable:(BOOL)start;
 
 
 - (void) connect;
@@ -91,11 +97,15 @@ static const CFStringRef kBtDevicePasscode = CFSTR("BluetoothDevicePasscode");
 @property (readwrite, assign) BTDEVICE device;
 @property (readwrite, assign) BTDISCOVERYAGENT discoveryAgent;
 @property (readwrite, assign) PAIRING_AGENT pairingAgent;
+@property (readwrite, assign) BOOL pairingAgentStarted;
 @property (readwrite, assign) BTLOCALDEVICE localDevice;
 @property (readwrite, retain) NSString* targetName;
 @property (readwrite, retain) NSString* targetAddr;
 @property (readwrite, retain) NSString* targetPin;
 @property (readonly,  retain) NSDictionary* foundDevices;
+@property (readwrite, assign) BtState targetState;
+@property (readwrite, assign) BtState currentState;
+
 
 @property (readwrite, assign) int magic;
 

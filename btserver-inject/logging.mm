@@ -30,6 +30,9 @@ bool log_open() {
 		char pathBuffer[BUFSIZ];
 		snprintf(pathBuffer, sizeof(pathBuffer), "%s/Library/Logs/btsrvinj.log", getenv("HOME"));
 		hLog = fopen(pathBuffer, "a");
+        if (hLog == nil) {
+            hLog = stderr;
+        }
 	}
 	return hLog != NULL;
 }

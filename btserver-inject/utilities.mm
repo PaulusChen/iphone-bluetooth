@@ -9,17 +9,31 @@
 
 #include "utilities.h"
 
-int getOsRevision()
+extern "C" CFDictionaryRef _CFCopySystemVersionDictionary();
+extern CFStringRef const _kCFSystemVersionProductVersionKey;
+
+static NSString* const getIosVer()
 {
-	static int osRevision = 0;
-	if (osRevision == 0) {
-		size_t len = sizeof(osRevision);
-		sysctlbyname("kern.osrevision", &osRevision, &len, nil, 0);
-	}
-	return osRevision;
+    static NSString* iosVer = nil;
+    if (iosVer == nil) {
+        CFDictionaryRef verDict = _CFCopySystemVersionDictionary();
+        if (verDict != nil) {
+            CFStringRef verStr = (CFStringRef)CFDictionaryGetValue(verDict, _kCFSystemVersionProductVersionKey);
+            if (verStr != nil) {
+                iosVer = [[NSString alloc] initWithString:(NSString*)verStr];
+            }
+            CFRelease(verDict);
+        }
+    }
+    return iosVer;
 }
 
 BOOL isOsVersion_4_2_OrHigher()
 {
-	return getOsRevision() >= osRev_4_2;
+    return [getIosVer() compare:@"4.2"] != NSOrderedAscending;
+}
+
+BOOL isOsVersion_5_OrHigher()
+{
+    return [getIosVer() compare:@"5.0"] != NSOrderedAscending;
 }

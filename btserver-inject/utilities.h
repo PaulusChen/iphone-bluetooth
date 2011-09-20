@@ -10,13 +10,14 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
-#define osRev_4_2 199506
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 BOOL isOsVersion_4_2_OrHigher();
+
+BOOL isOsVersion_5_OrHigher();
 
 #ifdef __cplusplus
 }

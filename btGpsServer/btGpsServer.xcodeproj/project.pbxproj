@@ -10,6 +10,7 @@
 		1D3623260D0F684500981E51 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		9D133E4B11D6FC31008CB46B /* gps_thread.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D133E4A11D6FC31008CB46B /* gps_thread.m */; };
+		9D1350E513F9C8EE00BC032C /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D1350E413F9C8EE00BC032C /* CoreFoundation.framework */; };
 		9D43932611D86DC100DAB52E /* context.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D43931C11D86DC100DAB52E /* context.c */; };
 		9D43932711D86DC100DAB52E /* generate.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D43931D11D86DC100DAB52E /* generate.c */; };
 		9D43932811D86DC100DAB52E /* generator.c in Sources */ = {isa = PBXBuildFile; fileRef = 9D43931E11D86DC100DAB52E /* generator.c */; };
@@ -43,6 +44,7 @@
 		9D133D0511D6C093008CB46B /* btGpsTypes.defs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.mig; path = btGpsTypes.defs; sourceTree = "<group>"; };
 		9D133E4911D6FC31008CB46B /* gps_thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gps_thread.h; sourceTree = "<group>"; };
 		9D133E4A11D6FC31008CB46B /* gps_thread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = gps_thread.m; sourceTree = "<group>"; };
+		9D1350E413F9C8EE00BC032C /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		9D43931C11D86DC100DAB52E /* context.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = context.c; path = nmealib/src/context.c; sourceTree = "<group>"; };
 		9D43931D11D86DC100DAB52E /* generate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = generate.c; path = nmealib/src/generate.c; sourceTree = "<group>"; };
 		9D43931E11D86DC100DAB52E /* generator.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = generator.c; path = nmealib/src/generator.c; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D1350E513F9C8EE00BC032C /* CoreFoundation.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				9DC5D91310B152A000CDA4DE /* MobileBluetooth.framework in Frameworks */,
 			);
@@ -144,6 +147,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9D1350E413F9C8EE00BC032C /* CoreFoundation.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 				9DC5D91210B152A000CDA4DE /* MobileBluetooth.framework */,
 			);
@@ -405,7 +409,7 @@
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
-				SDKROOT = iphoneos4.2;
+				SDKROOT = iphoneos;
 				SEPARATE_STRIP = YES;
 				STRIP_INSTALLED_PRODUCT = NO;
 				VALID_ARCHS = "armv6 armv7";
@@ -431,7 +435,7 @@
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
-				SDKROOT = iphoneos4.2;
+				SDKROOT = iphoneos;
 				SEPARATE_STRIP = YES;
 				VALID_ARCHS = "armv6 armv7";
 			};

@@ -9,6 +9,8 @@
 #import "EALocationAccessory.h"
 #include "ipc.h"
 
+#define SPAM 0
+
 @implementation EALocationAccessory
 
 @synthesize	connectionID;
@@ -86,7 +88,9 @@
 	currentIndex = 0;
 	[nmeaSentences release];
 	nmeaSentences = [[NSArray alloc] initWithArray:[data componentsSeparatedByString:@"\n"] copyItems:YES];
+#if SPAM
 	NSLog(@"Added %i sentences", [nmeaSentences count]);	
+#endif
 	[self postNamedNotification:EAAccessoryDidReceiveNMEASentenceNotification];
 }
 
@@ -109,7 +113,9 @@
 -(BOOL)accessoryHasNMEASentencesAvailable
 {
 	dataLeft = currentIndex < [nmeaSentences count];
+#if SPAM
 	NSLog(@"[EALocationAccessory accessoryHasNMEASentencesAvailable] returning %i", dataLeft);
+#endif
 	return dataLeft;
 }
 
@@ -118,7 +124,9 @@
 	if (![self accessoryHasNMEASentencesAvailable])
 		return NO;
 	*outSentence = [[[NSString alloc] initWithString:[nmeaSentences objectAtIndex:currentIndex++]] autorelease];
+#if SPAM
 	NSLog(@"[EALocationAccessory getNMEASentence] %@", *outSentence);
+#endif
 	return YES;
 }
 

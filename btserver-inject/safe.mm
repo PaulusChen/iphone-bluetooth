@@ -52,9 +52,9 @@ static bool safe_pathToConfig(char* buf, size_t size)
 	return snprintf(buf, size, "%s%s", homedir, filename) > 0;
 }
 
-static const NSString* keyLastBoot = @"lastBootTime";
-static const NSString* keyLastStart = @"lastStartTime";
-static const NSString* keyLastGoodStart = @"lastGoodStartTime";
+static NSString* const keyLastBoot = @"lastBootTime";
+static NSString* const keyLastStart = @"lastStartTime";
+static NSString* const keyLastGoodStart = @"lastGoodStartTime";
 
 static NSString* g_configFile = NULL;
 
